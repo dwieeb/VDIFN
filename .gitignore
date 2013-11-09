@@ -11,3 +11,11 @@ web/bundles/*
 # Configuration files
 app/config/parameters.ini
 app/config/parameters.yml
+
+# Misc
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+build/*
+bin/*
+composer.phar
+
