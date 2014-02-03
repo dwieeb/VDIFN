@@ -1,0 +1,5 @@
+plant_path_vdifn:
+    resource: "@PlantPathVDIFNBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
