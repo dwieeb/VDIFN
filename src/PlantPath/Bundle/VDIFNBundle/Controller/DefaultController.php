@@ -14,7 +14,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return new Response('Hi!');
+        return new Response(sprintf($this->container->getParameter('noaa_url'), '20140204'));
     }
 
     /**
