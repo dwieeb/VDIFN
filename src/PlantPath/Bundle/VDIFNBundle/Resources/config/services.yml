@@ -1,5 +1,5 @@
 parameters:
     vdifn.noaa_url: http://www.ftp.ncep.noaa.gov/data/nccf/com/nam/prod/nam.%%s/nam.t00z.awip1200.tm00.grib2
-    vdifn.cache_dir: %kernel.cache_dir%/vdifn
+    vdifn.noaa_path: %kernel.cache_dir%/vdifn/%%s/nam.t00z.awip1200.tm00.grib2
 
 services:

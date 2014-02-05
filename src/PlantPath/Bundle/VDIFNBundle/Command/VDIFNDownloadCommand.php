@@ -25,7 +25,7 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
     {
         $ymd = $input->getOption('date');
         $url = sprintf($this->getContainer()->getParameter('vdifn.noaa_url'), $ymd);
-        $filepath = $this->getContainer()->getParameter('vdifn.cache_dir') . '/' . $ymd . '/' . substr($url, strrpos($url, '/') + 1);
+        $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd);
 
         // Make directory recursively if it does not already exist. 0777 runs through umask
         if (!file_exists(dirname($filepath)) && false === mkdir(dirname($filepath), 0777, true)) {
