@@ -1,6 +1,9 @@
 parameters:
+    wgrib2_path: /usr/local/bin/wgrib2
     vdifn.cache_dir: %kernel.cache_dir%/vdifn
     vdifn.noaa_url: http://www.ftp.ncep.noaa.gov/data/nccf/com/nam/prod/nam.%%s/nam.t00z.awip1200.tm00.grib2
     vdifn.noaa_path: %vdifn.cache_dir%/%%s/nam.t00z.awip1200.tm00.grib2
+    # Correspond to the record number in this inventory: http://www.nco.ncep.noaa.gov/pmb/products/nam/nam.t00z.awip1200.tm00.grib2.shtml
+    vdifn.noaa_fields: [11, 12, 13, 14, 18, 24, 28, 76, 118, 159]
 
 services:

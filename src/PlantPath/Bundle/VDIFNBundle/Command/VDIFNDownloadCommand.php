@@ -10,6 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class VDIFNDownloadCommand extends ContainerAwareCommand
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function configure()
     {
         // Default date is today.
@@ -21,6 +24,9 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
             ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to download NOAA data (Format: Ymd)', $date->format('Ymd'));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ymd = $input->getOption('date');
