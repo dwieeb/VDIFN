@@ -10,6 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class VDIFNImportCommand extends ContainerAwareCommand
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function configure()
     {
         $this
@@ -17,6 +20,9 @@ class VDIFNImportCommand extends ContainerAwareCommand
             ->setDescription('Download & import NOAA data into VDIFN');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $command = $this->getApplication()->find('vdifn:download');

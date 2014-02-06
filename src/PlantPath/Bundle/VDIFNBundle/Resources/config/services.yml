@@ -5,5 +5,8 @@ parameters:
     vdifn.noaa_path: %vdifn.cache_dir%/%%s/nam.t00z.awip1200.tm00.grib2
     # Correspond to the record number in this inventory: http://www.nco.ncep.noaa.gov/pmb/products/nam/nam.t00z.awip1200.tm00.grib2.shtml
     vdifn.noaa_fields: [11, 12, 13, 14, 18, 24, 28, 76, 118, 159]
+    vdifn.state.class: PlantPath\Bundle\VDIFNBundle\Service\StateService
 
 services:
+    vdifn.state:
+        class: %vdifn.state.class%

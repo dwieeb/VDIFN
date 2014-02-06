@@ -20,7 +20,7 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
 
         $this
             ->setName('vdifn:download')
-            ->setDescription('Download the data from NOAA')
+            ->setDescription('Download a data file from NOAA for a specific day')
             ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to download NOAA data (Format: Ymd)', $date->format('Ymd'));
     }
 

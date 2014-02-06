@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "804bed7f176a264e8693b73ec5694bed",
+    "hash": "c0f95291b6804c084c3862ad6d34668b",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -621,6 +621,48 @@
                 "orm"
             ],
             "time": "2013-11-12 12:40:13"
+        },
+        {
+            "name": "fm/geo-utils",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/financial-media/geo-utils.git",
+                "reference": "3a21044b0ee3215b4af333b9e473e53d900b1983"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/financial-media/geo-utils/zipball/3a21044b0ee3215b4af333b9e473e53d900b1983",
+                "reference": "3a21044b0ee3215b4af333b9e473e53d900b1983",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-0": {
+                    "FM\\Geo": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "pkruithof",
+                    "email": "peter@financial-media.nl"
+                }
+            ],
+            "description": "Library with geo utilities",
+            "keywords": [
+                "Polygon",
+                "geo",
+                "gis",
+                "wgs84"
+            ],
+            "time": "2013-08-08 13:15:59"
         },
         {
             "name": "incenteev/composer-parameter-handler",
