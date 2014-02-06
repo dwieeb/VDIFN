@@ -7,8 +7,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use MrRio\ShellWrap as sh;
-use MrRio\ShellWrapException as shException;
 
 class VDIFNImportCommand extends ContainerAwareCommand
 {
