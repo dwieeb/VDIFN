@@ -17,13 +17,10 @@ class VDIFNSplitCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        // Default date is today.
-        $date = new \DateTime();
-
         $this
             ->setName('vdifn:split')
             ->setDescription('Split the data from NOAA into seperate file chunks')
-            ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which NOAA data file to split (Format: Ymd)', $date->format('Ymd'))
+            ->addArgument('file', InputArgument::REQUIRED, 'The file path to the NOAA data file')
             ->addOption('fields', 'f', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Specify inventory record numbers by which to split')
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'Remove the original file after splitting');
     }
@@ -128,16 +125,10 @@ class VDIFNSplitCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $ymd = $input->getOption('date');
-        $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd);
+        $filepath = $input->getArgument('file');
 
         if (!file_exists($filepath)) {
-            $command = $this->getApplication()->find('vdifn:download');
-
-            // An exit status code of 0 means the command terminated successfully.
-            if (0 !== $command->run(new ArrayInput([ 'command' => 'vdifn:download', '--date' => $ymd ]), $output)) {
-                throw new \RuntimeException('vdifn:download command failed');
-            }
+            throw new \RuntimeException('File does not exist: ' . $filepath);
         }
 
         if (false === $filesize = filesize($filepath)) {

@@ -59,17 +59,13 @@ class State
     /**
      * Determines whether the lat/long point is within this state.
      *
-     * @param  array  $point
+     * @param  PlantPath\Bundle\VDIFNBundle\Geo\Point $point
      *
      * @return boolean
      */
-    public function containsPoint(array $point)
+    public function containsPoint(Point $point)
     {
-        if (2 !== count($point)) {
-            throw new \InvalidArgumentException('Point must be a 2-tuple array');
-        }
-
-        return PointUtils::pointInPolygon($point, $this->boundaries);
+        return PointUtils::pointInPolygon($point->toArray(), $this->boundaries);
     }
 
     /**

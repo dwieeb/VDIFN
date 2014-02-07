@@ -40,9 +40,15 @@ class VDIFNExtractToCsvCommand extends ContainerAwareCommand
 
         $csvpath = null === $input->getArgument('csv') ? $filepath . '.csv' : $input->getArgument('csv');
 
+        // TODO: Add options for undefine. They should not do this by default.
+        $n = $this->getContainer()->getParameter('vdifn.bounding_box.coordinates.n');
+        $e = $this->getContainer()->getParameter('vdifn.bounding_box.coordinates.e');
+        $s = $this->getContainer()->getParameter('vdifn.bounding_box.coordinates.s');
+        $w = $this->getContainer()->getParameter('vdifn.bounding_box.coordinates.w');
+
         $builder = new ProcessBuilder();
         $builder->setPrefix($this->getContainer()->getParameter('wgrib2_path'));
-        $builder->setArguments([$filepath, '-csv', $csvpath]);
+        $builder->setArguments([$filepath, '-undefine', 'out-box', $w . ':' . $e, $s . ':' . $n, '-csv', $csvpath]);
 
         $process = $builder->getProcess();
         $process->run();
