@@ -2,6 +2,8 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Service;
 
+use PlantPath\Bundle\VDIFNBundle\Geo\Point;
+use PlantPath\Bundle\VDIFNBundle\Geo\PointCollection;
 use PlantPath\Bundle\VDIFNBundle\Geo\State;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -43,10 +45,10 @@ class StateService
             $crawler = new Crawler($this->dom->getElementsByTagName('state'));
             $state = $crawler->filter('state[name="' . $name . '"]')->eq(0);
 
-            $points = [];
+            $points = new PointCollection();
 
             foreach ($state->children() as $point) {
-                $points[] = [(float) $point->getAttribute('lat'), (float) $point->getAttribute('lng')];
+                $points->addPoint(new Point($point->getAttribute('lat'), $point->getAttribute('lng')));
             }
 
             $this->states[$name] = new State($name, $points);

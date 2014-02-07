@@ -16,7 +16,7 @@ class State
     /**
      * The latitudinal/longitudinal boundaries of the state.
      *
-     * @var array
+     * @var PlantPath\Bundle\VDIFNBundle\Geo\PointCollection
      */
     protected $boundaries;
 
@@ -25,7 +25,7 @@ class State
      *
      * @param string $name The name of the state.
      */
-    public function __construct($name, $boundaries = [])
+    public function __construct($name, PointCollection $boundaries = null)
     {
         $this
             ->setName($name)
@@ -65,7 +65,7 @@ class State
      */
     public function containsPoint(Point $point)
     {
-        return PointUtils::pointInPolygon($point->toArray(), $this->boundaries);
+        return PointUtils::pointInPolygon($point->toArray(), $this->boundaries->toArray());
     }
 
     /**
@@ -81,20 +81,12 @@ class State
     /**
      * Sets the latitudinal/longitudinal boundaries of the state.
      *
-     * @param array $boundaries the boundaries
+     * @param PlantPath\Bundle\VDIFNBundle\Geo\PointCollection $boundaries the boundaries
      *
      * @return self
      */
-    public function setBoundaries(array $boundaries)
+    public function setBoundaries(PointCollection $boundaries)
     {
-        if (!empty($boundaries)) {
-            foreach ($boundaries as $point) {
-                if (!is_array($point) || 2 !== count($point)) {
-                    throw new \InvalidArgumentException('Boundaries must be an array of 2-tuple arrays');
-                }
-            }
-        }
-
         $this->boundaries = $boundaries;
 
         return $this;
