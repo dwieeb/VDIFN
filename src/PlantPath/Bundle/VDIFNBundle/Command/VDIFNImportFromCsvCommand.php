@@ -54,18 +54,6 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
      */
     protected function pointInStates(Point $point)
     {
-        if (null === $this->service) {
-            $this->service = $this->getContainer()->get('vdifn.state');
-        }
-
-        if (null === $this->states) {
-            $this->states = [];
-
-            foreach ($this->getContainer()->getParameter('vdifn.noaa_states') as $stateName) {
-                $this->states[] = $this->service->getStateWithBoundaries($stateName);
-            }
-        }
-
         foreach ($this->states as $state) {
             if ($state->containsPoint($point)) {
                 return true;
@@ -104,6 +92,14 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
 
         if (!file_exists($filepath)) {
             throw new \RuntimeException('File not found at: ' . $filepath);
+        }
+
+        $this->service = $this->getContainer()->get('vdifn.state');
+
+        $this->states = [];
+
+        foreach ($this->getContainer()->getParameter('vdifn.noaa_states') as $stateName) {
+            $this->states[] = $this->service->getStateWithBoundaries($stateName);
         }
 
         $this->em = $this
