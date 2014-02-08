@@ -12,11 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class VDIFNImportFromCsvCommand extends ContainerAwareCommand
 {
     /**
-     * @var PlantPath\Bundle\VDIFNBundle\Service\StateService
-     */
-    protected $service;
-
-    /**
      * @var array
      */
     protected $states;
@@ -43,15 +38,13 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
      */
     protected function pointInStates(Point $point)
     {
-        if (null === $this->service) {
-            $this->service = $this->getContainer()->get('vdifn.state');
-        }
+        $service = $this->getContainer()->get('vdifn.state');
 
         if (null === $this->states) {
             $this->states = [];
 
             foreach ($this->getContainer()->getParameter('vdifn.noaa_states') as $stateName) {
-                $this->states[] = $this->service->getStateWithBoundaries($stateName);
+                $this->states[] = $service->getStateWithBoundaries($stateName);
             }
         }
 
