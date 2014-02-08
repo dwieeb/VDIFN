@@ -7,7 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * WeatherData
  *
- * @ORM\Table()
+ * @ORM\Table(
+ *     name="weather_data",
+ *     indexes={
+ *         @ORM\Index(name="time_location_dsv_idx", columns={"referenceTime", "latitude", "longitude", "dsv"})
+ *     }
+ * )
  * @ORM\Entity
  */
 class WeatherData
