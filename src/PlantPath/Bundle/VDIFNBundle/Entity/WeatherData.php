@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *         @ORM\Index(name="time_location_dsv_idx", columns={"referenceTime", "latitude", "longitude", "dsv"})
  *     }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PlantPath\Bundle\VDIFNBundle\Repository\WeatherDataRepository")
  */
 class WeatherData
 {
@@ -51,79 +51,104 @@ class WeatherData
     /**
      * @var integer
      *
-     * @ORM\Column(name="dsv", type="smallint")
+     * @ORM\Column(name="dsv", type="smallint", nullable=true)
      */
     protected $dsv;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="temperature", type="float")
+     * @ORM\Column(name="temperature", type="float", nullable=true)
      */
     protected $temperature;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="specificHumidity", type="float")
+     * @ORM\Column(name="specificHumidity", type="float", nullable=true)
      */
     protected $specificHumidity;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="dewPointTemperature", type="float")
+     * @ORM\Column(name="dewPointTemperature", type="float", nullable=true)
      */
     protected $dewPointTemperature;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="relativeHumiditity", type="smallint")
+     * @ORM\Column(name="relativeHumiditity", type="smallint", nullable=true)
      */
     protected $relativeHumiditity;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="totalPrecipitation", type="float")
+     * @ORM\Column(name="totalPrecipitation", type="float", nullable=true)
      */
     protected $totalPrecipitation;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="categoricalRain", type="boolean")
+     * @ORM\Column(name="categoricalRain", type="boolean", nullable=true)
      */
     protected $categoricalRain;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="totalCloudCover", type="smallint")
+     * @ORM\Column(name="totalCloudCover", type="smallint", nullable=true)
      */
     protected $totalCloudCover;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="surfaceTemperature", type="float")
+     * @ORM\Column(name="surfaceTemperature", type="float", nullable=true)
      */
     protected $surfaceTemperature;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="precipitationRate", type="float")
+     * @ORM\Column(name="precipitationRate", type="float", nullable=true)
      */
     protected $precipitationRate;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="windSpeed", type="float")
+     * @ORM\Column(name="windSpeed", type="float", nullable=true)
      */
     protected $windSpeed;
+
+    /**
+     * Factory.
+     *
+     * @return WeatherData
+     */
+    public static function create()
+    {
+        return new static();
+    }
+
+    /**
+     * Creates new weather data based upon a date and location.
+     *
+     * @param  DateTime $date
+     * @param  Point    $point
+     *
+     * @return WeatherData
+     */
+    public static function createFromSpaceTime(\DateTime $date, Point $point)
+    {
+        return static::create()
+            ->setReferenceTime($date)
+            ->setPoint($point);
+    }
 
     /**
      * Get id
@@ -147,6 +172,8 @@ class WeatherData
         $this
             ->setLatitude($point->getLatitude())
             ->setLongitude($point->getLongitude());
+
+        return $this;
     }
 
     /**
