@@ -135,6 +135,100 @@ class WeatherData
     }
 
     /**
+     * Set a value in this class based upon a field's parameter and level,
+     * which can be found in the inventory of the file.
+     *
+     * @link http://www.nco.ncep.noaa.gov/pmb/products/nam/nam.t00z.awip1200.tm00.grib2.shtml
+     *
+     * @param string $parameter
+     * @param string $level
+     * @param mixed  $value
+     *
+     * @return WeatherData
+     */
+    public function setParameter($parameter, $level, $value)
+    {
+        switch ($parameter) {
+            case 'TMP':
+                switch ($level) {
+                    case '2 m above ground':
+                        return $this->setTemperature($value);
+
+                    case 'surface':
+                        return $this->setSurfaceTemperature($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter TMP: ' . $level);
+
+            case 'SPFH':
+                switch ($level) {
+                    case '2 m above ground':
+                        return $this->setSpecificHumidity($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter SPFH: ' . $level);
+
+            case 'DPT':
+                switch ($level) {
+                    case '2 m above ground':
+                        return $this->setDewPointTemperature($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter DPT: ' . $level);
+
+            case 'RH':
+                switch ($level) {
+                    case '2 m above ground':
+                        return $this->setRelativeHumiditity($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter RH: ' . $level);
+
+            case 'APCP':
+                switch ($level) {
+                    case 'surface':
+                        return $this->setTotalPrecipitation($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter APCP: ' . $level);
+
+            case 'CRAIN':
+                switch ($level) {
+                    case 'surface':
+                        return $this->setCategoricalRain($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter CRAIN: ' . $level);
+
+            case 'TCDC':
+                switch ($level) {
+                    case 'entire atmosphere (considered as a single layer)':
+                        return $this->setTotalCloudCover($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter TCDC: ' . $level);
+
+            case 'PRATE':
+                switch ($level) {
+                    case 'surface':
+                        return $this->setPrecipitationRate($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter PRATE: ' . $level);
+
+            case 'GUST':
+                switch ($level) {
+                    case 'surface':
+                        return $this->setWindSpeed($value);
+                }
+
+                throw new \InvalidArgumentException('Unknown level/layer for parameter GUST: ' . $level);
+        }
+
+        throw new \InvalidArgumentException('Unknown parameter: ' . $parameter);
+    }
+
+    /**
      * Set referenceTime
      *
      * @param \DateTime $referenceTime
