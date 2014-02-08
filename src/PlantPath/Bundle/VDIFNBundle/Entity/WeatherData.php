@@ -2,6 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Entity;
 
+use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -135,14 +136,28 @@ class WeatherData
     }
 
     /**
+     * Set this weather data's latitude and longitude from a Point object.
+     *
+     * @param  PlantPath\Bundle\VDIFNBundle\Geo\Point $point
+     *
+     * @return WeatherData
+     */
+    public function setPoint(Point $point)
+    {
+        $this
+            ->setLatitude($point->getLatitude())
+            ->setLongitude($point->getLongitude());
+    }
+
+    /**
      * Set a value in this class based upon a field's parameter and level,
      * which can be found in the inventory of the file.
      *
      * @link http://www.nco.ncep.noaa.gov/pmb/products/nam/nam.t00z.awip1200.tm00.grib2.shtml
      *
-     * @param string $parameter
-     * @param string $level
-     * @param mixed  $value
+     * @param  string $parameter
+     * @param  string $level
+     * @param  mixed  $value
      *
      * @return WeatherData
      */
