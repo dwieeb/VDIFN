@@ -23,5 +23,5 @@ See [common options](http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/short_c
 
 1. Get inventory listing: `wgrib2 nam.t00z.awip1200.tm00.grib2`
 2. Use dd to make sub files of what you want (given byte start and length which can be calculated using the inventory listing): `dd if=nam.t00z.awip1200.tm00.grib2 ibs=1 skip=934102 count=97535 of=snippet.grib2`
-3. Use -[lola](http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/lola.html) to specify the grid constraints.
+3. Use -[undefine](http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/undefine.html) to specify the grid constraints.
 4. Use -[csv](http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/csv.html) for easy parsing in PHP.
