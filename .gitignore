@@ -19,3 +19,5 @@ build/*
 bin/*
 composer.phar
 
+# Entity backups
+*~

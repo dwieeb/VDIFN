@@ -2,7 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Command;
 
-use PlantPath\Bundle\VDIFNBundle\Entity\WeatherData;
+use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -67,19 +67,24 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
      * Given a set of values, process this weather data. Determine whether or
      * not to persist.
      *
-     * @param  DateTime $date
+     * @param  DateTime $referenceTime
+     * @param  DateTime $verificationTime
      * @param  PlantPath\Bundle\VDIFNBundle\Geo\Point $point
      * @param  string   $field
      * @param  string   $level
      * @param  string   $value
      */
-    protected function processWeatherData(\DateTime $date, Point $point, $field, $level, $value)
+    protected function processWeatherData(\DateTime $referenceTime, \DateTime $verificationTime, Point $point, $field, $level, $value)
     {
         if ($this->pointInStates($point)) {
-            $weatherData = $this->repo->getOneBySpaceTime($date, $point) ?: WeatherData::createFromSpaceTime($date, $point);
-            $weatherData->setParameter($field, $level, $value);
+            if (null === $hourlyData = $this->repo->getOneBySpaceTime($verificationTime, $point)) {
+                $hourlyData = HourlyWeather::createFromSpaceTime($verificationTime, $point);
+                $hourlyData->setReferenceTime($referenceTime);
+            }
 
-            $this->em->persist($weatherData);
+            $hourlyData->setParameter($field, $level, $value);
+
+            $this->em->persist($hourlyData);
         }
     }
 
@@ -89,13 +94,13 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $filepath = $input->getArgument('file');
+        $tz = new \DateTimeZone('UTC');
 
         if (!file_exists($filepath)) {
             throw new \RuntimeException('File not found at: ' . $filepath);
         }
 
         $this->service = $this->getContainer()->get('vdifn.state');
-
         $this->states = [];
 
         foreach ($this->getContainer()->getParameter('vdifn.noaa_states') as $stateName) {
@@ -106,7 +111,7 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
             ->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        $this->repo = $this->em->getRepository('PlantPathVDIFNBundle:WeatherData');
+        $this->repo = $this->em->getRepository('PlantPathVDIFNBundle:Weather\Hourly');
 
         $file = new \SplFileObject($filepath);
         $file->setFlags(\SplFileObject::READ_CSV | \SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE);
@@ -114,7 +119,7 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
         foreach ($file as $row) {
             if (false !== $row) {
                 list($date1, $date2, $field, $level, $longitude, $latitude, $value) = $row;
-                $this->processWeatherData(new \DateTime($date1), new Point($latitude, $longitude), $field, $level, $value);
+                $this->processWeatherData(new \DateTime($date1, $tz), new \DateTime($date2, $tz), new Point($latitude, $longitude), $field, $level, $value);
             }
         }
 

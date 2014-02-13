@@ -14,7 +14,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return new Response(sprintf($this->container->getParameter('vdifn.noaa_url'), '20140204'));
+        $hour = $this->getDoctrine()->getRepository('PlantPathVDIFNBundle:Weather\Hourly')->find(1);
     }
 
     /**

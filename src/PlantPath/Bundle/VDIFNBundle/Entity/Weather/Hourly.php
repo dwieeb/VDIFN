@@ -1,22 +1,22 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Entity;
+namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather;
 
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WeatherData
+ * Hourly weather data.
  *
  * @ORM\Table(
- *     name="weather_data",
+ *     name="weather_hourly",
  *     indexes={
- *         @ORM\Index(name="time_location_dsv_idx", columns={"referenceTime", "latitude", "longitude", "dsv"})
+ *         @ORM\Index(name="time_location_idx", columns={"verification_time", "latitude", "longitude"})
  *     }
  * )
- * @ORM\Entity(repositoryClass="PlantPath\Bundle\VDIFNBundle\Repository\WeatherDataRepository")
+ * @ORM\Entity(repositoryClass="PlantPath\Bundle\VDIFNBundle\Repository\Weather\HourlyRepository")
  */
-class WeatherData
+class Hourly
 {
     /**
      * @var integer
@@ -30,9 +30,16 @@ class WeatherData
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="referenceTime", type="datetime")
+     * @ORM\Column(name="reference_time", type="datetimetz")
      */
     protected $referenceTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="verification_time", type="datetimetz")
+     */
+    protected $verificationTime;
 
     /**
      * @var float
@@ -49,13 +56,6 @@ class WeatherData
     protected $longitude;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="dsv", type="smallint", nullable=true)
-     */
-    protected $dsv;
-
-    /**
      * @var float
      *
      * @ORM\Column(name="temperature", type="float", nullable=true)
@@ -65,70 +65,70 @@ class WeatherData
     /**
      * @var float
      *
-     * @ORM\Column(name="specificHumidity", type="float", nullable=true)
+     * @ORM\Column(name="specific_humidity", type="float", nullable=true)
      */
     protected $specificHumidity;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="dewPointTemperature", type="float", nullable=true)
+     * @ORM\Column(name="dew_point_temperature", type="float", nullable=true)
      */
     protected $dewPointTemperature;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="relativeHumiditity", type="smallint", nullable=true)
+     * @ORM\Column(name="relative_humiditity", type="smallint", nullable=true)
      */
     protected $relativeHumiditity;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="totalPrecipitation", type="float", nullable=true)
+     * @ORM\Column(name="total_precipitation", type="float", nullable=true)
      */
     protected $totalPrecipitation;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="categoricalRain", type="boolean", nullable=true)
+     * @ORM\Column(name="categorical_rain", type="boolean", nullable=true)
      */
     protected $categoricalRain;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="totalCloudCover", type="smallint", nullable=true)
+     * @ORM\Column(name="total_cloud_cover", type="smallint", nullable=true)
      */
     protected $totalCloudCover;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="surfaceTemperature", type="float", nullable=true)
+     * @ORM\Column(name="surface_temperature", type="float", nullable=true)
      */
     protected $surfaceTemperature;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="precipitationRate", type="float", nullable=true)
+     * @ORM\Column(name="precipitation_rate", type="float", nullable=true)
      */
     protected $precipitationRate;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="windSpeed", type="float", nullable=true)
+     * @ORM\Column(name="wind_speed", type="float", nullable=true)
      */
     protected $windSpeed;
 
     /**
      * Factory.
      *
-     * @return WeatherData
+     * @return PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly
      */
     public static function create()
     {
@@ -141,23 +141,13 @@ class WeatherData
      * @param  DateTime $date
      * @param  Point    $point
      *
-     * @return WeatherData
+     * @return PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly
      */
     public static function createFromSpaceTime(\DateTime $date, Point $point)
     {
         return static::create()
-            ->setReferenceTime($date)
+            ->setVerificationTime($date)
             ->setPoint($point);
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -165,7 +155,7 @@ class WeatherData
      *
      * @param  PlantPath\Bundle\VDIFNBundle\Geo\Point $point
      *
-     * @return WeatherData
+     * @return self
      */
     public function setPoint(Point $point)
     {
@@ -186,7 +176,7 @@ class WeatherData
      * @param  string $level
      * @param  mixed  $value
      *
-     * @return WeatherData
+     * @return self
      */
     public function setParameter($parameter, $level, $value)
     {
@@ -271,11 +261,20 @@ class WeatherData
     }
 
     /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Set referenceTime
      *
      * @param \DateTime $referenceTime
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setReferenceTime(\DateTime $referenceTime)
     {
@@ -295,16 +294,38 @@ class WeatherData
     }
 
     /**
+     * Set verificationTime
+     *
+     * @param \DateTime $verificationTime
+     * @return Hourly
+     */
+    public function setVerificationTime(\DateTime $verificationTime)
+    {
+        $this->verificationTime = $verificationTime;
+
+        return $this;
+    }
+
+    /**
+     * Get verificationTime
+     *
+     * @return \DateTime
+     */
+    public function getVerificationTime()
+    {
+        return $this->verificationTime;
+    }
+
+    /**
      * Set latitude
      *
      * @param float $latitude
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setLatitude($latitude)
     {
         if (false === $latitude = filter_var($latitude, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate latitude as a float');
+            throw new \InvalidArgumentException('Cannot validate latitude as a float');
         }
 
         $this->latitude = $latitude;
@@ -326,13 +347,12 @@ class WeatherData
      * Set longitude
      *
      * @param float $longitude
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setLongitude($longitude)
     {
         if (false === $longitude = filter_var($longitude, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate longitude as a float');
+            throw new \InvalidArgumentException('Cannot validate longitude as a float');
         }
 
         $this->longitude = $longitude;
@@ -351,44 +371,15 @@ class WeatherData
     }
 
     /**
-     * Set dsv
-     *
-     * @param integer $dsv
-     *
-     * @return WeatherData
-     */
-    public function setDsv($dsv)
-    {
-        if (false === $dsv = filter_var($dsv, FILTER_VALIDATE_INT)) {
-            throw new \InvalidArgumentException('Could not validate DSV as an integer');
-        }
-
-        $this->dsv = $dsv;
-
-        return $this;
-    }
-
-    /**
-     * Get dsv
-     *
-     * @return integer
-     */
-    public function getDsv()
-    {
-        return $this->dsv;
-    }
-
-    /**
      * Set temperature
      *
      * @param float $temperature
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setTemperature($temperature)
     {
         if (false === $temperature = filter_var($temperature, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate temperature as a float');
+            throw new \InvalidArgumentException('Cannot validate temperature as a float');
         }
 
         $this->temperature = $temperature;
@@ -410,13 +401,12 @@ class WeatherData
      * Set specificHumidity
      *
      * @param float $specificHumidity
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setSpecificHumidity($specificHumidity)
     {
         if (false === $specificHumidity = filter_var($specificHumidity, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate specific humidity as a float');
+            throw new \InvalidArgumentException('Cannot validate specific humidity as a float');
         }
 
         $this->specificHumidity = $specificHumidity;
@@ -438,13 +428,12 @@ class WeatherData
      * Set dewPointTemperature
      *
      * @param float $dewPointTemperature
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setDewPointTemperature($dewPointTemperature)
     {
         if (false === $dewPointTemperature = filter_var($dewPointTemperature, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate dew point temperature as a float');
+            throw new \InvalidArgumentException('Cannot validate dew point temperature as a float');
         }
 
         $this->dewPointTemperature = $dewPointTemperature;
@@ -466,13 +455,12 @@ class WeatherData
      * Set relativeHumiditity
      *
      * @param integer $relativeHumiditity
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setRelativeHumiditity($relativeHumiditity)
     {
         if (false === $relativeHumiditity = filter_var($relativeHumiditity, FILTER_VALIDATE_INT)) {
-            throw new \InvalidArgumentException('Could not validate relative humidity as an integer');
+            throw new \InvalidArgumentException('Cannot validate relative humiditity as an integer');
         }
 
         $this->relativeHumiditity = $relativeHumiditity;
@@ -494,13 +482,12 @@ class WeatherData
      * Set totalPrecipitation
      *
      * @param float $totalPrecipitation
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setTotalPrecipitation($totalPrecipitation)
     {
         if (false === $totalPrecipitation = filter_var($totalPrecipitation, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate total percipitation as a float');
+            throw new \InvalidArgumentException('Cannot validate total precipitation as a float');
         }
 
         $this->totalPrecipitation = $totalPrecipitation;
@@ -522,13 +509,12 @@ class WeatherData
      * Set categoricalRain
      *
      * @param boolean $categoricalRain
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setCategoricalRain($categoricalRain)
     {
         if (null === $categoricalRain = filter_var($categoricalRain, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-            throw new \InvalidArgumentException('Could not validate categorical rain as a boolean');
+            throw new \InvalidArgumentException('Cannot validate categorical rain as a boolean');
         }
 
         $this->categoricalRain = $categoricalRain;
@@ -550,13 +536,12 @@ class WeatherData
      * Set totalCloudCover
      *
      * @param integer $totalCloudCover
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setTotalCloudCover($totalCloudCover)
     {
-        if (null === $totalCloudCover = filter_var($totalCloudCover, FILTER_VALIDATE_INT)) {
-            throw new \InvalidArgumentException('Could not validate total cloud cover as an integer');
+        if (false === $totalCloudCover = filter_var($totalCloudCover, FILTER_VALIDATE_INT)) {
+            throw new \InvalidArgumentException('Cannot validate total cloud cover as an integer');
         }
 
         $this->totalCloudCover = $totalCloudCover;
@@ -578,13 +563,12 @@ class WeatherData
      * Set surfaceTemperature
      *
      * @param float $surfaceTemperature
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setSurfaceTemperature($surfaceTemperature)
     {
-        if (null === $surfaceTemperature = filter_var($surfaceTemperature, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate surface temperature as a float');
+        if (false === $surfaceTemperature = filter_var($surfaceTemperature, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Cannot validate surface temperature as a float');
         }
 
         $this->surfaceTemperature = $surfaceTemperature;
@@ -606,13 +590,12 @@ class WeatherData
      * Set precipitationRate
      *
      * @param float $precipitationRate
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setPrecipitationRate($precipitationRate)
     {
-        if (null === $precipitationRate = filter_var($precipitationRate, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate precipitation rate as a float');
+        if (false === $precipitationRate = filter_var($precipitationRate, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Cannot validate precipitation rate as a float');
         }
 
         $this->precipitationRate = $precipitationRate;
@@ -634,13 +617,12 @@ class WeatherData
      * Set windSpeed
      *
      * @param float $windSpeed
-     *
-     * @return WeatherData
+     * @return Hourly
      */
     public function setWindSpeed($windSpeed)
     {
-        if (null === $windSpeed = filter_var($windSpeed, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate wind speed as a float');
+        if (false === $windSpeed = filter_var($windSpeed, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Cannot validate wind speed as a float');
         }
 
         $this->windSpeed = $windSpeed;

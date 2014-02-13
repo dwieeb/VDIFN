@@ -53,7 +53,7 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
         curl_exec($ch);
 
         if (200 !== $code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
-            throw new \RuntimeException('Get HTTP response code ' . $code . ' for URL: ' . $url);
+            throw new \RuntimeException('Got HTTP response code ' . $code . ' for URL: ' . $url);
         }
 
         curl_close($ch);
