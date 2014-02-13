@@ -45,7 +45,7 @@ class Temperature
     public function convert($scale = self::KELVIN)
     {
         if ($this->scale === $scale) {
-            return $this;
+            return clone $this;
         }
 
         if ($this->scale === self::KELVIN && $scale === self::CELSIUS) {
