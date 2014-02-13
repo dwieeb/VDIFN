@@ -3,6 +3,7 @@
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather;
 
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
+use PlantPath\Bundle\VDIFNBundle\Geo\Temperature;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -182,6 +183,8 @@ class Hourly
     {
         switch ($parameter) {
             case 'TMP':
+                $value = Temperature::create($value, Temperature::KELVIN)->convert(Temperature::CELSIUS)->getTemperature();
+
                 switch ($level) {
                     case '2 m above ground':
                         return $this->setTemperature($value);
@@ -201,6 +204,8 @@ class Hourly
                 throw new \InvalidArgumentException('Unknown level/layer for parameter SPFH: ' . $level);
 
             case 'DPT':
+                $value = Temperature::create($value, Temperature::KELVIN)->convert(Temperature::CELSIUS)->getTemperature();
+
                 switch ($level) {
                     case '2 m above ground':
                         return $this->setDewPointTemperature($value);
