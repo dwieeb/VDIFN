@@ -20,8 +20,9 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
 
         $this
             ->setName('vdifn:download')
-            ->setDescription('Download a data file from NOAA for a specific day')
-            ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to download NOAA data (Format: Ymd)', $date->format('Ymd'));
+            ->setDescription('Download a data file from NOAA for a specific day and prediction hour')
+            ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to download NOAA data (Format: Ymd)', $date->format('Ymd'))
+            ->addOption('hour', 'p', InputOption::VALUE_REQUIRED, 'Specify a prediction hour for which to download (e.g. 00, 01, 84)', 0);
     }
 
     /**
@@ -30,8 +31,9 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ymd = $input->getOption('date');
-        $url = sprintf($this->getContainer()->getParameter('vdifn.noaa_url'), $ymd);
-        $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd);
+        $hour = str_pad((string) $input->getOption('hour'), 2, '0', STR_PAD_LEFT);
+        $url = sprintf($this->getContainer()->getParameter('vdifn.noaa_url'), $ymd, $hour);
+        $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, $hour);
 
         // Make directory recursively if it does not already exist. 0777 runs through umask
         if (!file_exists(dirname($filepath)) && false === mkdir(dirname($filepath), 0777, true)) {
@@ -49,8 +51,12 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
         curl_setopt($ch, CURLOPT_HEADER, 0);
 
         curl_exec($ch);
-        curl_close($ch);
 
+        if (200 !== $code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
+            throw new \RuntimeException('Get HTTP response code ' . $code . ' for URL: ' . $url);
+        }
+
+        curl_close($ch);
         fclose($fh);
     }
 }
