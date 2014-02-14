@@ -80,9 +80,9 @@ class Hourly
     /**
      * @var integer
      *
-     * @ORM\Column(name="relative_humiditity", type="smallint", nullable=true)
+     * @ORM\Column(name="relative_humidity", type="smallint", nullable=true)
      */
-    protected $relativeHumiditity;
+    protected $relativeHumidity;
 
     /**
      * @var float
@@ -216,7 +216,7 @@ class Hourly
             case 'RH':
                 switch ($level) {
                     case '2 m above ground':
-                        return $this->setRelativeHumiditity($value);
+                        return $this->setRelativeHumidity($value);
                 }
 
                 throw new \InvalidArgumentException('Unknown level/layer for parameter RH: ' . $level);
@@ -457,30 +457,30 @@ class Hourly
     }
 
     /**
-     * Set relativeHumiditity
+     * Set relativeHumidity
      *
-     * @param integer $relativeHumiditity
+     * @param integer $relativeHumidity
      * @return Hourly
      */
-    public function setRelativeHumiditity($relativeHumiditity)
+    public function setRelativeHumidity($relativeHumidity)
     {
-        if (false === $relativeHumiditity = filter_var($relativeHumiditity, FILTER_VALIDATE_INT)) {
-            throw new \InvalidArgumentException('Cannot validate relative humiditity as an integer');
+        if (false === $relativeHumidity = filter_var($relativeHumidity, FILTER_VALIDATE_INT)) {
+            throw new \InvalidArgumentException('Cannot validate relative humidity as an integer');
         }
 
-        $this->relativeHumiditity = $relativeHumiditity;
+        $this->relativeHumidity = $relativeHumidity;
 
         return $this;
     }
 
     /**
-     * Get relativeHumiditity
+     * Get relativeHumidity
      *
      * @return integer
      */
-    public function getRelativeHumiditity()
+    public function getRelativeHumidity()
     {
-        return $this->relativeHumiditity;
+        return $this->relativeHumidity;
     }
 
     /**
