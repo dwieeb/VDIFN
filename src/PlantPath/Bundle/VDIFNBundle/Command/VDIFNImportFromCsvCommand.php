@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class VDIFNImportFromCsvCommand extends ContainerAwareCommand
 {
@@ -111,6 +112,9 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
             ->getContainer()
             ->get('doctrine.orm.entity_manager');
 
+        // http://konradpodgorski.com/blog/2013/01/18/how-to-avoid-memory-leaks-in-symfony-2-commands
+        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $this->repo = $this->em->getRepository('PlantPathVDIFNBundle:Weather\Hourly');
 
         $file = new \SplFileObject($filepath);
@@ -124,9 +128,11 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
         }
 
         $this->em->flush();
+        $this->em->clear();
 
         if ($input->getOption('remove')) {
-            unlink($filepath);
+            $fs = new Filesystem();
+            $fs->remove($filepath);
         }
     }
 }

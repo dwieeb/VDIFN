@@ -9,9 +9,15 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 
 class VDIFNSplitCommand extends ContainerAwareCommand
 {
+    /**
+     * @var Symfony\Component\Console\Input\InputInterface
+     */
+    protected $input;
+
     /**
      * {@inheritDoc}
      */
@@ -29,26 +35,35 @@ class VDIFNSplitCommand extends ContainerAwareCommand
      * Given an InputInterface, return a sanitized array of field IDs. Defaults
      * to configuration value if no fields are supplied.
      *
-     * @param  InputInterface $input
-     *
      * @return array
      */
-    protected function getFields(InputInterface $input)
+    protected function getFields()
     {
-        $fields = $input->getOption('fields');
+        $fields = $this->input->getOption('fields');
 
         if (empty($fields)) {
             $fields = $this->getContainer()->getParameter('vdifn.noaa_fields');
-        } else {
-            // Change all number strings to integers and remove any that didn't validate as an integer.
-            $fields = array_filter(array_map(function($value) {
-                if (false !== $value = filter_var($value, FILTER_VALIDATE_INT)) {
-                    return $value;
-                }
-            }, $fields));
         }
 
-        return $fields;
+        return $this->filterFields($fields);
+    }
+
+    /**
+     * Given an array of fields, filter out the invalid values and run valid
+     * values through filter_var to turn them into integers and return the
+     * result.
+     *
+     * @param  array  $fields
+     *
+     * @return array
+     */
+    public function filterFields(array $fields)
+    {
+        return array_filter(array_map(function($value) {
+            if (false !== $value = filter_var($value, FILTER_VALIDATE_INT)) {
+                return $value;
+            }
+        }, $fields));
     }
 
     /**
@@ -125,7 +140,8 @@ class VDIFNSplitCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $filepath = $input->getArgument('file');
+        $this->input = $input;
+        $filepath = $this->input->getArgument('file');
 
         if (!file_exists($filepath)) {
             throw new \RuntimeException('File does not exist: ' . $filepath);
@@ -135,7 +151,7 @@ class VDIFNSplitCommand extends ContainerAwareCommand
             throw new \RuntimeException('Unable to determine filesize of file: ' . $filepath);
         }
 
-        $fields = $this->getFields($input);
+        $fields = $this->getFields($this->input);
         $inventory = $this->getInventory($filepath);
         $processes = [];
 
@@ -155,8 +171,9 @@ class VDIFNSplitCommand extends ContainerAwareCommand
             // Waiting for asynchronous processes to finish.
         }
 
-        if ($input->getOption('remove')) {
-            unlink($filepath);
+        if ($this->input->getOption('remove')) {
+            $fs = new Filesystem();
+            $fs->remove($filepath);
         }
     }
 }

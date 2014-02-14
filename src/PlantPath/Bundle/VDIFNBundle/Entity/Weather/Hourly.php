@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="weather_hourly",
  *     indexes={
- *         @ORM\Index(name="time_location_idx", columns={"verification_time", "latitude", "longitude"})
+ *         @ORM\Index(name="location_time_idx", columns={"latitude", "longitude", "verification_time"})
  *     }
  * )
  * @ORM\Entity(repositoryClass="PlantPath\Bundle\VDIFNBundle\Repository\Weather\HourlyRepository")

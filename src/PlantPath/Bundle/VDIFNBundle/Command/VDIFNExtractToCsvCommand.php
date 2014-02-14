@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 
 class VDIFNExtractToCsvCommand extends ContainerAwareCommand
 {
@@ -54,7 +55,8 @@ class VDIFNExtractToCsvCommand extends ContainerAwareCommand
         $process->run();
 
         if ($input->getOption('remove')) {
-            unlink($filepath);
+            $fs = new Filesystem();
+            $fs->remove($filepath);
         }
     }
 }
