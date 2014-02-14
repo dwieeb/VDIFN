@@ -9,6 +9,8 @@ parameters:
     # Only data for these states will be imported
     vdifn.noaa_states: [Wisconsin]
     vdifn.state.class: PlantPath\Bundle\VDIFNBundle\Service\StateService
+    # Leaf-wetting time relative humidity threshold
+    vdifn.lwt_rh_threshold: 85
     # Only data within this bounding box will be imported
     vdifn.bounding_box.coordinates.n: 47.408574
     vdifn.bounding_box.coordinates.e: -85.649414

@@ -2,6 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Command;
 
+use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily as DailyWeather;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -101,7 +102,7 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
         $beginning = $this->getBeginningOfDay($day);
         $end = $this->getEndOfDay($day);
 
-        return $this->hourlyRepo
+        $locations = $this->hourlyRepo
             ->createQueryBuilder('h')
             ->select('h.latitude', 'h.longitude')
             ->groupBy('h.latitude', 'h.longitude')
@@ -110,6 +111,14 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
             ->setParameter('end', $end)
             ->getQuery()
             ->execute();
+
+        $points = [];
+
+        foreach ($locations as $location) {
+            $points[] = new Point($location['latitude'], $location['longitude']);
+        }
+
+        return $points;
     }
 
     /**
@@ -190,34 +199,49 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $threshold = (int) $this->getContainer()->getParameter('vdifn.lwt_rh_threshold');
         $ymd = $input->getOption('date');
         $tz = new \DateTimeZone(date_default_timezone_get());
         $date = new \DateTime($ymd, $tz);
-        $beginning = $this->getBeginningOfDay($date);
-        $end = $this->getEndOfDay($date);
 
         $this->em = $this
             ->getContainer()
             ->get('doctrine.orm.entity_manager');
 
         $this->hourlyRepo = $this->em->getRepository('PlantPathVDIFNBundle:Weather\Hourly');
-        // $this->dailyRepo = $this->em->getRepository('PlantPathVDIFNBundle:Weather\Daily');
+        $this->dailyRepo = $this->em->getRepository('PlantPathVDIFNBundle:Weather\Daily');
 
-        $locations = $this->getLocations($date);
-
-        foreach ($locations as $location) {
-            $hourlies = $this->getInterpolatedHourlyWeather(new Point($location['latitude'], $location['longitude']), $date);
+        foreach ($this->getLocations($date) as $point) {
+            $hourlies = $this->getInterpolatedHourlyWeather($point, $date);
 
             ksort($hourlies);
             array_pop($hourlies);
 
+            $leafWettingTime = 0;
+            $sumTemperature = 0;
+
             foreach ($hourlies as $hourly) {
-                print $hourly->getVerificationTime()->format('H') . ":\n";
-                print '-------' . "\n";
-                print 'temp: ' . $hourly->getTemperature() . "\n";
-                print 'rh  : ' . $hourly->getRelativeHumidity() . "\n";
+                if ($hourly->getRelativeHumidity() > $threshold) {
+                    $leafWettingTime += 1;
+                }
+
+                $sumTemperature += $hourly->getTemperature();
             }
-            die;
+
+            $meanTemperature = $sumTemperature / count($hourlies);
+
+            $daily = $this->dailyRepo->getOneBySpaceTime($date, $point) ?: DailyWeather::create();
+
+            $daily
+                ->setTime($date)
+                ->setPoint($point)
+                ->setMeanTemperature($meanTemperature)
+                ->setLeafWettingTime($leafWettingTime)
+                ->computeDsv();
+
+            $this->em->persist($daily);
         }
+
+        $this->em->flush();
     }
 }

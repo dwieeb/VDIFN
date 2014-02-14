@@ -9,13 +9,13 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Hourly weather data.
  *
+ * @ORM\Entity(repositoryClass="PlantPath\Bundle\VDIFNBundle\Repository\Weather\HourlyRepository")
  * @ORM\Table(
  *     name="weather_hourly",
  *     indexes={
  *         @ORM\Index(name="location_time_idx", columns={"latitude", "longitude", "verification_time"})
  *     }
  * )
- * @ORM\Entity(repositoryClass="PlantPath\Bundle\VDIFNBundle\Repository\Weather\HourlyRepository")
  */
 class Hourly
 {
