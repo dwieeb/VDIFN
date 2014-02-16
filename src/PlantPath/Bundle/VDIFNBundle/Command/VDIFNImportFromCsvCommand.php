@@ -94,8 +94,11 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $logger = $this->getContainer()->get('logger');
         $filepath = $input->getArgument('file');
         $tz = new \DateTimeZone('UTC');
+
+        $logger->info('Starting import from CSV.', ['filepath' => $filepath]);
 
         if (!file_exists($filepath)) {
             throw new \RuntimeException('File not found at: ' . $filepath);
@@ -131,8 +134,11 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
         $this->em->clear();
 
         if ($input->getOption('remove')) {
+            $logger->info('Removing file as requested: ' . $filepath);
             $fs = new Filesystem();
             $fs->remove($filepath);
         }
+
+        $logger->info('Finished import from CSV.');
     }
 }

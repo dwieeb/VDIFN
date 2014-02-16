@@ -141,6 +141,7 @@ class VDIFNSplitCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
+        $logger = $this->getContainer()->get('logger');
         $filepath = $this->input->getArgument('file');
 
         if (!file_exists($filepath)) {
@@ -154,6 +155,8 @@ class VDIFNSplitCommand extends ContainerAwareCommand
         $fields = $this->getFields($this->input);
         $inventory = $this->getInventory($filepath);
         $processes = [];
+
+        $logger->info('Starting split.', ['filepath' => $filepath, 'fields' => $fields]);
 
         for ($i = 0; $i < count($inventory); ++$i) {
             $fieldNumber = $inventory[$i][0];
@@ -172,8 +175,11 @@ class VDIFNSplitCommand extends ContainerAwareCommand
         }
 
         if ($this->input->getOption('remove')) {
+            $logger->info('Removing file as requested: ' . $filepath);
             $fs = new Filesystem();
             $fs->remove($filepath);
         }
+
+        $logger->info('Finished split.');
     }
 }

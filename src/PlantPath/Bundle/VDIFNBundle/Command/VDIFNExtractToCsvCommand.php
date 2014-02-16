@@ -33,6 +33,7 @@ class VDIFNExtractToCsvCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $logger = $this->getContainer()->get('logger');
         $filepath = $input->getArgument('file');
 
         if (!file_exists($filepath)) {
@@ -51,12 +52,17 @@ class VDIFNExtractToCsvCommand extends ContainerAwareCommand
         $builder->setPrefix($this->getContainer()->getParameter('wgrib2_path'));
         $builder->setArguments([$filepath, '-undefine', 'out-box', $w . ':' . $e, $s . ':' . $n, '-csv', $csvpath]);
 
+        $logger->info('Extracting to CSV.', ['filepath' => $filepath, 'csvpath' => $csvpath]);
+
         $process = $builder->getProcess();
         $process->run();
 
         if ($input->getOption('remove')) {
+            $logger->info('Removing file as requested: ' . $filepath);
             $fs = new Filesystem();
             $fs->remove($filepath);
         }
+
+        $logger->info('Finished extracting to CSV.');
     }
 }

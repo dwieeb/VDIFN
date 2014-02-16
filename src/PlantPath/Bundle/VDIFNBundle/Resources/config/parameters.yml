@@ -16,3 +16,5 @@ parameters:
     vdifn.bounding_box.coordinates.e: -85.649414
     vdifn.bounding_box.coordinates.s: 42.125729
     vdifn.bounding_box.coordinates.w: -93.757324
+    vdifn.admin.email: { 'admin@vdifn.net': 'VDIFN Admin' }
+    vdifn.admin.emails: [dwieeb@gmail.com]

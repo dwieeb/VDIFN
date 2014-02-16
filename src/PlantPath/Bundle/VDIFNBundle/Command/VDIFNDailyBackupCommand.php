@@ -32,15 +32,21 @@ class VDIFNDailyBackupCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $logger = $this->getContainer()->get('logger');
         $ymd = $input->getOption('date');
         $directory = dirname(sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, ''));
+
+        $logger->info('Starting daily backup.', ['ymd' => $ymd]);
 
         $process = new Process("cd $directory; tar -czvf $directory.tar.gz *");
         $process->run();
 
         if ($input->getOption('remove')) {
+            $logger->info('Removing directory as requested: ' . $directory);
             $fs = new Filesystem();
             $fs->remove($directory);
         }
+
+        $logger->info('Finished daily backup.');
     }
 }

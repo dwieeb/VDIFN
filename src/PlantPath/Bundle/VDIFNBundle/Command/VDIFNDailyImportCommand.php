@@ -30,9 +30,13 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $startTime = new \DateTime();
         $console = $this->getApplication();
+        $logger = $this->getContainer()->get('logger');
         $ymd = $input->getOption('date');
         $hours = $this->getContainer()->getParameter('vdifn.noaa_hours');
+
+        $logger->info('Starting daily import.');
 
         foreach ($hours as $hour) {
             $hour = str_pad((string) $hour, 2, '0', STR_PAD_LEFT);
@@ -67,18 +71,39 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
                     '--remove' => true,
                 ]), $output);
 
-                // $console->find('vdifn:import-from-csv')->run(new ArrayInput([
-                //     'command' => 'vdifn:import-from-csv',
-                //     'file' => $csv,
-                // ]), $output);
-
+                $console->find('vdifn:import-from-csv')->run(new ArrayInput([
+                    'command' => 'vdifn:import-from-csv',
+                    'file' => $csv,
+                ]), $output);
             }
+        }
+
+        // There should be predictions for the next three days.
+        foreach(new \DatePeriod(new \DateTime($ymd), \DateInterval::createFromDateString('1 day'), 2) as $day) {
+            $console->find('vdifn:aggregate')->run(new ArrayInput([
+                'command' => 'vdifn:aggregate',
+                '--date' => $day->format('Ymd'),
+            ]), $output);
         }
 
         $console->find('vdifn:daily-backup')->run(new ArrayInput([
             'command' => 'vdifn:daily-backup',
             '--date' => $ymd,
-            '--remove' => true
+            '--remove' => true,
         ]), $output);
+
+        $logger->info('Finished daily import.');
+
+        $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:DailyImport/finished.html.twig', [
+            'time' => $startTime->diff(new \DateTime()),
+        ]);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('VDIFN Daily Import Finished')
+            ->setFrom($this->getContainer()->getParameter('vdifn.admin.email'))
+            ->setTo($this->getContainer()->getParameter('vdifn.admin.emails'))
+            ->setBody($body, 'text/html');
+
+        $this->getContainer()->get('mailer')->send($message);
     }
 }

@@ -199,6 +199,7 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $logger = $this->getContainer()->get('logger');
         $threshold = (int) $this->getContainer()->getParameter('vdifn.lwt_rh_threshold');
         $ymd = $input->getOption('date');
         $tz = new \DateTimeZone(date_default_timezone_get());
@@ -208,8 +209,13 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
             ->getContainer()
             ->get('doctrine.orm.entity_manager');
 
+        // http://konradpodgorski.com/blog/2013/01/18/how-to-avoid-memory-leaks-in-symfony-2-commands
+        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $this->hourlyRepo = $this->em->getRepository('PlantPathVDIFNBundle:Weather\Hourly');
         $this->dailyRepo = $this->em->getRepository('PlantPathVDIFNBundle:Weather\Daily');
+
+        $logger->info('Starting aggregation.', ['date' => $date->format('c')]);
 
         foreach ($this->getLocations($date) as $point) {
             $hourlies = $this->getInterpolatedHourlyWeather($point, $date);
@@ -243,5 +249,7 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
         }
 
         $this->em->flush();
+
+        $logger->info('Finished aggregation.');
     }
 }

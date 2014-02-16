@@ -30,10 +30,13 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $logger = $this->getContainer()->get('logger');
         $ymd = $input->getOption('date');
         $hour = str_pad((string) $input->getOption('hour'), 2, '0', STR_PAD_LEFT);
         $url = sprintf($this->getContainer()->getParameter('vdifn.noaa_url'), $ymd, $hour);
         $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, $hour);
+
+        $logger->info('Starting download.', ['url' => $url, 'filepath' => $filepath]);
 
         // Make directory recursively if it does not already exist. 0777 runs through umask
         if (!file_exists(dirname($filepath)) && false === mkdir(dirname($filepath), 0777, true)) {
@@ -58,5 +61,7 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
 
         curl_close($ch);
         fclose($fh);
+
+        $logger->info('Finished download.');
     }
 }
