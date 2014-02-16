@@ -246,9 +246,15 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
                 ->computeDsv();
 
             $this->em->persist($daily);
+
+            // Remove hourly data once daily data is aggregated and persisted.
+            foreach ($hourlies as $hourly) {
+                $this->em->remove($hourly);
+            }
         }
 
         $this->em->flush();
+        $this->em->clear();
 
         $logger->info('Finished aggregation.');
     }
