@@ -21,3 +21,6 @@ composer.phar
 
 # Entity backups
 *~
+
+# Bower
+src/PlantPath/Bundle/VDIFNBundle/Resources/public/bower-components
