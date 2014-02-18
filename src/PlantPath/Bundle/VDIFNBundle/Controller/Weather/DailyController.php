@@ -3,6 +3,7 @@
 namespace PlantPath\Bundle\VDIFNBundle\Controller\Weather;
 
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -23,7 +24,7 @@ class DailyController extends Controller
      * @Route("/{day}/{nwLat}/{nwLong}/{seLat}/{seLong}", name="weather_daily_bounding_box")
      * @Method("GET")
      */
-    public function boundingBoxAction(\DateTime $day, $nwLat, $nwLong, $seLat, $seLong)
+    public function boundingBoxAction(Request $request, \DateTime $day, $nwLat, $nwLong, $seLat, $seLong)
     {
         $entity = $this
             ->getDoctrine()

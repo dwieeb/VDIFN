@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block javascripts %}{% javascripts filter='?uglifyjs2'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/crossfilter/crossfilter.js' %}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}{% endblock %}
+
+{% block body %}
+{% endblock %}

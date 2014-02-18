@@ -11,21 +11,10 @@ class DefaultController extends Controller
 {
     /**
      * @Route("/")
+     * @Template()
      */
     public function indexAction()
     {
-        $hour = $this->getDoctrine()->getRepository('PlantPathVDIFNBundle:Weather\Hourly')->find(1);
-    }
-
-    /**
-     * @Route("/hello/{first}/{last}")
-     * @Template()
-     */
-    public function helloAction($last, $first)
-    {
-        return array(
-            'first' => $first,
-            'last' => $last,
-        );
+        return [];
     }
 }
