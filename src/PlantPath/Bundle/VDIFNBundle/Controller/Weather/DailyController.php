@@ -21,7 +21,7 @@ class DailyController extends Controller
     /**
      * Finds and displays a Weather\Daily entity.
      *
-     * @Route("/{day}/{nwLat}/{nwLong}/{seLat}/{seLong}", name="weather_daily_bounding_box")
+     * @Route("/{day}/{nwLat}/{nwLong}/{seLat}/{seLong}", name="weather_daily_bounding_box", options={"expose"=true})
      * @Method("GET")
      */
     public function boundingBoxAction(Request $request, \DateTime $day, $nwLat, $nwLong, $seLat, $seLong)
