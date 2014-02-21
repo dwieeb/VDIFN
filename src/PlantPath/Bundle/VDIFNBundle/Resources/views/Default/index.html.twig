@@ -1,7 +1,11 @@
 {% extends '::base.html.twig' %}
 
 {% block javascripts %}{% javascripts filter='?uglifyjs2'
-    '@PlantPathVDIFNBundle/Resources/public/bower-components/crossfilter/crossfilter.js' %}
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/sugar/release/sugar.min.js'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/superagent/superagent.js'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/crossfilter/crossfilter.js'
+    '@PlantPathVDIFNBundle/Resources/public/js/compat.js'
+    '@PlantPathVDIFNBundle/Resources/public/js/vdifn.js' %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}{% endblock %}
 

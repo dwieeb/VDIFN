@@ -1,0 +1,4 @@
+/**
+ * @namespace vdifn
+ */
+var vdifn = {};
