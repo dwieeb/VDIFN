@@ -19,23 +19,32 @@ use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily;
 class DailyController extends Controller
 {
     /**
-     * Finds and displays a Weather\Daily entity.
+     * Finds and displays Weather\Daily entities.
      *
      * @Route("/{day}/{nwLat}/{nwLong}/{seLat}/{seLong}", name="weather_daily_bounding_box", options={"expose"=true})
      * @Method("GET")
      */
     public function boundingBoxAction(Request $request, \DateTime $day, $nwLat, $nwLong, $seLat, $seLong)
     {
-        $entity = $this
+        $entities = $this
             ->getDoctrine()
             ->getManager()
             ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-            ->getWithinBoundingBox($day, new Point($nwLat, $nwLong), new Point($seLat, $seLong));
+            ->getWithinBoundingBox(
+                $day,
+                new Point($nwLat, $nwLong),
+                new Point($seLat, $seLong),
+                ['d.time', 'd.latitude', 'd.longitude', 'd.dsv']
+            );
 
-        if (!$entity) {
+        if (!$entities) {
             throw $this->createNotFoundException('Unable to find.');
         }
 
-        return JsonResponse::create($entity);
+        foreach ($entities as &$entity) {
+            $entity['time'] = $entity['time']->format('Ymd');
+        }
+
+        return JsonResponse::create($entities);
     }
 }

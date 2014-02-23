@@ -10,7 +10,16 @@
     '@PlantPathVDIFNBundle/Resources/public/bower-components/superagent/superagent.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/crossfilter/crossfilter.js'
     '@PlantPathVDIFNBundle/Resources/public/js/compat.js'
-    '@PlantPathVDIFNBundle/Resources/public/js/vdifn.js' %}
+    '@PlantPathVDIFNBundle/Resources/public/js/vdifn.js'
+    '@PlantPathVDIFNBundle/Resources/public/js/vdifn.db.js'
+    '@PlantPathVDIFNBundle/Resources/public/js/vdifn.interface.js' %}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+    <script>
+        vdifn.parameters = {{ parameters|json_encode|raw }};
+    </script>
+{% javascripts filter='?uglifyjs2'
+    '@PlantPathVDIFNBundle/Resources/public/js/init.js' %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}{% endblock %}
 

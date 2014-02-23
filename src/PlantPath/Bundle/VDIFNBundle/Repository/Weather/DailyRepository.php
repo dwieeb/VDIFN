@@ -34,11 +34,15 @@ class DailyRepository extends EntityRepository
      *
      * @return PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily
      */
-    public function getWithinBoundingBox(\DateTime $dt, Point $nw, Point $se, array $projection = ['d.latitude', 'd.longitude', 'd.dsv'])
+    public function getWithinBoundingBox(\DateTime $dt, Point $nw, Point $se, array $projection = [])
     {
-        return $this
-            ->createQueryBuilder('d')
-            ->select($projection)
+        $qb = $this->createQueryBuilder('d');
+
+        if (!empty($projection)) {
+            $qb->select($projection);
+        }
+
+        return $qb
             ->where('d.latitude BETWEEN :s AND :n')
             ->andWhere('d.longitude BETWEEN :w AND :e')
             ->andWhere('d.time = :dt')
