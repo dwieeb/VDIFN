@@ -6,6 +6,7 @@
 vdifn.db = function(cf) {
     this.cf = cf;
     this.dimension = {};
+    this.known_times = [];
 
     this.addDimension('latitude', function(record) {
         return record.latitude;
@@ -102,7 +103,9 @@ vdifn.db.prototype.find = function(criteria, callback) {
         throw new Error('time is a required criterion.')
     }
 
-    if (0 === this.getDimension('time').filter(criteria.time).top(Infinity).length) {
+    if (-1 === this.known_times.indexOf(criteria.time)) {
+        this.known_times.push(criteria.time);
+
         superagent.get(
             Routing.generate('weather_daily_bounding_box', {
                 day: criteria.time,
@@ -112,8 +115,11 @@ vdifn.db.prototype.find = function(criteria, callback) {
                 seLong: vdifn.parameters.bounding_box.e
             })
         ).end(function(response) {
-            if (response.ok) {
-                db.insert(response.body);
+            if (response.ok || response.notFound) {
+                if (response.ok) {
+                    db.insert(response.body);
+                }
+
                 callback.call(db, db._find(criteria));
             } else {
                 console.log('ajax error', response);
