@@ -1,5 +1,8 @@
 /**
  * The VDIFN interface.
+ *
+ * @param  {google.maps.Map} map
+ * @param  {crossfilter} db
  */
 vdifn.Interface = function(map, db) {
     this.map = map;

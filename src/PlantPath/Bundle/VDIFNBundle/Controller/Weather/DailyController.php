@@ -38,7 +38,7 @@ class DailyController extends Controller
             );
 
         if (!$entities) {
-            throw $this->createNotFoundException('Unable to find.');
+            throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
         }
 
         foreach ($entities as &$entity) {
