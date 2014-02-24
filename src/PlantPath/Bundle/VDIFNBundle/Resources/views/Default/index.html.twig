@@ -1,16 +1,24 @@
 {% extends '::base.html.twig' %}
 
+{% block stylesheets %}{% stylesheets filter='cssrewrite,?uglifycss'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/normalize.css/normalize.css'
+    '@PlantPathVDIFNBundle/Resources/public/css/common.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}{% endblock %}
+
 {% block javascripts %}{% javascripts
     '@FOSJsRoutingBundle/Resources/public/js/router.js' %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor={{ parameters.google_maps.sensor }}"></script>
 {% javascripts filter='?uglifyjs2'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/sugar/release/sugar.min.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/superagent/superagent.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/crossfilter/crossfilter.js'
     '@PlantPathVDIFNBundle/Resources/public/js/compat.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.js'
+    '@PlantPathVDIFNBundle/Resources/public/js/vdifn.util.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.db.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.interface.js' %}
     <script src="{{ asset_url }}"></script>
@@ -24,4 +32,5 @@
 {% endjavascripts %}{% endblock %}
 
 {% block body %}
+    <div id="map-canvas"></div>
 {% endblock %}

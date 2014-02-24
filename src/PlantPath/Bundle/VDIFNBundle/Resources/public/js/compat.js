@@ -9,3 +9,7 @@ if (typeof Object.create !== 'function') {
         return new F();
     };
 }
+
+if (typeof document.body === 'undefined') {
+    document.body = document.getElementsByTagName('body')[0];
+}
