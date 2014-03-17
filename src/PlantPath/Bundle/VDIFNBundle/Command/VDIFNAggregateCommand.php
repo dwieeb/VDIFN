@@ -107,9 +107,9 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
             ->select('h.latitude', 'h.longitude')
             ->groupBy('h.latitude', 'h.longitude')
             ->where('h.verificationTime BETWEEN :beginning AND :end')
+            ->getQuery()
             ->setParameter('beginning', $beginning)
             ->setParameter('end', $end)
-            ->getQuery()
             ->execute();
 
         $points = [];
@@ -139,11 +139,11 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
                 ->where('h.latitude = :latitude')
                 ->andWhere('h.longitude = :longitude')
                 ->andWhere('h.verificationTime BETWEEN :beginning AND :end')
+                ->getQuery()
                 ->setParameter('latitude', $point->getLatitude())
                 ->setParameter('longitude', $point->getLongitude())
                 ->setParameter('beginning', $beginning)
                 ->setParameter('end', $end)
-                ->getQuery()
                 ->getResult();
 
         if (9 !== count($hourlies)) {

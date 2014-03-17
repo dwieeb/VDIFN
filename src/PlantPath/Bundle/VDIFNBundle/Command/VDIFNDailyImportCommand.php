@@ -21,8 +21,8 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
 
         $this
             ->setName('vdifn:daily-import')
-            ->setDescription('Download & import a day of NOAA data into VDIFN')
-            ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to download NOAA data (Format: Ymd)', $date->format('Ymd'));
+            ->setDescription('Download & import a day or multiple days of NOAA data into VDIFN')
+            ->addArgument('date', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Specify date(s) for which to download NOAA data (Format: Ymd)', [$date->format('Ymd')]);
     }
 
     /**
@@ -33,64 +33,65 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
         $startTime = new \DateTime();
         $console = $this->getApplication();
         $logger = $this->getContainer()->get('logger');
-        $ymd = $input->getOption('date');
         $hours = $this->getContainer()->getParameter('vdifn.noaa_hours');
 
         $logger->info('Starting daily import.');
 
-        foreach ($hours as $hour) {
-            $hour = str_pad((string) $hour, 2, '0', STR_PAD_LEFT);
-            $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, $hour);
+        foreach ($input->getArgument('date') as $ymd) {
+            foreach ($hours as $hour) {
+                $hour = str_pad((string) $hour, 2, '0', STR_PAD_LEFT);
+                $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, $hour);
 
-            $console->find('vdifn:download')->run(new ArrayInput([
-                'command' => 'vdifn:download',
-                '--date' => $ymd,
-                '--hour' => $hour,
-            ]), $output);
+                $console->find('vdifn:download')->run(new ArrayInput([
+                    'command' => 'vdifn:download',
+                    '--date' => $ymd,
+                    '--hour' => $hour,
+                ]), $output);
 
-            $command = $console->find('vdifn:split');
-            $fields = $command->filterFields($this->getContainer()->getParameter('vdifn.noaa_fields'));
+                $command = $console->find('vdifn:split');
+                $fields = $command->filterFields($this->getContainer()->getParameter('vdifn.noaa_fields'));
 
-            $command->run(new ArrayInput([
-                'command' => 'vdifn:split',
-                'file' => $filepath,
-                '--fields' => $fields,
-                '--remove' => true,
-            ]), $output);
-
-            $baseFilepath = $filepath;
-
-            foreach ($fields as $field) {
-                $filepath = $baseFilepath . '.' . $field;
-                $csv = $filepath . '.csv';
-
-                $console->find('vdifn:extract-to-csv')->run(new ArrayInput([
-                    'command' => 'vdifn:extract-to-csv',
+                $command->run(new ArrayInput([
+                    'command' => 'vdifn:split',
                     'file' => $filepath,
-                    'csv' => $csv,
+                    '--fields' => $fields,
                     '--remove' => true,
                 ]), $output);
 
-                $console->find('vdifn:import-from-csv')->run(new ArrayInput([
-                    'command' => 'vdifn:import-from-csv',
-                    'file' => $csv,
+                $baseFilepath = $filepath;
+
+                foreach ($fields as $field) {
+                    $filepath = $baseFilepath . '.' . $field;
+                    $csv = $filepath . '.csv';
+
+                    $console->find('vdifn:extract-to-csv')->run(new ArrayInput([
+                        'command' => 'vdifn:extract-to-csv',
+                        'file' => $filepath,
+                        'csv' => $csv,
+                        '--remove' => true,
+                    ]), $output);
+
+                    $console->find('vdifn:import-from-csv')->run(new ArrayInput([
+                        'command' => 'vdifn:import-from-csv',
+                        'file' => $csv,
+                    ]), $output);
+                }
+            }
+
+            // There should be predictions for the next three days.
+            foreach(new \DatePeriod(new \DateTime($ymd), \DateInterval::createFromDateString('1 day'), 2) as $day) {
+                $console->find('vdifn:aggregate')->run(new ArrayInput([
+                    'command' => 'vdifn:aggregate',
+                    '--date' => $day->format('Ymd'),
                 ]), $output);
             }
-        }
 
-        // There should be predictions for the next three days.
-        foreach(new \DatePeriod(new \DateTime($ymd), \DateInterval::createFromDateString('1 day'), 2) as $day) {
-            $console->find('vdifn:aggregate')->run(new ArrayInput([
-                'command' => 'vdifn:aggregate',
-                '--date' => $day->format('Ymd'),
+            $console->find('vdifn:daily-backup')->run(new ArrayInput([
+                'command' => 'vdifn:daily-backup',
+                '--date' => $ymd,
+                '--remove' => true,
             ]), $output);
         }
-
-        $console->find('vdifn:daily-backup')->run(new ArrayInput([
-            'command' => 'vdifn:daily-backup',
-            '--date' => $ymd,
-            '--remove' => true,
-        ]), $output);
 
         $logger->info('Finished daily import.');
 

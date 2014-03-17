@@ -27,7 +27,7 @@ class VDIFNSplitCommand extends ContainerAwareCommand
             ->setName('vdifn:split')
             ->setDescription('Split the data from NOAA into seperate file chunks')
             ->addArgument('file', InputArgument::REQUIRED, 'The file path to the NOAA data file')
-            ->addOption('fields', 'f', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Specify inventory record numbers by which to split')
+            ->addOption('fields', 'f', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Specify inventory record number(s) by which to split')
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'Remove the original file after splitting');
     }
 
