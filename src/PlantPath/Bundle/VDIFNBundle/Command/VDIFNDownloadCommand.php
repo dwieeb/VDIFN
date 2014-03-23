@@ -52,8 +52,15 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
         // Write the file to disk as it downloads.
         curl_setopt($ch, CURLOPT_FILE, $fh);
         curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 100);
 
         curl_exec($ch);
+        $curl_errno = curl_errno($ch);
+        $curl_error = curl_error($ch);
+
+        if ($curl_errno > 0) {
+            throw new \RuntimeException('cURL Error (' . $curl_errno . '): ' . $curl_error);
+        }
 
         if (200 !== $code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
             throw new \RuntimeException('Got HTTP response code ' . $code . ' for URL: ' . $url);

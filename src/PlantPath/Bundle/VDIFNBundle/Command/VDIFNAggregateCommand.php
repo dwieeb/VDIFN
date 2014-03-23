@@ -156,6 +156,8 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
             $hourlyObjects[$hourly->getVerificationTime()->format('c')] = $hourly;
         }
 
+        ksort($hourlyObjects);
+
         return $hourlyObjects;
     }
 
@@ -191,6 +193,8 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
             }
         }
 
+        ksort($hourlies);
+
         return $hourlies;
     }
 
@@ -202,8 +206,7 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('logger');
         $threshold = (int) $this->getContainer()->getParameter('vdifn.lwt_rh_threshold');
         $ymd = $input->getOption('date');
-        $tz = new \DateTimeZone(date_default_timezone_get());
-        $date = new \DateTime($ymd, $tz);
+        $date = new \DateTime($ymd);
 
         $this->em = $this
             ->getContainer()
@@ -220,7 +223,6 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
         foreach ($this->getLocations($date) as $point) {
             $hourlies = $this->getInterpolatedHourlyWeather($point, $date);
 
-            ksort($hourlies);
             array_pop($hourlies);
 
             $leafWettingTime = 0;

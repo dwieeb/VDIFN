@@ -22,7 +22,7 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
         $this
             ->setName('vdifn:daily-import')
             ->setDescription('Download & import a day or multiple days of NOAA data into VDIFN')
-            ->addArgument('date', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Specify date(s) for which to download NOAA data (Format: Ymd)', [$date->format('Ymd')]);
+            ->addArgument('date', InputArgument::IS_ARRAY, 'Specify date(s) for which to download NOAA data (Format: Ymd)', [$date->format('Ymd')]);
     }
 
     /**

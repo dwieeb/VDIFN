@@ -22,16 +22,16 @@ class Daily
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="time", type="datetimetz")
+     * @ORM\Column(name="time", type="utcdatetime")
      */
     protected $time;
 

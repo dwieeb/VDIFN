@@ -22,23 +22,23 @@ class Hourly
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="reference_time", type="datetimetz")
+     * @ORM\Column(name="reference_time", type="utcdatetime")
      */
     protected $referenceTime;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="verification_time", type="datetimetz")
+     * @ORM\Column(name="verification_time", type="utcdatetime")
      */
     protected $verificationTime;
 
