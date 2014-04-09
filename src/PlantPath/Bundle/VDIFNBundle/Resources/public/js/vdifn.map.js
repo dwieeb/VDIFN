@@ -69,7 +69,7 @@ vdifn.map.DataPoint.prototype.plot = function(map) {
 vdifn.map.ModelDataPoint = function(latLng, dsv) {
     vdifn.map.DataPoint.call(this, latLng);
     this.dsv = dsv;
-    this.size = 12;
+    this.size = 12; // km
 };
 
 vdifn.map.ModelDataPoint.prototype = Object.create(vdifn.map.DataPoint.prototype);
@@ -82,18 +82,20 @@ vdifn.map.ModelDataPoint.prototype = Object.create(vdifn.map.DataPoint.prototype
  * @return {string}
  */
 vdifn.map.ModelDataPoint.prototype.getSeverityColor = function(dsv) {
-    var color = '#ff0000';
-
     switch (dsv) {
         case 0:
-            color = '#ffffff';
-            break;
+            return '#00c957';
         case 1:
-            break;
-        // etc
+            return '#7dff23';
+        case 2:
+            return '#ffd700';
+        case 3:
+            return '#ff8000';
+        case 4:
+            return '#cc0000';
     }
 
-    return color;
+    return '#ffffff ';
 };
 
 /**
@@ -106,13 +108,15 @@ vdifn.map.ModelDataPoint.prototype.draw = function() {
         var longitude = this.latLng.lng();
         var latitudeOffset = vdifn.map.kmToLatitude(this.size) / 2;
         var longitudeOffset = vdifn.map.kmToLongitude(this.size, latitude) / 2;
+        var cornerOffset = 0.0025;
 
-        this.object = new google.maps.Rectangle({
-            map: this.map,
-            bounds: new google.maps.LatLngBounds(
-                new google.maps.LatLng(latitude - latitudeOffset, longitude - longitudeOffset),
-                new google.maps.LatLng(latitude + latitudeOffset, longitude + longitudeOffset)
-            ),
+        this.object = new google.maps.Polygon({
+            paths: [
+                new google.maps.LatLng(latitude - latitudeOffset + cornerOffset, longitude - longitudeOffset - cornerOffset), // SW
+                new google.maps.LatLng(latitude + latitudeOffset + cornerOffset, longitude - longitudeOffset + cornerOffset), // NW
+                new google.maps.LatLng(latitude + latitudeOffset - cornerOffset, longitude + longitudeOffset + cornerOffset), // NE
+                new google.maps.LatLng(latitude - latitudeOffset - cornerOffset, longitude + longitudeOffset - cornerOffset)  // SE
+            ],
             strokeWeight: 0,
             fillColor: color,
             fillOpacity: 0.35
