@@ -2,3 +2,20 @@ html,
 body {
     height: 100%;
 }
+
+#sidebar {
+    background: #ffffff;
+    background: rgba(255, 255, 255, 0.85);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 300px;
+    height: 100%;
+}
+
+#map-google-icon {
+    position: absolute;
+    left: 305px;
+    bottom: 0;
+}

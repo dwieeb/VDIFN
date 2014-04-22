@@ -11,6 +11,24 @@ vdifn.Interface = function(map, db) {
 };
 
 /**
+ * Wrap the Google Maps controls in manageable divs.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.wrapControls = function() {
+    var parent = this.map.getDiv().childNodes[0];
+    var mapGoogleIcon = parent.childNodes[1];
+    var wrapper = document.createElement('div');
+    wrapper.id = 'map-google-icon';
+
+    parent.removeChild(mapGoogleIcon);
+    wrapper.appendChild(mapGoogleIcon);
+    parent.appendChild(wrapper);
+
+    return this;
+};
+
+/**
  * Callback for a window resize event.
  *
  * @param  {Event} event
