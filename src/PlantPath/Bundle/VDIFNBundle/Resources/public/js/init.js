@@ -2,7 +2,9 @@ var Interface = new vdifn.Interface(
     new google.maps.Map(document.getElementById('map-canvas'), {
         center: new google.maps.LatLng(44.5278427984555, -89.6484375),
         mapTypeControl: false,
-        mapTypeId: google.maps.MapTypeId.HYBRID,
+        mapTypeId: google.maps.MapTypeId.TERRAIN,
+        maxZoom: 12,
+        minZoom: 6,
         streetViewControl: false,
         zoom: 7
     }),
@@ -18,4 +20,4 @@ if (vdifn.parameters.debug) {
 google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
 google.maps.event.trigger(window, 'resize');
 
-Interface.drawDay('20140416');
+Interface.drawDay(Date.create().format('{yyyy}{MM}{dd}'));

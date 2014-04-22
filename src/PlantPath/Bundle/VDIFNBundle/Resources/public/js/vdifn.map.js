@@ -119,7 +119,7 @@ vdifn.map.ModelDataPoint.prototype.draw = function() {
             ],
             strokeWeight: 0,
             fillColor: color,
-            fillOpacity: 0.35
+            fillOpacity: 0.2
         });
     }
 
