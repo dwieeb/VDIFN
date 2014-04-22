@@ -4,6 +4,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Command;
 
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
+use PlantPath\Bundle\VDIFNBundle\Geo\Square;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,7 +57,7 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
     protected function pointInStates(Point $point)
     {
         foreach ($this->states as $state) {
-            if ($state->containsPoint($point)) {
+            if ($state->overlapsSquare(new Square($point, 12))) {
                 return true;
             }
         }

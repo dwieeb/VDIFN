@@ -18,4 +18,4 @@ if (vdifn.parameters.debug) {
 google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
 google.maps.event.trigger(window, 'resize');
 
-Interface.drawDay('20140321');
+Interface.drawDay('20140416');

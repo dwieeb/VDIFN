@@ -69,6 +69,22 @@ class State
     }
 
     /**
+     * Determines whether the square overlaps this state.
+     *
+     * @param  Square $square
+     *
+     * @return boolean
+     */
+    public function overlapsSquare(Square $square)
+    {
+        return
+            $this->containsPoint($square->getSouthWestCorner()) ||
+            $this->containsPoint($square->getNorthWestCorner()) ||
+            $this->containsPoint($square->getNorthEastCorner()) ||
+            $this->containsPoint($square->getSouthEastCorner());
+    }
+
+    /**
      * Gets the latitudinal/longitudinal boundaries of the state.
      *
      * @return array
