@@ -57,6 +57,8 @@ vdifn.Interface.prototype.resize = function(event) {
 vdifn.Interface.prototype.drawDay = function(ymd) {
     var self = this;
 
+    this.clearModelDataPoints();
+
     this.db.find({ time: ymd }, function(results) {
         for (var point in results) {
             self.drawModelDataPoint(new vdifn.map.ModelDataPoint(
@@ -79,6 +81,21 @@ vdifn.Interface.prototype.drawDay = function(ymd) {
 vdifn.Interface.prototype.drawModelDataPoint = function(modelDataPoint) {
     this.modelDataPoints.push(modelDataPoint);
     modelDataPoint.plot(this.map);
+
+    return this;
+};
+
+/**
+ * Clears all the currently plotted data points.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.clearModelDataPoints = function() {
+    for (var i in this.modelDataPoints) {
+        this.modelDataPoints[i].plot(null);
+    }
+
+    this.modelDataPoints.length = 0;
 
     return this;
 };

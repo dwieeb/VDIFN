@@ -1,7 +1,10 @@
 {% extends '::base.html.twig' %}
 
-{% block stylesheets %}{% stylesheets filter='cssrewrite,?uglifycss'
+{% block stylesheets %}
+    <link href="http://fonts.googleapis.com/css?family=Caudex:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+{% stylesheets filter='cssrewrite,?uglifycss'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/normalize.css/normalize.css'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/pikaday/css/pikaday.css'
     '@PlantPathVDIFNBundle/Resources/public/css/common.css' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}{% endblock %}
@@ -16,6 +19,7 @@
     '@PlantPathVDIFNBundle/Resources/public/bower-components/sugar/release/sugar.min.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/superagent/superagent.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/crossfilter/crossfilter.js'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/pikaday/pikaday.js'
     '@PlantPathVDIFNBundle/Resources/public/js/compat.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.util.js'
@@ -33,6 +37,9 @@
 {% endjavascripts %}{% endblock %}
 
 {% block body %}
-    <div id="sidebar"></div>
+    <div id="sidebar">
+        <h1><span>Vegetable Disease &amp;</span><span>Insect Forecasting Network</span></h1>
+        <input type="text" id="datepicker">
+    </div>
     <div id="map-canvas"></div>
 {% endblock %}

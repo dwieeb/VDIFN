@@ -121,6 +121,8 @@ vdifn.map.ModelDataPoint.prototype.draw = function() {
             fillColor: color,
             fillOpacity: 0.2
         });
+
+        this.drawn = true;
     }
 
     return this;

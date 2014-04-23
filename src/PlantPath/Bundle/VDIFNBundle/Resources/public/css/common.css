@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    font-family: Caudex, Garamond, Georgia, "Times New Roman", Times, serif;
 }
 
 #sidebar {
@@ -10,12 +11,33 @@ body {
     top: 0;
     left: 0;
     z-index: 10;
-    width: 300px;
+    width: 350px;
     height: 100%;
+}
+
+h1 {
+    margin: 0;
+    position: relative;
+    height: 100px;
+    margin: 8px 12px;
+}
+
+h1 span {
+    top: 0;
+    left: 0;
+    display: block;
+    position: absolute;
+    white-space: nowrap;
+}
+
+h1 span:nth-of-type(2) {
+    top: 32px;
+    left: 19px;
+    font-size: 0.75em;
 }
 
 #map-google-icon {
     position: absolute;
-    left: 305px;
+    left: 355px;
     bottom: 0;
 }

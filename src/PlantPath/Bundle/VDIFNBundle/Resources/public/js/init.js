@@ -20,6 +20,16 @@ var Interface = new vdifn.Interface(
     new vdifn.db(new crossfilter())
 );
 
+var picker = new Pikaday({
+    defaultDate: Date.create(),
+    setDefaultDate: true,
+    field: document.getElementById('datepicker'),
+    maxDate: Date.create('3 days from today'),
+    onSelect: function(date) {
+        Interface.drawDay(date.format('{yyyy}{MM}{dd}'))
+    }
+});
+
 if (vdifn.parameters.debug) {
     google.maps.event.addListener(Interface.map, 'click', function(event) {
         console.log('new google.maps.LatLng' + event.latLng.toString());
@@ -33,4 +43,4 @@ google.maps.event.addListenerOnce(Interface.map, 'idle', function() {
     Interface.wrapControls();
 });
 
-Interface.drawDay(Date.create().format('{yyyy}{MM}{dd}'));
+Interface.drawDay(picker.getDate().format('{yyyy}{MM}{dd}'));
