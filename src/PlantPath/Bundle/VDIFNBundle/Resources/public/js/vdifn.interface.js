@@ -17,13 +17,20 @@ vdifn.Interface = function(map, db) {
  */
 vdifn.Interface.prototype.wrapControls = function() {
     var parent = this.map.getDiv().childNodes[0];
-    var mapGoogleIcon = parent.childNodes[1];
-    var wrapper = document.createElement('div');
-    wrapper.id = 'map-google-icon';
+    var mapPanZoomControls = parent.childNodes[7];
+    var mapTypeControls = parent.childNodes[8];
 
-    parent.removeChild(mapGoogleIcon);
-    wrapper.appendChild(mapGoogleIcon);
-    parent.appendChild(wrapper);
+    var wrapInDiv = function(element, divId) {
+        var parent = element.parentNode;
+        var wrapper = document.createElement('div');
+        wrapper.id = divId;
+        parent.removeChild(element);
+        wrapper.appendChild(element);
+        parent.appendChild(wrapper);
+    };
+
+    wrapInDiv(mapPanZoomControls, 'map-pan-zoom-controls');
+    wrapInDiv(mapTypeControls, 'map-type-controls');
 
     return this;
 };

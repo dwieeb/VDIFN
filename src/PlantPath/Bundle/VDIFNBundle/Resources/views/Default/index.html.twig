@@ -37,9 +37,15 @@
 {% endjavascripts %}{% endblock %}
 
 {% block body %}
-    <div id="sidebar">
-        <h1><span>Vegetable Disease &amp;</span><span>Insect Forecasting Network</span></h1>
-        <input type="text" id="datepicker">
-    </div>
+    <header>
+        <div>
+            <hgroup>
+                <h1><span>Vegetable Disease &amp;</span><span>Insect Forecasting Network</span></h1>
+            </hgroup>
+            <div class="middle">
+                <input type="text" id="datepicker">
+            </div>
+        </div>
+    </header>
     <div id="map-canvas"></div>
 {% endblock %}

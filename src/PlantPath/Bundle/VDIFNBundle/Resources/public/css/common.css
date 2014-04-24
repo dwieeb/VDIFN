@@ -4,22 +4,44 @@ body {
     font-family: Caudex, Garamond, Georgia, "Times New Roman", Times, serif;
 }
 
-#sidebar {
+input[type="text"] {
+    border: 1px solid #d0d0d0;
+}
+
+header {
     background: #ffffff;
     background: rgba(255, 255, 255, 0.85);
     position: absolute;
     top: 0;
     left: 0;
     z-index: 10;
-    width: 350px;
-    height: 100%;
+    width: 100%;
+    height: 100px;
+}
+
+header > div {
+    padding: 10px 15px;
+    height: 80px;
+}
+
+header > div > * {
+    position: relative;
+    height: 80px;
+}
+
+hgroup {
+    float: left;
+    width: 320px;
+}
+
+header .middle {
+    float: left;
 }
 
 h1 {
+    position: absolute;
+    top: 6px;
     margin: 0;
-    position: relative;
-    height: 100px;
-    margin: 8px 12px;
 }
 
 h1 span {
@@ -36,8 +58,15 @@ h1 span:nth-of-type(2) {
     font-size: 0.75em;
 }
 
-#map-google-icon {
+#map-pan-zoom-controls {
     position: absolute;
-    left: 355px;
-    bottom: 0;
+    top: 100px;
+    left: 0;
+}
+
+#map-type-controls {
+    position: absolute;
+    top: 100px;
+    right: 0;
+    width: 100%;
 }

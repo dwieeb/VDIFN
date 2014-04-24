@@ -1,6 +1,6 @@
 var Interface = new vdifn.Interface(
     new google.maps.Map(document.getElementById('map-canvas'), {
-        center: new google.maps.LatLng(44.5278427984555, -89.6484375),
+        center: new google.maps.LatLng(45.05024026979463, -90.274658203125),
         mapTypeControl: true,
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.HYBRID]
@@ -8,14 +8,8 @@ var Interface = new vdifn.Interface(
         mapTypeId: google.maps.MapTypeId.TERRAIN,
         maxZoom: 12,
         minZoom: 6,
-        panControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP
-        },
         streetViewControl: false,
-        zoom: 7,
-        zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP
-        }
+        zoom: 7
     }),
     new vdifn.db(new crossfilter())
 );
