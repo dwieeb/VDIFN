@@ -6,6 +6,7 @@
     "sugar": "~1.4.1",
     "superagent": "~0.16.0",
     "normalize.css": "~3.0.0",
-    "pikaday": "~1.2.0"
+    "pikaday": "~1.2.0",
+    "momentjs": "~2.6.0"
   }
 }

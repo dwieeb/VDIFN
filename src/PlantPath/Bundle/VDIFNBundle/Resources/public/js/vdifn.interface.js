@@ -17,8 +17,8 @@ vdifn.Interface = function(map, db) {
  */
 vdifn.Interface.prototype.wrapControls = function() {
     var parent = this.map.getDiv().childNodes[0];
+    var mapGoogleLogo = parent.childNodes[1];
     var mapPanZoomControls = parent.childNodes[7];
-    var mapTypeControls = parent.childNodes[8];
 
     var wrapInDiv = function(element, divId) {
         var parent = element.parentNode;
@@ -30,7 +30,7 @@ vdifn.Interface.prototype.wrapControls = function() {
     };
 
     wrapInDiv(mapPanZoomControls, 'map-pan-zoom-controls');
-    wrapInDiv(mapTypeControls, 'map-type-controls');
+    wrapInDiv(mapGoogleLogo, 'map-google-logo');
 
     return this;
 };

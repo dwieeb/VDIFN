@@ -18,11 +18,24 @@ var picker = new Pikaday({
     defaultDate: Date.create(),
     setDefaultDate: true,
     field: document.getElementById('datepicker'),
-    maxDate: Date.create('3 days from today'),
+    format: 'MMMM D, YYYY',
+    maxDate: Date.create('2 days from today'),
     onSelect: function(date) {
-        Interface.drawDay(date.format('{yyyy}{MM}{dd}'))
+        Interface.drawDay(date.format('{yyyy}{MM}{dd}'));
+    },
+    onClose: function() {
+        this.config().field.blur();
     }
 });
+
+var dsvSquares = document.getElementById('dsv-legend').getElementsByClassName('dsv');
+
+for (var i = 0; i < dsvSquares.length; ++i) {
+    var element = dsvSquares.item(i);
+    var dsv = parseInt(element.getAttribute('data-dsv'));
+    var color = vdifn.map.ModelDataPoint.getSeverityColor(dsv);
+    element.getElementsByTagName('div').item(0).style.backgroundColor = color;
+}
 
 if (vdifn.parameters.debug) {
     google.maps.event.addListener(Interface.map, 'click', function(event) {

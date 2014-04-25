@@ -81,7 +81,7 @@ vdifn.map.ModelDataPoint.prototype = Object.create(vdifn.map.DataPoint.prototype
  *
  * @return {string}
  */
-vdifn.map.ModelDataPoint.prototype.getSeverityColor = function(dsv) {
+vdifn.map.ModelDataPoint.getSeverityColor = function(dsv) {
     switch (dsv) {
         case 0:
             return '#00c957';
@@ -103,7 +103,7 @@ vdifn.map.ModelDataPoint.prototype.getSeverityColor = function(dsv) {
  */
 vdifn.map.ModelDataPoint.prototype.draw = function() {
     if (!this.drawn) {
-        var color = this.getSeverityColor(this.dsv);
+        var color = vdifn.map.ModelDataPoint.getSeverityColor(this.dsv);
         var latitude = this.latLng.lat();
         var longitude = this.latLng.lng();
         var latitudeOffset = vdifn.map.kmToLatitude(this.size) / 2;
