@@ -24,3 +24,6 @@ composer.phar
 
 # Bower
 src/PlantPath/Bundle/VDIFNBundle/Resources/public/bower-components
+
+# Mac awfulness
+*.DS_Store
