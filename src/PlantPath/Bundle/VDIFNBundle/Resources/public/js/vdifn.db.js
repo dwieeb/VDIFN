@@ -115,14 +115,11 @@ vdifn.db.prototype.find = function(criteria, callback) {
                 seLong: vdifn.parameters.bounding_box.e
             })
         ).end(function(response) {
-            if (response.ok || response.notFound) {
-                if (response.ok) {
-                    db.insert(response.body);
-                }
-
+            if (response.ok) {
+                db.insert(response.body);
                 callback.call(db, db._find(criteria));
             } else {
-                console.log('ajax error', response);
+                callback.call(db, []);
             }
         });
     } else {

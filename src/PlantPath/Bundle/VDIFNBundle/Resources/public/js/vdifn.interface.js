@@ -5,9 +5,47 @@
  * @param  {crossfilter} db
  */
 vdifn.Interface = function(map, db) {
+    var self = this;
     this.map = map;
     this.db = db;
     this.modelDataPoints = [];
+    this.errorOverlay = document.getElementById('error-overlay');
+    this.loadingOverlay = document.getElementById('loading-overlay');
+
+    var dsvSquares = document.getElementById('dsv-legend').querySelectorAll('.dsv');
+
+    for (var i = 0; i < dsvSquares.length; ++i) {
+        var element = dsvSquares.item(i);
+        var dsv = parseInt(element.getAttribute('data-dsv'));
+        var color = vdifn.map.ModelDataPoint.getSeverityColor(dsv);
+        element.getElementsByTagName('div').item(0).style.backgroundColor = color;
+    }
+
+    this.picker = new Pikaday({
+        defaultDate: Date.create(),
+        setDefaultDate: true,
+        field: document.getElementById('datepicker'),
+        format: 'MMMM D, YYYY',
+        maxDate: Date.create('2 days from today'),
+        onSelect: function(date) {
+            self.loadingOverlay.style.opacity = 1;
+            self.loadingOverlay.style.visibility = "visible";
+
+            self.drawDay(date.format('{yyyy}{MM}{dd}'), function(success) {
+                self.loadingOverlay.style.opacity = 0;
+                self.loadingOverlay.style.visibility = "hidden";
+
+                if (!success) {
+                    self.errorOverlay.style.opacity = 1;
+                    self.errorOverlay.style.visibility = "visible";
+                    document.getElementById('error-text').innerHTML = "<strong>Error</strong>: Could not load weather data for this day.";
+                }
+            });
+        },
+        onClose: function() {
+            this.config().field.blur();
+        }
+    });
 };
 
 /**
@@ -55,13 +93,41 @@ vdifn.Interface.prototype.resize = function(event) {
 };
 
 /**
- * Draw a day of data onto the map.
- *
- * @param  {string} ymd
+ * Callback for a Google Maps tilesloaded event.
  *
  * @return this
  */
-vdifn.Interface.prototype.drawDay = function(ymd) {
+vdifn.Interface.prototype.tilesloaded = function() {
+    this.wrapControls();
+    this.loadingOverlay.style.opacity = 0;
+    this.loadingOverlay.style.visibility = "hidden";
+    this.loadingOverlay.style.backgroundColor = "transparent";
+    this.loadingOverlay.classList.add('radial');
+
+    return this;
+};
+
+/**
+ * Callback for closing the error overlay.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.closeErrorOverlay = function() {
+    this.errorOverlay.style.opacity = 0;
+    this.errorOverlay.style.visibility = "hidden";
+
+    return this;
+};
+
+/**
+ * Draw a day of data onto the map.
+ *
+ * @param  {string} ymd
+ * @param  {Function} callback
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.drawDay = function(ymd, callback) {
     var self = this;
 
     this.clearModelDataPoints();
@@ -72,6 +138,10 @@ vdifn.Interface.prototype.drawDay = function(ymd) {
                 new google.maps.LatLng(results[point].latitude, results[point].longitude),
                 results[point].dsv
             ));
+        }
+
+        if (typeof callback === 'function') {
+            callback.call(this, results && results.length > 0);
         }
     });
 

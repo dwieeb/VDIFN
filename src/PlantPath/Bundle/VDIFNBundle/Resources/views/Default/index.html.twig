@@ -38,6 +38,27 @@
 {% endjavascripts %}{% endblock %}
 
 {% block body %}
+    <div id="loading-overlay" class="overlay">
+        <div id="loading" class="message">
+            <div>
+                <ul id="loading-icon">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <div id="loading-text">Please wait...</div>
+            </div>
+        </div>
+    </div>
+    <div id="error-overlay" class="overlay">
+        <div id="error" class="message">
+            <div>
+                <div id="error-icon"></div>
+                <div id="error-text"></div>
+                <div id="error-button">Okay</div>
+            </div>
+        </div>
+    </div>
     <div id="sidebar">
         <header>
             <hgroup>
