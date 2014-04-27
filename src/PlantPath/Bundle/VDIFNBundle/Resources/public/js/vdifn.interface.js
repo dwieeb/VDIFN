@@ -26,6 +26,7 @@ vdifn.Interface = function(map, db) {
         setDefaultDate: true,
         field: document.getElementById('datepicker'),
         format: 'MMMM D, YYYY',
+        minDate: Date.create('April 16, 2014'),
         maxDate: Date.create('2 days from today'),
         onSelect: function(date) {
             self.loadingOverlay.style.opacity = 1;
