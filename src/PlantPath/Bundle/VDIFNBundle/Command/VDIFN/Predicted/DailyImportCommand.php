@@ -40,7 +40,7 @@ class DailyImportCommand extends ContainerAwareCommand
         foreach ($input->getArgument('date') as $ymd) {
             foreach ($hours as $hour) {
                 $hour = str_pad((string) $hour, 2, '0', STR_PAD_LEFT);
-                $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa.predicted.path'), $ymd, $hour);
+                $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa.predicted.path.data_file'), $ymd, $hour);
 
                 $console->find('vdifn:predicted:download')->run(new ArrayInput([
                     'command' => 'vdifn:predicted:download',
