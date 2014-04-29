@@ -79,7 +79,7 @@ class DailyImportCommand extends ContainerAwareCommand
             }
 
             // There should be predictions for the next three days.
-            foreach(new \DatePeriod(new \DateTime($ymd), \DateInterval::createFromDateString('1 day'), 2) as $day) {
+            foreach (new \DatePeriod(new \DateTime($ymd), \DateInterval::createFromDateString('1 day'), 2) as $day) {
                 $console->find('vdifn:predicted:aggregate')->run(new ArrayInput([
                     'command' => 'vdifn:predicted:aggregate',
                     '--date' => $day->format('Ymd'),
