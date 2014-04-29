@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Command;
+namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class VDIFNDownloadCommand extends ContainerAwareCommand
+class DownloadCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritDoc}
@@ -19,7 +19,7 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
         $date = new \DateTime();
 
         $this
-            ->setName('vdifn:download')
+            ->setName('vdifn:predicted:download')
             ->setDescription('Download a data file from NOAA for a specific day and prediction hour')
             ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to download NOAA data (Format: Ymd)', $date->format('Ymd'))
             ->addOption('hour', 'p', InputOption::VALUE_REQUIRED, 'Specify a prediction hour for which to download (e.g. 00, 03, 84)', '00');

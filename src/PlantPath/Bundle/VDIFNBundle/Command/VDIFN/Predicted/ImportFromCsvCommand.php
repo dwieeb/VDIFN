@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Command;
+namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class VDIFNImportFromCsvCommand extends ContainerAwareCommand
+class ImportFromCsvCommand extends ContainerAwareCommand
 {
     /**
      * @var array
@@ -40,7 +40,7 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('vdifn:import-from-csv')
+            ->setName('vdifn:predicted:import-from-csv')
             ->setDescription('Import a wgrib2-formatted CSV of a NOAA data file into the database')
             ->addArgument('file', InputArgument::REQUIRED, 'The file path to the CSV file')
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'Remove the CSV file after importing');

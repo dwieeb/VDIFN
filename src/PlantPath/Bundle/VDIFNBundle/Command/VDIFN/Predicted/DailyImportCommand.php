@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Command;
+namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class VDIFNDailyImportCommand extends ContainerAwareCommand
+class DailyImportCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritDoc}
@@ -20,7 +20,7 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
         $date = new \DateTime();
 
         $this
-            ->setName('vdifn:daily-import')
+            ->setName('vdifn:predicted:daily-import')
             ->setDescription('Download & import a day or multiple days of NOAA data into VDIFN')
             ->addArgument('date', InputArgument::IS_ARRAY, 'Specify date(s) for which to download NOAA data (Format: Ymd)', [$date->format('Ymd')]);
     }
@@ -42,17 +42,17 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
                 $hour = str_pad((string) $hour, 2, '0', STR_PAD_LEFT);
                 $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa.predicted.path'), $ymd, $hour);
 
-                $console->find('vdifn:download')->run(new ArrayInput([
-                    'command' => 'vdifn:download',
+                $console->find('vdifn:predicted:download')->run(new ArrayInput([
+                    'command' => 'vdifn:predicted:download',
                     '--date' => $ymd,
                     '--hour' => $hour,
                 ]), $output);
 
-                $command = $console->find('vdifn:split');
+                $command = $console->find('vdifn:predicted:split');
                 $fields = $command->filterFields($this->getContainer()->getParameter('vdifn.noaa.predicted.fields'));
 
                 $command->run(new ArrayInput([
-                    'command' => 'vdifn:split',
+                    'command' => 'vdifn:predicted:split',
                     'file' => $filepath,
                     '--fields' => $fields,
                     '--remove' => true,
@@ -64,15 +64,15 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
                     $filepath = $baseFilepath . '.' . $field;
                     $csv = $filepath . '.csv';
 
-                    $console->find('vdifn:extract-to-csv')->run(new ArrayInput([
-                        'command' => 'vdifn:extract-to-csv',
+                    $console->find('vdifn:predicted:extract-to-csv')->run(new ArrayInput([
+                        'command' => 'vdifn:predicted:extract-to-csv',
                         'file' => $filepath,
                         'csv' => $csv,
                         '--remove' => true,
                     ]), $output);
 
-                    $console->find('vdifn:import-from-csv')->run(new ArrayInput([
-                        'command' => 'vdifn:import-from-csv',
+                    $console->find('vdifn:predicted:import-from-csv')->run(new ArrayInput([
+                        'command' => 'vdifn:predicted:import-from-csv',
                         'file' => $csv,
                     ]), $output);
                 }
@@ -80,14 +80,14 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
 
             // There should be predictions for the next three days.
             foreach(new \DatePeriod(new \DateTime($ymd), \DateInterval::createFromDateString('1 day'), 2) as $day) {
-                $console->find('vdifn:aggregate')->run(new ArrayInput([
-                    'command' => 'vdifn:aggregate',
+                $console->find('vdifn:predicted:aggregate')->run(new ArrayInput([
+                    'command' => 'vdifn:predicted:aggregate',
                     '--date' => $day->format('Ymd'),
                 ]), $output);
             }
 
-            $console->find('vdifn:daily-backup')->run(new ArrayInput([
-                'command' => 'vdifn:daily-backup',
+            $console->find('vdifn:predicted:daily-backup')->run(new ArrayInput([
+                'command' => 'vdifn:predicted:daily-backup',
                 '--date' => $ymd,
                 '--remove' => true,
             ]), $output);

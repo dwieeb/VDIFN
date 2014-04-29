@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Command;
+namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily as DailyWeather;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class VDIFNAggregateCommand extends ContainerAwareCommand
+class AggregateCommand extends ContainerAwareCommand
 {
     /**
      * @var Doctrine\Common\Persistence\ObjectManager
@@ -37,7 +37,7 @@ class VDIFNAggregateCommand extends ContainerAwareCommand
         $date = new \DateTime();
 
         $this
-            ->setName('vdifn:aggregate')
+            ->setName('vdifn:predicted:aggregate')
             ->setDescription('Aggregate existing hourly data and calculate and store disease severity values')
             ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to aggregate hourly data', $date->format('Ymd'));
     }

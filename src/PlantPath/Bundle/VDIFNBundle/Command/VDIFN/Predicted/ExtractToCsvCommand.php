@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Command;
+namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class VDIFNExtractToCsvCommand extends ContainerAwareCommand
+class ExtractToCsvCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritDoc}
@@ -21,7 +21,7 @@ class VDIFNExtractToCsvCommand extends ContainerAwareCommand
         $date = new \DateTime();
 
         $this
-            ->setName('vdifn:extract-to-csv')
+            ->setName('vdifn:predicted:extract-to-csv')
             ->setDescription('Make a CSV file from a NOAA data file')
             ->addArgument('file', InputArgument::REQUIRED, 'The file path to the NOAA data file')
             ->addArgument('csv', InputArgument::OPTIONAL, 'The file path to the generated CSV file')

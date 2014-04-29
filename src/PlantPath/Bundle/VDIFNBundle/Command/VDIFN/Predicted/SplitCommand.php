@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Command;
+namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class VDIFNSplitCommand extends ContainerAwareCommand
+class SplitCommand extends ContainerAwareCommand
 {
     /**
      * @var Symfony\Component\Console\Input\InputInterface
@@ -24,7 +24,7 @@ class VDIFNSplitCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('vdifn:split')
+            ->setName('vdifn:predicted:split')
             ->setDescription('Split the data from NOAA into seperate file chunks')
             ->addArgument('file', InputArgument::REQUIRED, 'The file path to the NOAA data file')
             ->addOption('fields', 'f', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Specify inventory record number(s) by which to split')

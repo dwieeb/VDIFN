@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Command;
+namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
 
-class VDIFNDailyBackupCommand extends ContainerAwareCommand
+class DailyBackupCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritDoc}
@@ -21,7 +21,7 @@ class VDIFNDailyBackupCommand extends ContainerAwareCommand
         $date = new \DateTime();
 
         $this
-            ->setName('vdifn:daily-backup')
+            ->setName('vdifn:predicted:daily-backup')
             ->setDescription('Create an archive backup of a day of NOAA data')
             ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Specify a date for which to archive NOAA data (Format: Ymd)', $date->format('Ymd'))
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'Remove the NOAA data after archiving');
