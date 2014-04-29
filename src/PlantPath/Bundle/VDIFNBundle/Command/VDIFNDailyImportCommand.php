@@ -33,14 +33,14 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
         $startTime = new \DateTime();
         $console = $this->getApplication();
         $logger = $this->getContainer()->get('logger');
-        $hours = $this->getContainer()->getParameter('vdifn.noaa_hours');
+        $hours = $this->getContainer()->getParameter('vdifn.noaa.predicted.hours');
 
         $logger->info('Starting daily import.');
 
         foreach ($input->getArgument('date') as $ymd) {
             foreach ($hours as $hour) {
                 $hour = str_pad((string) $hour, 2, '0', STR_PAD_LEFT);
-                $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, $hour);
+                $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa.predicted.path'), $ymd, $hour);
 
                 $console->find('vdifn:download')->run(new ArrayInput([
                     'command' => 'vdifn:download',
@@ -49,7 +49,7 @@ class VDIFNDailyImportCommand extends ContainerAwareCommand
                 ]), $output);
 
                 $command = $console->find('vdifn:split');
-                $fields = $command->filterFields($this->getContainer()->getParameter('vdifn.noaa_fields'));
+                $fields = $command->filterFields($this->getContainer()->getParameter('vdifn.noaa.predicted.fields'));
 
                 $command->run(new ArrayInput([
                     'command' => 'vdifn:split',

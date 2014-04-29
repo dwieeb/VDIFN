@@ -42,7 +42,7 @@ class VDIFNSplitCommand extends ContainerAwareCommand
         $fields = $this->input->getOption('fields');
 
         if (empty($fields)) {
-            $fields = $this->getContainer()->getParameter('vdifn.noaa_fields');
+            $fields = $this->getContainer()->getParameter('vdifn.noaa.predicted.fields');
         }
 
         return $this->filterFields($fields);

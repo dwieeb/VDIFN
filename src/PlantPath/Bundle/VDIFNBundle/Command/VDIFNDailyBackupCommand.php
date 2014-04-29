@@ -34,7 +34,7 @@ class VDIFNDailyBackupCommand extends ContainerAwareCommand
     {
         $logger = $this->getContainer()->get('logger');
         $ymd = $input->getOption('date');
-        $directory = dirname(sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, ''));
+        $directory = dirname(sprintf($this->getContainer()->getParameter('vdifn.noaa.predicted.path'), $ymd, ''));
 
         $logger->info('Starting daily backup.', ['ymd' => $ymd]);
 

@@ -33,8 +33,8 @@ class VDIFNDownloadCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('logger');
         $ymd = $input->getOption('date');
         $hour = str_pad((string) $input->getOption('hour'), 2, '0', STR_PAD_LEFT);
-        $url = sprintf($this->getContainer()->getParameter('vdifn.noaa_url'), $ymd, $hour);
-        $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa_path'), $ymd, $hour);
+        $url = sprintf($this->getContainer()->getParameter('vdifn.noaa.predicted.url'), $ymd, $hour);
+        $filepath = sprintf($this->getContainer()->getParameter('vdifn.noaa.predicted.path'), $ymd, $hour);
 
         $logger->info('Starting download.', ['url' => $url, 'filepath' => $filepath]);
 

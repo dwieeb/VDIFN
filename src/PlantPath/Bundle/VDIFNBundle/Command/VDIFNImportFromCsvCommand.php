@@ -108,7 +108,7 @@ class VDIFNImportFromCsvCommand extends ContainerAwareCommand
         $this->service = $this->getContainer()->get('vdifn.state');
         $this->states = [];
 
-        foreach ($this->getContainer()->getParameter('vdifn.noaa_states') as $stateName) {
+        foreach ($this->getContainer()->getParameter('vdifn.noaa.predicted.states') as $stateName) {
             $this->states[] = $this->service->getStateWithBoundaries($stateName);
         }
 
