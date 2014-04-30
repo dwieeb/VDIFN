@@ -330,7 +330,7 @@ class Hourly
     public function setLatitude($latitude)
     {
         if (false === $latitude = filter_var($latitude, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate latitude as a float');
+            throw new \InvalidArgumentException('Cannot validate latitude as a float: ' . $latitude);
         }
 
         $this->latitude = $latitude;
@@ -357,7 +357,7 @@ class Hourly
     public function setLongitude($longitude)
     {
         if (false === $longitude = filter_var($longitude, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate longitude as a float');
+            throw new \InvalidArgumentException('Cannot validate longitude as a float: ' . $longitude);
         }
 
         $this->longitude = $longitude;
@@ -384,7 +384,7 @@ class Hourly
     public function setTemperature($temperature)
     {
         if (false === $temperature = filter_var($temperature, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate temperature as a float');
+            throw new \InvalidArgumentException('Cannot validate temperature as a float: ' . $temperature);
         }
 
         $this->temperature = $temperature;
@@ -411,7 +411,7 @@ class Hourly
     public function setSpecificHumidity($specificHumidity)
     {
         if (false === $specificHumidity = filter_var($specificHumidity, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate specific humidity as a float');
+            throw new \InvalidArgumentException('Cannot validate specific humidity as a float: ' . $specificHumidity);
         }
 
         $this->specificHumidity = $specificHumidity;
@@ -438,7 +438,7 @@ class Hourly
     public function setDewPointTemperature($dewPointTemperature)
     {
         if (false === $dewPointTemperature = filter_var($dewPointTemperature, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate dew point temperature as a float');
+            throw new \InvalidArgumentException('Cannot validate dew point temperature as a float: ' . $dewPointTemperature);
         }
 
         $this->dewPointTemperature = $dewPointTemperature;
@@ -465,7 +465,7 @@ class Hourly
     public function setRelativeHumidity($relativeHumidity)
     {
         if (false === $relativeHumidity = filter_var($relativeHumidity, FILTER_VALIDATE_INT)) {
-            throw new \InvalidArgumentException('Cannot validate relative humidity as an integer');
+            throw new \InvalidArgumentException('Cannot validate relative humidity as an integer: ' . $relativeHumidity);
         }
 
         $this->relativeHumidity = $relativeHumidity;
@@ -492,7 +492,7 @@ class Hourly
     public function setTotalPrecipitation($totalPrecipitation)
     {
         if (false === $totalPrecipitation = filter_var($totalPrecipitation, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate total precipitation as a float');
+            throw new \InvalidArgumentException('Cannot validate total precipitation as a float: ' . $totalPrecipitation);
         }
 
         $this->totalPrecipitation = $totalPrecipitation;
@@ -519,7 +519,7 @@ class Hourly
     public function setCategoricalRain($categoricalRain)
     {
         if (null === $categoricalRain = filter_var($categoricalRain, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-            throw new \InvalidArgumentException('Cannot validate categorical rain as a boolean');
+            throw new \InvalidArgumentException('Cannot validate categorical rain as a boolean: ' . $categoricalRain);
         }
 
         $this->categoricalRain = $categoricalRain;
@@ -546,7 +546,7 @@ class Hourly
     public function setTotalCloudCover($totalCloudCover)
     {
         if (false === $totalCloudCover = filter_var($totalCloudCover, FILTER_VALIDATE_INT)) {
-            throw new \InvalidArgumentException('Cannot validate total cloud cover as an integer');
+            throw new \InvalidArgumentException('Cannot validate total cloud cover as an integer: ' . $totalCloudCover);
         }
 
         $this->totalCloudCover = $totalCloudCover;
@@ -573,7 +573,7 @@ class Hourly
     public function setSurfaceTemperature($surfaceTemperature)
     {
         if (false === $surfaceTemperature = filter_var($surfaceTemperature, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate surface temperature as a float');
+            throw new \InvalidArgumentException('Cannot validate surface temperature as a float: ' . $surfaceTemperature);
         }
 
         $this->surfaceTemperature = $surfaceTemperature;
@@ -600,7 +600,7 @@ class Hourly
     public function setPrecipitationRate($precipitationRate)
     {
         if (false === $precipitationRate = filter_var($precipitationRate, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate precipitation rate as a float');
+            throw new \InvalidArgumentException('Cannot validate precipitation rate as a float: ' . $precipitationRate);
         }
 
         $this->precipitationRate = $precipitationRate;
@@ -627,7 +627,7 @@ class Hourly
     public function setWindSpeed($windSpeed)
     {
         if (false === $windSpeed = filter_var($windSpeed, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Cannot validate wind speed as a float');
+            throw new \InvalidArgumentException('Cannot validate wind speed as a float: ' . $windSpeed);
         }
 
         $this->windSpeed = $windSpeed;
