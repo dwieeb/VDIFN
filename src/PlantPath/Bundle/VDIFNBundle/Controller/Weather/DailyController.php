@@ -21,30 +21,46 @@ class DailyController extends Controller
     /**
      * Finds and displays Weather\Daily entities.
      *
-     * @Route("/{day}/{nwLat}/{nwLong}/{seLat}/{seLong}", name="weather_daily_bounding_box", options={"expose"=true})
+     * @Route("/{start}/{end}", name="weather_daily_date_range", options={"expose"=true})
      * @Method("GET")
      */
-    public function boundingBoxAction(Request $request, \DateTime $day, $nwLat, $nwLong, $seLat, $seLong)
+    public function dateRangeAction(Request $request, \DateTime $start, \DateTime $end)
     {
         $entities = $this
             ->getDoctrine()
             ->getManager()
             ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-            ->getWithinBoundingBox(
-                $day,
-                new Point($nwLat, $nwLong),
-                new Point($seLat, $seLong),
-                ['d.time', 'd.latitude', 'd.longitude', 'd.dsv']
-            );
+            ->getWithinDateRange($start, $end, ['d.latitude', 'd.longitude', 'd.dsv']);
 
         if (!$entities) {
             throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
         }
 
-        foreach ($entities as &$entity) {
-            $entity['time'] = $entity['time']->format('Ymd');
+        $latLngHashMap = [];
+
+        foreach ($entities as $entity) {
+            $entity = current($entity);
+            $key = (string) $entity['latitude'] . ':' . (string) $entity['longitude'];
+
+            if (!isset($latLngHashMap[$key])) {
+                $latLngHashMap[$key] = 0;
+            }
+
+            $latLngHashMap[$key] += $entity['dsv'];
         }
 
-        return JsonResponse::create($entities);
+        $results = [];
+        $days = (abs($end->getTimestamp() - $start->getTimestamp()) / 60 / 60 / 24) + 1;
+
+        foreach ($latLngHashMap as $key => $dsv) {
+            $split = explode(':', $key);
+            $results[] = [
+                'latitude' => $split[0],
+                'longitude' => $split[1],
+                'dsv' => round($dsv / $days),
+            ];
+        }
+
+        return JsonResponse::create($results);
     }
 }

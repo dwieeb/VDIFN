@@ -3,12 +3,10 @@
  *
  * @param  {google.maps.Map} map
  * @param  {vdifn.db} db
- * @param  {Pikaday} picker
  */
-vdifn.Interface = function(map, db, picker) {
+vdifn.Interface = function(map, db) {
     this.map = map;
     this.db = db;
-    this.picker = picker;
     this.modelDataPoints = [];
     this.errorOverlay = document.getElementById('error-overlay');
     this.loadingOverlay = document.getElementById('loading-overlay');
@@ -144,25 +142,31 @@ vdifn.Interface.prototype.closeErrorOverlay = function() {
 };
 
 /**
- * Draw a day of data onto the map.
+ * Draw a date range of aggregated data onto the map.
  *
- * @param  {string} ymd
+ * @param  {Date} startDate
+ * @param  {Date} endDate
  * @param  {Function} callback
  *
  * @return this
  */
-vdifn.Interface.prototype.drawDay = function(ymd, callback) {
+vdifn.Interface.prototype.drawDateRange = function(startDate, endDate, callback) {
     var self = this;
+    var startYmd = startDate.format('{yyyy}{MM}{dd}');
+    var endYmd = endDate.format('{yyyy}{MM}{dd}');
 
+    this.openLoadingOverlay();
     this.clearModelDataPoints();
 
-    this.db.find({ time: ymd }, function(results) {
+    this.db.find({ start: startYmd, end: endYmd }, function(results) {
         for (var point in results) {
             self.drawModelDataPoint(new vdifn.map.ModelDataPoint(
                 new google.maps.LatLng(results[point].latitude, results[point].longitude),
                 results[point].dsv
             ));
         }
+
+        self.closeLoadingOverlay();
 
         if (typeof callback === 'function') {
             callback.call(this, results && results.length > 0);

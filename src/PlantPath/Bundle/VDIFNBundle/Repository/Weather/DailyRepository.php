@@ -25,16 +25,13 @@ class DailyRepository extends EntityRepository
     }
 
     /**
-     * Find daily weather data given a datetime and bounding box.
+     * Find daily weather data based upon a date range.
      *
-     * @param  DateTime $dt
-     * @param  Point    $nw
-     * @param  Point    $se
-     * @param  array    $projection
-     *
-     * @return PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily
+     * @param  DateTime $start
+     * @param  DateTime $end
+     * @param  array   $projection
      */
-    public function getWithinBoundingBox(\DateTime $dt, Point $nw, Point $se, array $projection = [])
+    public function getWithinDateRange(\DateTime $start, \DateTime $end, array $projection = [])
     {
         $qb = $this->createQueryBuilder('d');
 
@@ -43,15 +40,10 @@ class DailyRepository extends EntityRepository
         }
 
         return $qb
-            ->where('d.latitude BETWEEN :s AND :n')
-            ->andWhere('d.longitude BETWEEN :w AND :e')
-            ->andWhere('d.time = :dt')
-            ->setParameter('n', $nw->getLatitude())
-            ->setParameter('e', $se->getLongitude())
-            ->setParameter('s', $se->getLatitude())
-            ->setParameter('w', $nw->getLongitude())
-            ->setParameter('dt', $dt)
+            ->where('d.time BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->getQuery()
-            ->getResult();
+            ->iterate();
     }
 }

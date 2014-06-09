@@ -19,13 +19,13 @@
     '@PlantPathVDIFNBundle/Resources/public/bower-components/sugar/release/sugar.min.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/momentjs/min/moment.min.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/superagent/superagent.js'
-    '@PlantPathVDIFNBundle/Resources/public/bower-components/crossfilter/crossfilter.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/pikaday/pikaday.js'
     '@PlantPathVDIFNBundle/Resources/public/js/compat.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.util.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.db.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.map.js'
+    '@PlantPathVDIFNBundle/Resources/public/js/vdifn.datepicker.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.interface.js' %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
@@ -55,7 +55,7 @@
             <div>
                 <div id="error-icon"></div>
                 <div id="error-text"></div>
-                <div id="error-button">Okay</div>
+                <div id="error-button" class="button">Okay</div>
             </div>
         </div>
     </div>
@@ -68,9 +68,12 @@
         </header>
         <div id="options">
             <div class="inner">
-                <fieldset>
-                    <legend>Select a date:</legend>
-                    <input type="text" id="datepicker">
+                <fieldset id="datepicker">
+                    <legend>Dates:</legend>
+                    <input type="text" class="datepicker" id="datepicker-start">
+                    <div class="to">to</div>
+                    <input type="text" class="datepicker" id="datepicker-end">
+                    <input type="button" class="button" id="datepicker-select" value="Select" />
                 </fieldset>
                 <fieldset id="dsv-legend">
                     <legend>Disease Severity Color Legend:</legend>

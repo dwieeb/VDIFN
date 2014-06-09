@@ -110,10 +110,22 @@ h1 span:nth-of-type(2) {
     width: 99%;
 }
 
-#datepicker {
+#datepicker .to {
+    font-style: italic;
+    text-align: center;
+    font-size: 0.75em;
+    color: #808080;
+}
+
+.datepicker {
     cursor: pointer;
     text-align: center;
     padding: 5px 0;
+}
+
+#datepicker-select {
+    margin: 10px auto 0;
+    padding: 5px 23px;
 }
 
 #dsv-legend .dsv {
@@ -263,6 +275,10 @@ footer {
 }
 
 #error-button {
+    width: 65px;
+}
+
+.button {
     cursor: pointer;
     padding: 8px 20px;
     background: -webkit-gradient(linear, left top, left bottom, from(#29d4ff), to(#249dde));
@@ -275,7 +291,6 @@ footer {
     -moz-box-shadow: 0px 1px 3px rgba(000,000,000,0), inset 0px 0px 1px rgba(255,255,255,1);
     box-shadow: 0px 1px 3px rgba(000,000,000,0), inset 0px 0px 1px rgba(255,255,255,1);
     color: #fff;
-    width: 65px;
     margin: 0 auto;
 }
 

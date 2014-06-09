@@ -12,29 +12,22 @@ var Interface = new vdifn.Interface(
         streetViewControl: false,
         zoom: 7
     }),
-    new vdifn.db(new crossfilter()),
-    new Pikaday({
-        defaultDate: Date.create(),
-        setDefaultDate: true,
-        field: document.getElementById('datepicker'),
-        format: 'MMMM D, YYYY',
-        minDate: Date.create('April 16, 2014'),
-        maxDate: Date.create('2 days from today'),
-        onSelect: function(date) {
-            Interface.openLoadingOverlay();
-            Interface.drawDay(date.format('{yyyy}{MM}{dd}'), function(success) {
-                Interface.closeLoadingOverlay();
-
-                if (!success) {
-                    Interface.openErrorOverlay("Could not load weather data for this day.");
-                }
-            });
-        },
-        onClose: function() {
-            this.config().field.blur();
-        }
-    })
+    new vdifn.db()
 );
+
+Interface.startPicker = vdifn.datepicker.create({
+    defaultDate: Date.create('3 days ago'),
+    field: document.getElementById('datepicker-start'),
+    onSelect: function() {
+        Interface.endPicker.setMinDate(this.getDate());
+    }
+});
+
+Interface.endPicker = vdifn.datepicker.create({
+    defaultDate: Date.create(),
+    minDate: Interface.startPicker.getDate(),
+    field: document.getElementById('datepicker-end')
+});
 
 // Events
 if (vdifn.parameters.debug) {
@@ -43,10 +36,14 @@ if (vdifn.parameters.debug) {
     });
 }
 
+google.maps.event.addDomListener(document.getElementById('datepicker-select'), 'click', function(event) {
+    Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate());
+});
+
 google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
 google.maps.event.addListenerOnce(Interface.map, 'tilesloaded', Interface.tilesloaded.bind(Interface));
 google.maps.event.addDomListener(document.getElementById('error-button'), 'click', Interface.closeErrorOverlay.bind(Interface));
 google.maps.event.trigger(window, 'resize');
 
 // Initialization
-Interface.drawDay(Interface.picker.getDate().format('{yyyy}{MM}{dd}'));
+Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate());
