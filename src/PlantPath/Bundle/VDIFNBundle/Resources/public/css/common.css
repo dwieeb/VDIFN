@@ -245,6 +245,7 @@ footer {
 }
 
 #error-overlay {
+    display: none;
     visibility: hidden;
 }
 

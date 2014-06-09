@@ -12,7 +12,28 @@ var Interface = new vdifn.Interface(
         streetViewControl: false,
         zoom: 7
     }),
-    new vdifn.db(new crossfilter())
+    new vdifn.db(new crossfilter()),
+    new Pikaday({
+        defaultDate: Date.create(),
+        setDefaultDate: true,
+        field: document.getElementById('datepicker'),
+        format: 'MMMM D, YYYY',
+        minDate: Date.create('April 16, 2014'),
+        maxDate: Date.create('2 days from today'),
+        onSelect: function(date) {
+            Interface.openLoadingOverlay();
+            Interface.drawDay(date.format('{yyyy}{MM}{dd}'), function(success) {
+                Interface.closeLoadingOverlay();
+
+                if (!success) {
+                    Interface.openErrorOverlay("Could not load weather data for this day.");
+                }
+            });
+        },
+        onClose: function() {
+            this.config().field.blur();
+        }
+    })
 );
 
 // Events

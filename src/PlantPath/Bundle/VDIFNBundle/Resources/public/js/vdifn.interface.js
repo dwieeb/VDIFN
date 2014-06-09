@@ -2,16 +2,25 @@
  * The VDIFN interface.
  *
  * @param  {google.maps.Map} map
- * @param  {crossfilter} db
+ * @param  {vdifn.db} db
+ * @param  {Pikaday} picker
  */
-vdifn.Interface = function(map, db) {
-    var self = this;
+vdifn.Interface = function(map, db, picker) {
     this.map = map;
     this.db = db;
+    this.picker = picker;
     this.modelDataPoints = [];
     this.errorOverlay = document.getElementById('error-overlay');
     this.loadingOverlay = document.getElementById('loading-overlay');
+    this.setupDsvLegend();
+};
 
+/**
+ * Using known severity colors, setup the DSV legend on the sidebar.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.setupDsvLegend = function() {
     var dsvSquares = document.getElementById('dsv-legend').querySelectorAll('.dsv');
 
     for (var i = 0; i < dsvSquares.length; ++i) {
@@ -21,32 +30,7 @@ vdifn.Interface = function(map, db) {
         element.getElementsByTagName('div').item(0).style.backgroundColor = color;
     }
 
-    this.picker = new Pikaday({
-        defaultDate: Date.create(),
-        setDefaultDate: true,
-        field: document.getElementById('datepicker'),
-        format: 'MMMM D, YYYY',
-        minDate: Date.create('April 16, 2014'),
-        maxDate: Date.create('2 days from today'),
-        onSelect: function(date) {
-            self.loadingOverlay.style.opacity = 1;
-            self.loadingOverlay.style.visibility = "visible";
-
-            self.drawDay(date.format('{yyyy}{MM}{dd}'), function(success) {
-                self.loadingOverlay.style.opacity = 0;
-                self.loadingOverlay.style.visibility = "hidden";
-
-                if (!success) {
-                    self.errorOverlay.style.opacity = 1;
-                    self.errorOverlay.style.visibility = "visible";
-                    document.getElementById('error-text').innerHTML = "<strong>Error</strong>: Could not load weather data for this day.";
-                }
-            });
-        },
-        onClose: function() {
-            this.config().field.blur();
-        }
-    });
+    return this;
 };
 
 /**
@@ -100,8 +84,7 @@ vdifn.Interface.prototype.resize = function(event) {
  */
 vdifn.Interface.prototype.tilesloaded = function() {
     this.wrapControls();
-    this.loadingOverlay.style.opacity = 0;
-    this.loadingOverlay.style.visibility = "hidden";
+    this.closeLoadingOverlay();
     this.loadingOverlay.style.backgroundColor = "transparent";
     this.loadingOverlay.classList.add('radial');
 
@@ -109,7 +92,47 @@ vdifn.Interface.prototype.tilesloaded = function() {
 };
 
 /**
- * Callback for closing the error overlay.
+ * Open the loading overlay.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.openLoadingOverlay = function() {
+    this.loadingOverlay.style.opacity = 1;
+    this.loadingOverlay.style.visibility = "visible";
+
+    return this;
+};
+
+/**
+ * Close the loading overlay.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.closeLoadingOverlay = function() {
+    this.loadingOverlay.style.opacity = 0;
+    this.loadingOverlay.style.visibility = "hidden";
+
+    return this;
+};
+
+/**
+ * Open the error overlay with a message.
+ *
+ * @param  {String} message
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.openErrorOverlay = function(message) {
+    this.errorOverlay.style.display = "block";
+    this.errorOverlay.style.opacity = 1;
+    this.errorOverlay.style.visibility = "visible";
+    document.getElementById('error-text').innerHTML = "<strong>Error</strong>: " + message;
+
+    return this;
+};
+
+/**
+ * Close the error overlay.
  *
  * @return this
  */
