@@ -166,10 +166,8 @@ vdifn.Interface.prototype.drawDateRange = function(startDate, endDate, callback)
             ));
         }
 
-        self.closeLoadingOverlay();
-
         if (typeof callback === 'function') {
-            callback.call(this, results && results.length > 0);
+            callback.call(this, !results.isEmpty());
         }
     });
 

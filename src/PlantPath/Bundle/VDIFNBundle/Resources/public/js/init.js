@@ -15,35 +15,46 @@ var Interface = new vdifn.Interface(
     new vdifn.db()
 );
 
-Interface.startPicker = vdifn.datepicker.create({
-    defaultDate: Date.create('3 days ago'),
-    field: document.getElementById('datepicker-start'),
-    onSelect: function() {
-        Interface.endPicker.setMinDate(this.getDate());
-    }
-});
-
-Interface.endPicker = vdifn.datepicker.create({
-    defaultDate: Date.create(),
-    minDate: Interface.startPicker.getDate(),
-    field: document.getElementById('datepicker-end')
-});
-
-// Events
-if (vdifn.parameters.debug) {
-    google.maps.event.addListener(Interface.map, 'click', function(event) {
-        console.log('new google.maps.LatLng' + event.latLng.toString());
+(function() {
+    Interface.startPicker = vdifn.datepicker.create({
+        defaultDate: Date.create('3 days ago'),
+        field: document.getElementById('datepicker-start'),
+        onSelect: function() {
+            Interface.endPicker.setMinDate(this.getDate());
+        }
     });
-}
 
-google.maps.event.addDomListener(document.getElementById('datepicker-select'), 'click', function(event) {
-    Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate());
-});
+    Interface.endPicker = vdifn.datepicker.create({
+        defaultDate: Date.create(),
+        minDate: Interface.startPicker.getDate(),
+        field: document.getElementById('datepicker-end')
+    });
 
-google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
-google.maps.event.addListenerOnce(Interface.map, 'tilesloaded', Interface.tilesloaded.bind(Interface));
-google.maps.event.addDomListener(document.getElementById('error-button'), 'click', Interface.closeErrorOverlay.bind(Interface));
-google.maps.event.trigger(window, 'resize');
+    var onDateRangeSelect = function(event) {
+        Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate(), onDateRangeDataLoad);
+    };
 
-// Initialization
-Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate());
+    var onDateRangeDataLoad = function(success) {
+        Interface.closeLoadingOverlay();
+
+        if (!success) {
+            Interface.openErrorOverlay("Could not load weather data for the date range specified.");
+        }
+    };
+
+    // Events
+    if (vdifn.parameters.debug) {
+        google.maps.event.addListener(Interface.map, 'click', function(event) {
+            console.log('new google.maps.LatLng' + event.latLng.toString());
+        });
+    }
+
+    google.maps.event.addDomListener(document.getElementById('datepicker-select'), 'click', onDateRangeSelect);
+    google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
+    google.maps.event.addListenerOnce(Interface.map, 'tilesloaded', Interface.tilesloaded.bind(Interface));
+    google.maps.event.addDomListener(document.getElementById('error-button'), 'click', Interface.closeErrorOverlay.bind(Interface));
+    google.maps.event.trigger(window, 'resize');
+
+    // Initialization
+    onDateRangeSelect();
+})();
