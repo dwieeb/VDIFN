@@ -29,21 +29,24 @@ class DailyRepository extends EntityRepository
      *
      * @param  DateTime $start
      * @param  DateTime $end
-     * @param  array   $projection
      */
-    public function getWithinDateRange(\DateTime $start, \DateTime $end, array $projection = [])
+    public function getDsvAverageWithinDateRange(\DateTime $start, \DateTime $end)
     {
-        $qb = $this->createQueryBuilder('d');
-
-        if (!empty($projection)) {
-            $qb->select($projection);
-        }
-
-        return $qb
+        $entities = $this
+            ->createQueryBuilder('d')
+            ->select('d.latitude, d.longitude, SUM(d.dsv) AS dsv')
             ->where('d.time BETWEEN :start AND :end')
+            ->groupBy('d.latitude, d.longitude')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
             ->getQuery()
-            ->iterate();
+            ->getResult();
+
+        $days = (abs($end->getTimestamp() - $start->getTimestamp()) / 60 / 60 / 24) + 1;
+
+        return array_map(function($entity) use ($days) {
+            $entity['dsv'] = round($entity['dsv'] / $days);
+            return $entity;
+        }, $entities);
     }
 }

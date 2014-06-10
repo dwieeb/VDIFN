@@ -30,37 +30,12 @@ class DailyController extends Controller
             ->getDoctrine()
             ->getManager()
             ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-            ->getWithinDateRange($start, $end, ['d.latitude', 'd.longitude', 'd.dsv']);
+            ->getDsvAverageWithinDateRange($start, $end);
 
         if (!$entities) {
             throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
         }
 
-        $latLngHashMap = [];
-
-        foreach ($entities as $entity) {
-            $entity = current($entity);
-            $key = (string) $entity['latitude'] . ':' . (string) $entity['longitude'];
-
-            if (!isset($latLngHashMap[$key])) {
-                $latLngHashMap[$key] = 0;
-            }
-
-            $latLngHashMap[$key] += $entity['dsv'];
-        }
-
-        $results = [];
-        $days = (abs($end->getTimestamp() - $start->getTimestamp()) / 60 / 60 / 24) + 1;
-
-        foreach ($latLngHashMap as $key => $dsv) {
-            $split = explode(':', $key);
-            $results[] = [
-                'latitude' => $split[0],
-                'longitude' => $split[1],
-                'dsv' => round($dsv / $days),
-            ];
-        }
-
-        return JsonResponse::create($results);
+        return JsonResponse::create($entities);
     }
 }
