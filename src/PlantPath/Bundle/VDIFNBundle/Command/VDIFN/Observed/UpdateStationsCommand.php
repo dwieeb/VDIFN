@@ -44,7 +44,8 @@ class UpdateStationsCommand extends ContainerAwareCommand
 
         $this
             ->setName('vdifn:observed:update-stations')
-            ->setDescription('Download a data file from NOAA for a specific day of observed weather');
+            ->setDescription('Download a data file from NOAA for a specific day of observed weather')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update the stations');
     }
 
     /**
@@ -143,7 +144,7 @@ class UpdateStationsCommand extends ContainerAwareCommand
         $this->logger->info('Starting update.');
         $startTime = new \DateTime();
 
-        if ($this->isLocalHistoryFileCurrent()) {
+        if ($this->isLocalHistoryFileCurrent() && !$this->input->getOption('force')) {
             $this->logger->info('Stations up-to-date. Exiting.');
         } else {
             $this->logger->info('Outdated local history file.');
@@ -171,9 +172,10 @@ class UpdateStationsCommand extends ContainerAwareCommand
                     $parameters = array_combine($keys, $row);
 
                     if (null === $station = $this->repo->findOneBy(['usaf' => $parameters['USAF'], 'wban' => $parameters['WBAN']])) {
-                        $station = Station::createFromParameters($parameters);
+                        $station = Station::create();
                     }
 
+                    $station->setParameters($parameters);
                     $this->em->persist($station);
                 }
 
@@ -185,7 +187,7 @@ class UpdateStationsCommand extends ContainerAwareCommand
 
             $this->logger->info('Finished update.');
 
-            $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:DailyImport/finished.html.twig', [
+            $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:UpdateStations/finished.html.twig', [
                 'time' => $startTime->diff(new \DateTime()),
             ]);
 

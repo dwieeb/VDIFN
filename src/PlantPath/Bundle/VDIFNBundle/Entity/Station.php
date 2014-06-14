@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Station
+class Station implements \JsonSerializable
 {
     /**
      * @var integer
@@ -133,12 +133,24 @@ class Station
     public static function createFromParameters(array $parameters)
     {
         $station = static::create();
-
-        foreach ($parameters as $parameter => $value) {
-            $station->setParameter($parameter, $value);
-        }
+        $station->setParameters($parameters);
 
         return $station;
+    }
+
+    /**
+     * Sets the values of this class given an array of parameters from the
+     * NOAA history file.
+     *
+     * @param array $parameters
+     */
+    public function setParameters(array $parameters)
+    {
+        foreach ($parameters as $parameter => $value) {
+            $this->setParameter($parameter, $value);
+        }
+
+        return $this;
     }
 
     /**
@@ -180,9 +192,9 @@ class Station
             case 'ELEV(.1M)':
                 return $this->setElevation($this->parseElevation($value));
             case 'BEGIN':
-                return $this->setBeginTime(new \DateTime($value));
+                return $this->setBeginTime($this->parseDateField($value));
             case 'END':
-                return $this->setEndTime(new \DateTime($value));
+                return $this->setEndTime($this->parseDateField($value));
         }
 
         throw new \InvalidArgumentException('Unknown parameter: ' . $parameter);
@@ -195,14 +207,10 @@ class Station
      *
      * @return float
      */
-    public function parseCartesianCoordinateItem($item)
+    protected function parseCartesianCoordinateItem($item)
     {
-        if (null === $item) {
+        if (null === $item = $this->parseFloatField($item)) {
             return null;
-        }
-
-        if (false === $item = filter_var($item, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate as a float: ' . $item);
         }
 
         return $item / 1000;
@@ -215,17 +223,56 @@ class Station
      *
      * @return float
      */
-    public function parseElevation($elevation)
+    protected function parseElevation($elevation)
     {
-        if (null === $elevation) {
+        if (null === $elevation = $this->parseFloatField($elevation)) {
             return null;
         }
 
-        if (false === $elevation = filter_var($elevation, FILTER_VALIDATE_FLOAT)) {
-            throw new \InvalidArgumentException('Could not validate as a float: ' . $elevation);
+        return $elevation / 10;
+    }
+
+    /**
+     * Will return null if the NOAA history file numeric data field is deemed
+     * to contain no data. Otherwise, return the float value of the original
+     * field.
+     *
+     * @param  string $value
+     *
+     * @return float|null
+     */
+    protected function parseFloatField($value)
+    {
+        if (null === $value) {
+            return null;
         }
 
-        return $elevation / 10;
+        if (substr($value, 0, 6) === '-99999') {
+            return null;
+        }
+
+        if (false === $value = filter_var($value, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Could not validate as a float: ' . $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Will return a DateTime object or null as it tries to parse a date field
+     * from a NOAA history file.
+     *
+     * @param  string $value
+     *
+     * @return \DateTime|null
+     */
+    protected function parseDateField($value)
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        return new \DateTime($value);
     }
 
     /**
@@ -532,5 +579,15 @@ class Station
         $this->endTime = $endTime;
 
         return $this;
+    }
+
+    /**
+     * @see \JsonSerializable
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->getName(),
+        ];
     }
 }
