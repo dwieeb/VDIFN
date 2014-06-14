@@ -1,6 +1,6 @@
 <?php
 
-namespace PlantPath\Bundle\VDIFNBundle\Controller\Weather;
+namespace PlantPath\Bundle\VDIFNBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,25 +10,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * Weather\Daily controller.
+ * Station controller.
  *
- * @Route("/weather/daily")
+ * @Route("/stations")
  */
-class DailyController extends Controller
+class StationController extends Controller
 {
     /**
-     * Finds and displays Weather\Daily entities.
+     * Finds and displays Stations by their respective country and state.
      *
-     * @Route("/{start}/{end}", name="weather_daily_date_range", options={"expose"=true})
+     * @Route("/{country}/{state}", name="stations_country_state", options={"expose"=true})
      * @Method("GET")
      */
-    public function dateRangeAction(Request $request, \DateTime $start, \DateTime $end)
+    public function countryStateAction(Request $request, $country, $state)
     {
         $entities = $this
             ->getDoctrine()
             ->getManager()
-            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-            ->getDsvAverageWithinDateRange($start, $end);
+            ->getRepository('PlantPathVDIFNBundle:Station')
+            ->findBy([
+                'country' => $country,
+                'state' => $state,
+            ]);
 
         if (!$entities) {
             throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');

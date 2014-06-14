@@ -158,7 +158,7 @@ vdifn.Interface.prototype.drawDateRange = function(startDate, endDate, callback)
     this.openLoadingOverlay();
     this.clearModelDataPoints();
 
-    this.db.find({ start: startYmd, end: endYmd }, function(results) {
+    this.db.findPredictedWeatherData({ start: startYmd, end: endYmd }, function(results) {
         for (var point in results) {
             self.drawModelDataPoint(new vdifn.map.ModelDataPoint(
                 new google.maps.LatLng(results[point].latitude, results[point].longitude),
