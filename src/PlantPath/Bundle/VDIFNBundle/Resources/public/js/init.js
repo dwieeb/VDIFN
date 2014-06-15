@@ -57,4 +57,5 @@ var Interface = new vdifn.Interface(
 
     // Initialization
     onDateRangeSelect();
+    Interface.drawStations();
 })();

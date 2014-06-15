@@ -31,6 +31,7 @@
 {% endjavascripts %}
     <script>
         vdifn.parameters = {{ parameters|json_encode|raw }};
+        vdifn.parameters.static_path = "{{ asset('bundles/plantpathvdifn') }}";
     </script>
 {% javascripts filter='?uglifyjs2'
     '@PlantPathVDIFNBundle/Resources/public/js/init.js' %}

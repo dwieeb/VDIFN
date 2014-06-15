@@ -24,22 +24,22 @@ vdifn.map.kmToLongitude = function(km, latitude) {
 };
 
 /**
- * Constructor.
+ * An item that can be plotted on Google Maps.
  *
- * @param  {google.maps.LatLng} latLng
+ * @param {google.maps.LatLng} latLng
  */
-vdifn.map.DataPoint = function(latLng) {
+vdifn.map.Plottable = function(latLng) {
     this.latLng = latLng;
     this.object = undefined;
     this.drawn = false;
 };
 
 /**
- * Construct the Google Maps object.
+ * Construct the object.
  *
  * @return this
  */
-vdifn.map.DataPoint.prototype.draw = function() {
+vdifn.map.Plottable.prototype.draw = function() {
     throw new vdifn.UnimplementedAbstractException();
 };
 
@@ -50,7 +50,7 @@ vdifn.map.DataPoint.prototype.draw = function() {
  *
  * @return this
  */
-vdifn.map.DataPoint.prototype.plot = function(map) {
+vdifn.map.Plottable.prototype.plot = function(map) {
     if (!this.drawn) {
         this.draw();
     }
@@ -59,6 +59,44 @@ vdifn.map.DataPoint.prototype.plot = function(map) {
 
     return this;
 };
+
+/**
+ * Constructor.
+ *
+ * @param  {google.maps.LatLng} latLng
+ */
+vdifn.map.Station = function(latLng) {
+    vdifn.map.Plottable.call(this, latLng);
+};
+
+vdifn.map.Station.prototype = Object.create(vdifn.map.Plottable.prototype);
+
+/**
+ * @see vdifn.map.Plottable.prototype.draw
+ */
+vdifn.map.Station.prototype.draw = function() {
+    if (!this.drawn) {
+        this.object = new google.maps.Marker({
+            icon: vdifn.parameters.static_path + '/img/station-open.png',
+            position: this.latLng
+        });
+
+        this.drawn = true;
+    }
+
+    return this;
+};
+
+/**
+ * Constructor.
+ *
+ * @param  {google.maps.LatLng} latLng
+ */
+vdifn.map.DataPoint = function(latLng) {
+    vdifn.map.Plottable.call(this, latLng);
+};
+
+vdifn.map.DataPoint.prototype = Object.create(vdifn.map.Plottable.prototype);
 
 /**
  * Constructor.

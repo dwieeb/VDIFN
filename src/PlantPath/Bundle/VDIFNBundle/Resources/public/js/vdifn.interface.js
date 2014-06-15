@@ -8,6 +8,7 @@ vdifn.Interface = function(map, db) {
     this.map = map;
     this.db = db;
     this.modelDataPoints = [];
+    this.stations = [];
     this.errorOverlay = document.getElementById('error-overlay');
     this.loadingOverlay = document.getElementById('loading-overlay');
     this.setupDsvLegend();
@@ -184,6 +185,38 @@ vdifn.Interface.prototype.drawDateRange = function(startDate, endDate, callback)
 vdifn.Interface.prototype.drawModelDataPoint = function(modelDataPoint) {
     this.modelDataPoints.push(modelDataPoint);
     modelDataPoint.plot(this.map);
+
+    return this;
+};
+
+/**
+ * Draw the stations onto the map.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.drawStations = function() {
+    var self = this;
+
+    this.db.findStations({ country: "US", state: "WI" }, function(results) {
+        results.forEach(function(result) {
+            var station = new vdifn.map.Station(new google.maps.LatLng(result.latitude, result.longitude));
+            self.drawStation(station);
+        });
+    });
+
+    return this;
+};
+
+/**
+ * Draw a station onto the map.
+ *
+ * @param  {vdifn.map.Station} station
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.drawStation = function(station) {
+    this.stations.push(station);
+    station.plot(this.map);
 
     return this;
 };
