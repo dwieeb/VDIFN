@@ -185,6 +185,12 @@ class UpdateStationsCommand extends ContainerAwareCommand
                 }
             }
 
+            $this->em->createQuery(
+                'UPDATE ' . $this->repo->getClassName() . ' s
+                 SET s.endTime = NULL
+                 WHERE s.endTime = (SELECT MAX(m.endTime) FROM ' . $this->repo->getClassName() . ' m)'
+            )->execute();
+
             $this->logger->info('Finished update.');
 
             $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:UpdateStations/finished.html.twig', [

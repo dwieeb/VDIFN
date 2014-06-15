@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Hourly weather data.
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="PlantPath\Bundle\VDIFNBundle\Repository\StationRepository")
  * @ORM\Table(
  *     name="stations",
  *     indexes={
@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Station implements \JsonSerializable
+class Station
 {
     /**
      * @var integer
@@ -32,14 +32,14 @@ class Station implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="usaf", type="text")
+     * @ORM\Column(name="usaf", type="text", nullable=true)
      */
     protected $usaf;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="wban", type="text")
+     * @ORM\Column(name="wban", type="text", nullable=true)
      */
     protected $wban;
 
@@ -247,12 +247,12 @@ class Station implements \JsonSerializable
             return null;
         }
 
-        if (substr($value, 0, 6) === '-99999') {
-            return null;
-        }
-
         if (false === $value = filter_var($value, FILTER_VALIDATE_FLOAT)) {
             throw new \InvalidArgumentException('Could not validate as a float: ' . $value);
+        }
+
+        if (in_array(abs($value), [99999, 999999])) {
+            return null;
         }
 
         return $value;
@@ -579,15 +579,5 @@ class Station implements \JsonSerializable
         $this->endTime = $endTime;
 
         return $this;
-    }
-
-    /**
-     * @see \JsonSerializable
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'name' => $this->getName(),
-        ];
     }
 }

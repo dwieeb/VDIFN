@@ -28,10 +28,7 @@ class StationController extends Controller
             ->getDoctrine()
             ->getManager()
             ->getRepository('PlantPathVDIFNBundle:Station')
-            ->findBy([
-                'country' => $country,
-                'state' => $state,
-            ]);
+            ->getOpenByCountryAndState($country, $state);
 
         if (!$entities) {
             throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
