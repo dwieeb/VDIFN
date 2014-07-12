@@ -15,6 +15,7 @@ parameters:
     vdifn.noaa.observed.url.history_file: ftp://ftp.ncdc.noaa.gov/pub/data/noaa/ish-history.csv
     vdifn.noaa.observed.url.data_file: ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-lite/%%s/%%s-%%s-%%s.gz
     vdifn.noaa.observed.path.history_file: %vdifn.cache_dir%/ish-history.csv
+    vdifn.noaa.observed.path.data_file: %vdifn.cache_dir%/%%s/%%s-%%s.gz
     vdifn.noaa.observed.states: [WI]
     vdifn.state.class: PlantPath\Bundle\VDIFNBundle\Service\StateService
     # Leaf-wetting time relative humidity threshold

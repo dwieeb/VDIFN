@@ -35,7 +35,7 @@ class DailyImportCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('logger');
         $hours = $this->getContainer()->getParameter('vdifn.noaa.predicted.hours');
 
-        $logger->info('Starting daily import.');
+        $logger->info('Starting daily import for predicted data.');
 
         foreach ($input->getArgument('date') as $ymd) {
             foreach ($hours as $hour) {
@@ -100,7 +100,7 @@ class DailyImportCommand extends ContainerAwareCommand
         ]);
 
         $message = \Swift_Message::newInstance()
-            ->setSubject('VDIFN Daily Import Finished')
+            ->setSubject('VDIFN Daily Import for Predicted Data Finished')
             ->setFrom($this->getContainer()->getParameter('vdifn.admin.email'))
             ->setTo($this->getContainer()->getParameter('vdifn.admin.emails'))
             ->setBody($body, 'text/html');
