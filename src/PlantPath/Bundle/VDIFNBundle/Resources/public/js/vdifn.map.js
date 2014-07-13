@@ -211,20 +211,19 @@ vdifn.map.ModelDataPoint.prototype = Object.create(vdifn.map.DataPoint.prototype
  * @return {string}
  */
 vdifn.map.ModelDataPoint.getSeverityColor = function(dsv) {
-    switch (dsv) {
-        case 0:
-            return '#00c957';
-        case 1:
-            return '#7dff23';
-        case 2:
-            return '#ffd700';
-        case 3:
-            return '#ff8000';
-        case 4:
-            return '#cc0000';
+    if (dsv >= 0 && dsv < 5) {
+        return '#00c957';
+    } else if (dsv >= 5 && dsv < 10) {
+        return '#7dff23';
+    } else if (dsv >= 10 && dsv < 15) {
+        return '#ffd700';
+    } else if (dsv >= 15 && dsv < 20) {
+        return '#ff8000';
+    } else if (dsv >= 20) {
+        return '#cc0000';
     }
 
-    return '#ffffff ';
+    return '#ffffff';
 };
 
 /**

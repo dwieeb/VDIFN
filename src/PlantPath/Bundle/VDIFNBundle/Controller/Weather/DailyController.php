@@ -28,7 +28,7 @@ class DailyController extends Controller
             ->getDoctrine()
             ->getManager()
             ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-            ->getDsvAverageWithinDateRange($start, $end);
+            ->getDsvSumsWithinDateRange($start, $end);
 
         if (!$entities) {
             throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
