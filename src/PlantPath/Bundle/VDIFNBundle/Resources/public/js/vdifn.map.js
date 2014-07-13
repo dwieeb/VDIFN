@@ -31,6 +31,7 @@ vdifn.map.kmToLongitude = function(km, latitude) {
 vdifn.map.Plottable = function(latLng) {
     this.latLng = latLng;
     this.object = undefined;
+    this.map = undefined;
     this.drawn = false;
 };
 
@@ -56,6 +57,7 @@ vdifn.map.Plottable.prototype.plot = function(map) {
     }
 
     this.object.setMap(map);
+    this.map = map;
 
     return this;
 };
@@ -64,9 +66,17 @@ vdifn.map.Plottable.prototype.plot = function(map) {
  * Constructor.
  *
  * @param  {google.maps.LatLng} latLng
+ * @param  {object} data
  */
-vdifn.map.Station = function(latLng) {
+vdifn.map.Station = function(latLng, data) {
+    data = data || {};
     vdifn.map.Plottable.call(this, latLng);
+
+    this.name = data.name;
+    this.call = data.call;
+    this.usaf = data.usaf;
+    this.wban = data.wban;
+    this.elevation = data.elevation;
 };
 
 vdifn.map.Station.prototype = Object.create(vdifn.map.Plottable.prototype);
@@ -85,6 +95,87 @@ vdifn.map.Station.prototype.draw = function() {
     }
 
     return this;
+};
+
+vdifn.map.Station.prototype.createStationTitleElement = function() {
+    var title = document.createElement('h2');
+    title.className = 'title';
+    title.innerText = this.name.capitalize(true);
+
+    return title;
+}
+
+vdifn.map.Station.prototype.createStationInformationElement = function() {
+    var information = document.createElement('div');
+    information.className = 'information';
+    var informationTitle = document.createElement('h3');
+    informationTitle.className = 'information-title'
+    informationTitle.innerText = 'Station Information';
+    information.appendChild(informationTitle);
+
+    if (this.call) {
+        information.appendChild(this.createStationDataElement('Call', this.call));
+    }
+
+    if (this.usaf) {
+        information.appendChild(this.createStationDataElement('USAF', this.usaf));
+    }
+
+    if (this.wban) {
+        information.appendChild(this.createStationDataElement('WBAN', this.wban));
+    }
+
+    if (this.elevation) {
+        information.appendChild(this.createStationDataElement('Elevation', this.elevation));
+    }
+
+    return information;
+};
+
+vdifn.map.Station.prototype.createStationDataElement = function(label, value) {
+    var element = document.createElement('div');
+    element.innerHTML = '<strong>' + label + '</strong>: ' + value;
+
+    return element;
+};
+
+vdifn.map.Station.prototype.getInfoBox = function() {
+    if (!(this.infoBox instanceof InfoBox)) {
+        var content = document.createElement('div');
+        var title = this.createStationTitleElement();
+        var information = this.createStationInformationElement();
+
+        content.appendChild(title);
+        content.appendChild(information);
+
+        this.infoBox = new InfoBox({
+            alignBottom: true,
+            content: content,
+            boxClass: 'infoBox infoBox-station',
+            visible: false,
+            pixelOffset: new google.maps.Size(-13, -20)
+        });
+    }
+
+    return this.infoBox;
+}
+
+/**
+ * @see vdifn.map.Plottable.prototype.plot
+ */
+vdifn.map.Station.prototype.plot = function(map) {
+    vdifn.map.Plottable.prototype.plot.call(this, map);
+
+    return this;
+};
+
+/**
+ * The event to run during a click event.
+ */
+vdifn.map.Station.prototype.onclick = function(event) {
+    var infoBox = this.getInfoBox();
+    infoBox.open(this.map, this.object);
+    infoBox.setVisible(true);
 };
 
 /**

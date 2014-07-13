@@ -50,6 +50,23 @@ var Interface = new vdifn.Interface(
     }
 
     google.maps.event.addDomListener(document.getElementById('datepicker-select'), 'click', onDateRangeSelect);
+    google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseover', function(event) {
+        var content = document.createElement('div');
+        content.innerHTML = 'Date of Emergence/Last Fungicide Application';
+        Interface.openTooltip(document.getElementById('datepicker-start-information'), content);
+    });
+    google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseout', function(event) {
+        Interface.closeTooltip();
+    });
+    google.maps.event.addDomListener(document.getElementById('datepicker-end-information'), 'mouseover', function(event) {
+        var content = document.createElement('div');
+        content.innerHTML = 'Date through which disease severity values are accumulated';
+        Interface.openTooltip(document.getElementById('datepicker-end-information'), content);
+    });
+    google.maps.event.addDomListener(document.getElementById('datepicker-end-information'), 'mouseout', function(event) {
+        Interface.closeTooltip();
+    });
+
     google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
     google.maps.event.addListenerOnce(Interface.map, 'tilesloaded', Interface.tilesloaded.bind(Interface));
     google.maps.event.addDomListener(document.getElementById('error-button'), 'click', Interface.closeErrorOverlay.bind(Interface));

@@ -9,6 +9,7 @@ vdifn.Interface = function(map, db) {
     this.db = db;
     this.modelDataPoints = [];
     this.stations = [];
+    this.tooltip = undefined;
     this.errorOverlay = document.getElementById('error-overlay');
     this.loadingOverlay = document.getElementById('loading-overlay');
     this.setupDsvLegend();
@@ -53,6 +54,44 @@ vdifn.Interface.prototype.wrapControls = function() {
 
     wrapInDiv(mapPanZoomControls, 'map-pan-zoom-controls');
     wrapInDiv(mapGoogleLogo, 'map-google-logo');
+
+    return this;
+};
+
+/**
+ * Open the VDIFN informational tooltip.
+ *
+ * @param  {DOMElement} element
+ * @param  {DOMElement|string} content
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.openTooltip = function(element, content) {
+    if (typeof this.tooltip === 'undefined') {
+        this.tooltip = document.createElement('div');
+        this.tooltip.id = 'tooltip';
+        document.body.appendChild(this.tooltip);
+    }
+
+    var elementBounding = element.getBoundingClientRect();
+
+    this.tooltip.innerHTML = '';
+    this.tooltip.appendChild(content);
+    this.tooltip.style.display = 'block';
+    this.tooltip.style.top = (elementBounding.top - (this.tooltip.clientHeight + 7)) + 'px';
+    this.tooltip.style.left = (elementBounding.left + 1) + 'px';
+
+    return this;
+};
+
+/**
+ * Close the VDIFN informational tooltip.
+ *
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.closeTooltip = function() {
+    this.tooltip.style.display = 'none';
 
     return this;
 };
@@ -199,7 +238,7 @@ vdifn.Interface.prototype.drawStations = function() {
 
     this.db.findStations({ country: "US", state: "WI" }, function(results) {
         results.forEach(function(result) {
-            var station = new vdifn.map.Station(new google.maps.LatLng(result.latitude, result.longitude));
+            var station = new vdifn.map.Station(new google.maps.LatLng(result.latitude, result.longitude), result);
             self.drawStation(station);
         });
     });
@@ -217,6 +256,8 @@ vdifn.Interface.prototype.drawStations = function() {
 vdifn.Interface.prototype.drawStation = function(station) {
     this.stations.push(station);
     station.plot(this.map);
+
+    google.maps.event.addListener(station.object, 'click', station.onclick.bind(station));
 
     return this;
 };

@@ -16,6 +16,7 @@
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?sensor={{ parameters.google_maps.sensor }}"></script>
 {% javascripts filter='?uglifyjs2'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/google-maps-utility-library-v3/infobox/src/infobox.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/sugar/release/sugar.min.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/momentjs/min/moment.min.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/superagent/superagent.js'
@@ -71,9 +72,15 @@
             <div class="inner">
                 <fieldset id="datepicker">
                     <legend>Dates:</legend>
-                    <input type="text" class="datepicker" id="datepicker-start">
+                    <div class="datepicker-wrapper" id="datepicker-start-wrapper">
+                        <input type="text" class="datepicker" id="datepicker-start">
+                        <span class="datepicker-information" id="datepicker-start-information">?</span>
+                    </div>
                     <div class="to">to</div>
-                    <input type="text" class="datepicker" id="datepicker-end">
+                    <div class="datepicker-wrapper" id="datepicker-end-wrapper">
+                        <input type="text" class="datepicker" id="datepicker-end">
+                        <span class="datepicker-information" id="datepicker-end-information">?</span>
+                    </div>
                     <input type="button" class="button" id="datepicker-select" value="Select" />
                 </fieldset>
                 <fieldset id="dsv-legend">
