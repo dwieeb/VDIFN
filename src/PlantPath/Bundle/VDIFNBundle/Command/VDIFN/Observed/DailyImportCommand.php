@@ -67,7 +67,7 @@ class DailyImportCommand extends ContainerAwareCommand
         foreach ($stations as $station) {
             foreach ($years as $year) {
                 $usaf = $station['usaf'];
-                $wban = $station['wban'];;
+                $wban = $station['wban'];
                 $exitCode = $console->find('vdifn:observed:download')->run(new ArrayInput([
                     'command' => 'vdifn:observed:download',
                     'usaf' => $usaf,
