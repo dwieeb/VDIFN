@@ -374,3 +374,10 @@ footer {
 .infoBox-station .information-title {
     margin-bottom: 2px;
 }
+
+.infoBox-station > img {
+    position: absolute !important;
+    top: -5px;
+    right: -5px;
+    padding: 10px;
+}

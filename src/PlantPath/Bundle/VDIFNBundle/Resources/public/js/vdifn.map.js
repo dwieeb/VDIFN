@@ -152,6 +152,7 @@ vdifn.map.Station.prototype.getInfoBox = function() {
             alignBottom: true,
             content: content,
             boxClass: 'infoBox infoBox-station',
+            closeBoxURL: vdifn.parameters.static_path + '/img/close.png',
             visible: false,
             pixelOffset: new google.maps.Size(-13, -20)
         });
