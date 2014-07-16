@@ -46,11 +46,41 @@ class DiseaseSeverity
     }
 
     /**
+     * Given an array of objects that allow calculation of DSVs, calculate the
+     * mean temperature and leaf-wetting time of that group of hourlies.
+     *
+     * @param  array  $hourlies
+     *
+     * @return array
+     */
+    public static function calculateTemperatureAndLeafWettingTime(array $hourlies)
+    {
+        $leafWettingTime = 0;
+        $sumTemperature = 0;
+
+        foreach ($hourlies as $hourly) {
+            if (!($hourly instanceof DsvCalculableInterface)) {
+                throw new \RuntimeException('Hourly is missing implementation detail.');
+            }
+
+            if ($hourly->getRelativeHumidity() > $threshold) {
+                $leafWettingTime += 1;
+            }
+
+            $sumTemperature += $hourly->getTemperature();
+        }
+
+        $meanTemperature = $sumTemperature / count($hourlies);
+
+        return [$meanTemperature, $leafWettingTime];
+    }
+
+    /**
      * Builds the DSV Matrix if not already built and returns it.
      *
      * @return array
      */
-    public static function getDsvMatrix()
+    protected static function getDsvMatrix()
     {
         if (null === self::$dsvMatrix) {
             self::$dsvMatrix = [];

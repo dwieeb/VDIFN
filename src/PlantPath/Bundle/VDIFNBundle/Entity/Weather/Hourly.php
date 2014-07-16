@@ -2,6 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather;
 
+use PlantPath\Bundle\VDIFNBundle\Geo\DsvCalculableInterface;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use PlantPath\Bundle\VDIFNBundle\Geo\Temperature;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Hourly
+class Hourly implements DsvCalculableInterface
 {
     /**
      * @var integer
@@ -376,10 +377,7 @@ class Hourly
     }
 
     /**
-     * Set temperature
-     *
-     * @param float $temperature
-     * @return Hourly
+     * {@inheritDoc}
      */
     public function setTemperature($temperature)
     {
@@ -393,9 +391,7 @@ class Hourly
     }
 
     /**
-     * Get temperature
-     *
-     * @return float
+     * {@inheritDoc}
      */
     public function getTemperature()
     {
@@ -457,10 +453,7 @@ class Hourly
     }
 
     /**
-     * Set relativeHumidity
-     *
-     * @param integer $relativeHumidity
-     * @return Hourly
+     * {@inheritDoc}
      */
     public function setRelativeHumidity($relativeHumidity)
     {
@@ -474,9 +467,7 @@ class Hourly
     }
 
     /**
-     * Get relativeHumidity
-     *
-     * @return integer
+     * {@inheritDoc}
      */
     public function getRelativeHumidity()
     {

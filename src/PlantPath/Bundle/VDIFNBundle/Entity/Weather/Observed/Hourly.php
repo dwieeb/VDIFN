@@ -2,8 +2,9 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather\Observed;
 
-use Doctrine\ORM\Mapping as ORM;
+use PlantPath\Bundle\VDIFNBundle\Geo\DsvCalculableInterface;
 use PlantPath\Bundle\VDIFNBundle\Geo\RelativeHumidity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Observed hourly weather data.
@@ -16,7 +17,7 @@ use PlantPath\Bundle\VDIFNBundle\Geo\RelativeHumidity;
  *     }
  * )
  */
-class Hourly
+class Hourly implements DsvCalculableInterface
 {
     /**
      * @var integer
@@ -262,6 +263,22 @@ class Hourly
         $this->airTemperature = $airTemperature;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTemperature($temperature)
+    {
+        return $this->setAirTemperature($temperature);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTemperature()
+    {
+        return $this->getAirTemperature();
     }
 
     /**

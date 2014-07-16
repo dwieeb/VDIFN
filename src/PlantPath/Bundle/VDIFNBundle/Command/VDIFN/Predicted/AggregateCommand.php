@@ -4,6 +4,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily as DailyWeather;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
+use PlantPath\Bundle\VDIFNBundle\Geo\DiseaseSeverity;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -225,18 +226,7 @@ class AggregateCommand extends ContainerAwareCommand
 
             array_pop($hourlies);
 
-            $leafWettingTime = 0;
-            $sumTemperature = 0;
-
-            foreach ($hourlies as $hourly) {
-                if ($hourly->getRelativeHumidity() > $threshold) {
-                    $leafWettingTime += 1;
-                }
-
-                $sumTemperature += $hourly->getTemperature();
-            }
-
-            $meanTemperature = $sumTemperature / count($hourlies);
+            list($meanTemperature, $leafWettingTime) = DiseaseSeverity::calculateTemperatureAndLeafWettingTime($hourlies);
 
             $daily = $this->dailyRepo->getOneBySpaceTime($date, $point) ?: DailyWeather::create();
 
