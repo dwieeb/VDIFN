@@ -17,7 +17,7 @@ class DiseaseSeverity
     /**
      * @var int
      */
-    protected $meanTemperature;
+    protected $leafWettingTime;
 
     /**
      * Factory.
