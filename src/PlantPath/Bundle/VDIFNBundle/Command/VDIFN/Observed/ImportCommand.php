@@ -58,15 +58,16 @@ class ImportCommand extends ContainerAwareCommand
             }
 
             // As per ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-lite/isd-lite-format.txt
-            $hourlyData->setAirTemperature($this->getLineValue($line, 13, 6, 10, '-9999'));
-            $hourlyData->setDewPointTemperature($this->getLineValue($line, 19, 5, 10, '-9999'));
-            $hourlyData->setSeaLevelPressure($this->getLineValue($line, 25, 6, 10, '-9999'));
-            $hourlyData->setWindDirection($this->getLineValue($line, 31, 6, 1, '-9999'));
-            $hourlyData->setWindSpeedRate($this->getLineValue($line, 37, 6, 10, '-9999'));
-            $hourlyData->setSkyCondition($this->getLineValue($line, 43, 6, null, '-9999'));
-            $hourlyData->setPrecipitationOneHour($this->getLineValue($line, 49, 6, 10, '-9999'));
-            $hourlyData->setPrecipitationSixHour($this->getLineValue($line, 55, 6, 10, '-9999'));
-            $hourlyData->setRelativeHumidity($hourlyData->calculateRelativeHumidity());
+            $hourlyData
+                ->setAirTemperature($this->getLineValue($line, 13, 6, 10, '-9999'))
+                ->setDewPointTemperature($this->getLineValue($line, 19, 5, 10, '-9999'))
+                ->setSeaLevelPressure($this->getLineValue($line, 25, 6, 10, '-9999'))
+                ->setWindDirection($this->getLineValue($line, 31, 6, 1, '-9999'))
+                ->setWindSpeedRate($this->getLineValue($line, 37, 6, 10, '-9999'))
+                ->setSkyCondition($this->getLineValue($line, 43, 6, null, '-9999'))
+                ->setPrecipitationOneHour($this->getLineValue($line, 49, 6, 10, '-9999'))
+                ->setPrecipitationSixHour($this->getLineValue($line, 55, 6, 10, '-9999'))
+                ->setRelativeHumidity($hourlyData->calculateRelativeHumidity());
 
             // $this->logger->debug('Calculated relative humidity.', [
             //     'temperature' => $hourlyData->getAirTemperature(),

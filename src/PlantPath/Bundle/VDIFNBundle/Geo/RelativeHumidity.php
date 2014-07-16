@@ -8,6 +8,11 @@ class RelativeHumidity
     const CONSTANT_2 = 243.04;
 
     /**
+     * @var float
+     */
+    protected $relativeHumidity
+
+    /**
      * Factory.
      *
      * @param  float $temperature
