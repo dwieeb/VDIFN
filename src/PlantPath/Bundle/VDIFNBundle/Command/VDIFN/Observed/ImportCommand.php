@@ -66,6 +66,13 @@ class ImportCommand extends ContainerAwareCommand
             $hourlyData->setSkyCondition($this->getLineValue($line, 43, 6, null, '-9999'));
             $hourlyData->setPrecipitationOneHour($this->getLineValue($line, 49, 6, 10, '-9999'));
             $hourlyData->setPrecipitationSixHour($this->getLineValue($line, 55, 6, 10, '-9999'));
+            $hourlyData->setRelativeHumidity($hourlyData->calculateRelativeHumidity());
+
+            // $this->logger->debug('Calculated relative humidity.', [
+            //     'temperature' => $hourlyData->getAirTemperature(),
+            //     'dewPointTemperature' => $hourlyData->getDewPointTemperature(),
+            //     'relativeHumidity' => $hourlyData->getRelativeHumidity(),
+            // ]);
 
             $this->em->persist($hourlyData);
 

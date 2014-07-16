@@ -3,6 +3,7 @@
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather\Observed;
 
 use Doctrine\ORM\Mapping as ORM;
+use PlantPath\Bundle\VDIFNBundle\Geo\RelativeHumidity;
 
 /**
  * Observed hourly weather data.
@@ -60,6 +61,13 @@ class Hourly
      * @ORM\Column(name="dew_point_temperature", type="float", nullable=true)
      */
     protected $dewPointTemperature;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="relative_humidity", type="float", nullable=true)
+     */
+    protected $relativeHumidity;
 
     /**
      * @var float
@@ -128,6 +136,22 @@ class Hourly
             ->setUsaf($usaf)
             ->setWban($wban)
             ->setTime($time);
+    }
+
+    /**
+     * Given the set air temperature and dew point temperature, calculate and
+     * return the relative humidity.
+     *
+     * @return float
+     */
+    public function calculateRelativeHumidity()
+    {
+        $rh = RelativeHumidity::createFromTemperatureAndDewPoint(
+            $this->getAirTemperature(),
+            $this->getDewPointTemperature()
+        );
+
+        return $rh->getRelativeHumidity();
     }
 
     /**
@@ -264,6 +288,30 @@ class Hourly
         }
 
         $this->dewPointTemperature = $dewPointTemperature;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of relativeHumidity.
+     *
+     * @return float
+     */
+    public function getRelativeHumidity()
+    {
+        return $this->relativeHumidity;
+    }
+
+    /**
+     * Sets the value of relativeHumidity.
+     *
+     * @param float $relativeHumidity the relative humidity
+     *
+     * @return self
+     */
+    public function setRelativeHumidity($relativeHumidity)
+    {
+        $this->relativeHumidity = $relativeHumidity;
 
         return $this;
     }
