@@ -4,6 +4,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily as DailyWeather;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
+use PlantPath\Bundle\VDIFNBundle\Geo\DateUtils;
 use PlantPath\Bundle\VDIFNBundle\Geo\DiseaseSeverity;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -44,53 +45,6 @@ class AggregateCommand extends ContainerAwareCommand
     }
 
     /**
-     * Given a day, return the beginning of it.
-     *
-     * @param  DateTime $day
-     *
-     * @return DateTime
-     */
-    protected function getBeginningOfDay(\DateTime $day)
-    {
-        $beginning = clone $day;
-        $beginning->setTime(0, 0, 0);
-
-        return $beginning;
-    }
-
-    /**
-     * Given a day, return the end of it.
-     *
-     * @param  DateTime $day
-     *
-     * @return DateTime
-     */
-    protected function getEndOfDay(\DateTime $day)
-    {
-        $end = clone $day;
-        $end->setTime(0, 0, 0);
-        $end->modify('+1 day');
-
-        return $end;
-    }
-
-    /**
-     * Makes a new DateTime object based upon a given day and hour.
-     *
-     * @param  DateTime $day
-     * @param  int      $hour
-     *
-     * @return DateTime
-     */
-    protected function getDailyHour(\DateTime $day, $hour)
-    {
-        $dt = clone $day;
-        $dt->setTime($hour, 0, 0);
-
-        return $dt;
-    }
-
-    /**
      * Get the distinct latitude/longitude locations of a given day.
      *
      * @param  DateTime $beginning
@@ -100,8 +54,8 @@ class AggregateCommand extends ContainerAwareCommand
      */
     protected function getLocations(\DateTime $day)
     {
-        $beginning = $this->getBeginningOfDay($day);
-        $end = $this->getEndOfDay($day);
+        $beginning = DateUtils::getBeginningOfDay($day);
+        $end = DateUtils::getEndOfDay($day);
 
         $locations = $this->hourlyRepo
             ->createQueryBuilder('h')
@@ -132,8 +86,8 @@ class AggregateCommand extends ContainerAwareCommand
      */
     protected function getHourlyWeather(Point $point, \DateTime $day)
     {
-        $beginning = $this->getBeginningOfDay($day);
-        $end = $this->getEndOfDay($day);
+        $beginning = DateUtils::getBeginningOfDay($day);
+        $end = DateUtils::getEndOfDay($day);
 
         $hourlies = $this->hourlyRepo
                 ->createQueryBuilder('h')
@@ -173,8 +127,8 @@ class AggregateCommand extends ContainerAwareCommand
      */
     protected function getInterpolatedHourlyWeather(Point $point, \DateTime $day)
     {
-        $beginning = $this->getBeginningOfDay($day);
-        $end = $this->getEndOfDay($day);
+        $beginning = DateUtils::getBeginningOfDay($day);
+        $end = DateUtils::getEndOfDay($day);
 
         $hourlies = $this->getHourlyWeather($point, $day);
 
@@ -184,8 +138,8 @@ class AggregateCommand extends ContainerAwareCommand
             if (0 !== $hour % 3) {
                 $p = floor($hour / 3) * 3;
                 $n = ceil($hour / 3) * 3;
-                $prev = $hourlies[$this->getDailyHour($dt, $p)->format('c')];
-                $next = $hourlies[$this->getDailyHour($dt, $n)->format('c')];
+                $prev = $hourlies[DateUtils::getDailyHour($dt, $p)->format('c')];
+                $next = $hourlies[DateUtils::getDailyHour($dt, $n)->format('c')];
                 $hourly = new HourlyWeather();
                 $hourly->setVerificationTime($dt);
                 $hourly->setTemperature($prev->getTemperature() + ($next->getTemperature() - $prev->getTemperature()) * (($hour - $p) / ($n - $p)));
