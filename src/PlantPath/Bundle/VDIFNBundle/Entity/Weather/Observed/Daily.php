@@ -2,6 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather\Observed;
 
+use PlantPath\Bundle\VDIFNBundle\Geo\DiseaseSeverity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

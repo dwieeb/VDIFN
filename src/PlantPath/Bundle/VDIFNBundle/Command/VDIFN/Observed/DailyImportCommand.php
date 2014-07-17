@@ -75,15 +75,24 @@ class DailyImportCommand extends ContainerAwareCommand
                     '--year' => $year,
                 ]), $output);
 
-                if ($exitCode === 0) {
-                    $console->find('vdifn:observed:import')->run(new ArrayInput([
-                        'command' => 'vdifn:observed:import',
-                        'usaf' => $usaf,
-                        'wban' => $wban,
-                        '--year' => $year,
-                    ]), $output);
+                if ($exitCode > 0) {
+                    continue;
                 }
+
+                $console->find('vdifn:observed:import')->run(new ArrayInput([
+                    'command' => 'vdifn:observed:import',
+                    'usaf' => $usaf,
+                    'wban' => $wban,
+                    '--year' => $year,
+                ]), $output);
             }
+        }
+
+        foreach ($input->getArgument('date') as $date) {
+            $console->find('vdifn:observed:aggregate')->run(new ArrayInput([
+                'command' => 'vdifn:observed:aggregate',
+                '--date' => $date,
+            ]), $output);
         }
 
         $logger->info('Finished daily import.');

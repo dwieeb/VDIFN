@@ -10,7 +10,7 @@ class RelativeHumidity
     /**
      * @var float
      */
-    protected $relativeHumidity
+    protected $relativeHumidity;
 
     /**
      * Factory.

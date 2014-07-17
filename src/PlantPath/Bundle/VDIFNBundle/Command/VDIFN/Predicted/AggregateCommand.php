@@ -180,7 +180,7 @@ class AggregateCommand extends ContainerAwareCommand
 
             array_pop($hourlies);
 
-            list($meanTemperature, $leafWettingTime) = DiseaseSeverity::calculateTemperatureAndLeafWettingTime($hourlies);
+            list($meanTemperature, $leafWettingTime) = DiseaseSeverity::calculateTemperatureAndLeafWettingTime($hourlies, $threshold);
 
             $daily = $this->dailyRepo->getOneBySpaceTime($date, $point) ?: DailyWeather::create();
 

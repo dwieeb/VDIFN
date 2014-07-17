@@ -50,10 +50,11 @@ class DiseaseSeverity
      * mean temperature and leaf-wetting time of that group of hourlies.
      *
      * @param  array  $hourlies
+     * @param  int    $threshold
      *
      * @return array
      */
-    public static function calculateTemperatureAndLeafWettingTime(array $hourlies)
+    public static function calculateTemperatureAndLeafWettingTime(array $hourlies, $threshold)
     {
         $leafWettingTime = 0;
         $sumTemperature = 0;
@@ -161,6 +162,16 @@ class DiseaseSeverity
         }
 
         return $dsv;
+    }
+
+    /**
+     * Gets the value of meanTemperature.
+     *
+     * @return integer
+     */
+    public function getMeanTemperature()
+    {
+        return $this->meanTemperature;
     }
 
     /**
