@@ -36,4 +36,37 @@ class StationController extends Controller
 
         return JsonResponse::create($entities);
     }
+
+    /**
+     * Gets a station.
+     *
+     * @Route("/{usaf}/{wban}/{start}/{end}", name="stations_single", options={"expose"=true})
+     */
+    public function stationAction(Request $request, $usaf, $wban, \DateTime $start, \DateTime $end)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $station = $em
+            ->getRepository('PlantPathVDIFNBundle:Station')
+            ->findOneBy(['usaf' => $usaf, 'wban' => $wban]);
+
+        $weather = $em
+            ->getRepository('PlantPathVDIFNBundle:Weather\Observed\Daily')
+            ->createQueryBuilder('d')
+            ->where('d.usaf = :usaf')
+            ->andWhere('d.wban = :wban')
+            ->andWhere('d.time BETWEEN :start AND :end')
+            ->orderBy('d.time', 'DESC')
+            ->setParameter('usaf', $usaf)
+            ->setParameter('wban', $wban)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('PlantPathVDIFNBundle:Station:infobox.html.twig', [
+            'station' => $station,
+            'weather' => $weather,
+        ]);
+    }
 }

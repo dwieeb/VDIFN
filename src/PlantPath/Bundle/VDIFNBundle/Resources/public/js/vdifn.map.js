@@ -36,6 +36,25 @@ vdifn.map.Plottable = function(latLng) {
 };
 
 /**
+ * Create an InfoBox with extra options.
+ *
+ * @param  {Object} options
+ *
+ * @return InfoBox
+ */
+vdifn.map.Plottable.createInfoBox = function(options) {
+    options = options || {};
+
+    return new InfoBox(Object.merge({
+        alignBottom: true,
+        boxClass: 'infoBox infoBox-station',
+        closeBoxURL: vdifn.parameters.static_path + '/img/close.png',
+        visible: false,
+        pixelOffset: new google.maps.Size(-13, -20)
+    }, options));
+}
+
+/**
  * Construct the object.
  *
  * @return this
@@ -72,11 +91,8 @@ vdifn.map.Station = function(latLng, data) {
     data = data || {};
     vdifn.map.Plottable.call(this, latLng);
 
-    this.name = data.name;
-    this.call = data.call;
     this.usaf = data.usaf;
     this.wban = data.wban;
-    this.elevation = data.elevation;
 };
 
 vdifn.map.Station.prototype = Object.create(vdifn.map.Plottable.prototype);
@@ -97,69 +113,64 @@ vdifn.map.Station.prototype.draw = function() {
     return this;
 };
 
-vdifn.map.Station.prototype.createStationTitleElement = function() {
-    var title = document.createElement('h2');
-    title.className = 'title';
-    title.innerText = this.name.capitalize(true);
-
-    return title;
-}
-
-vdifn.map.Station.prototype.createStationInformationElement = function() {
-    var information = document.createElement('div');
-    information.className = 'information';
-    var informationTitle = document.createElement('h3');
-    informationTitle.className = 'information-title'
-    informationTitle.innerText = 'Station Information';
-    information.appendChild(informationTitle);
-
-    if (this.call) {
-        information.appendChild(this.createStationDataElement('Call', this.call));
-    }
-
-    if (this.usaf) {
-        information.appendChild(this.createStationDataElement('USAF', this.usaf));
-    }
-
-    if (this.wban) {
-        information.appendChild(this.createStationDataElement('WBAN', this.wban));
-    }
-
-    if (this.elevation) {
-        information.appendChild(this.createStationDataElement('Elevation', this.elevation));
-    }
-
-    return information;
-};
-
-vdifn.map.Station.prototype.createStationDataElement = function(label, value) {
-    var element = document.createElement('div');
-    element.innerHTML = '<strong>' + label + '</strong>: ' + value;
-
-    return element;
-};
-
+/**
+ * Get the InfoBox for this station which displays station information and
+ * recent weather details for this station.
+ *
+ * @return {InfoBox}
+ */
 vdifn.map.Station.prototype.getInfoBox = function() {
     if (!(this.infoBox instanceof InfoBox)) {
         var content = document.createElement('div');
-        var title = this.createStationTitleElement();
-        var information = this.createStationInformationElement();
+        var loading = document.createElement('ul');
+        loading.classList.add('loading-icon');
+        loading.appendChild(document.createElement('li'));
+        loading.appendChild(document.createElement('li'));
+        loading.appendChild(document.createElement('li'));
+        content.setAttribute('id', 'station-' + this.usaf + '-' + this.wban);
+        content.classList.add('station');
+        content.classList.add('loading');
+        content.appendChild(loading);
 
-        content.appendChild(title);
-        content.appendChild(information);
-
-        this.infoBox = new InfoBox({
-            alignBottom: true,
+        this.infoBox = vdifn.map.Plottable.createInfoBox({
             content: content,
-            boxClass: 'infoBox infoBox-station',
-            closeBoxURL: vdifn.parameters.static_path + '/img/close.png',
-            visible: false,
-            pixelOffset: new google.maps.Size(-13, -20)
+            boxClass: 'infoBox infoBox-station'
         });
+
+        this.getWeatherDetails();
     }
 
     return this.infoBox;
 }
+
+/**
+ * Get the weather details of this station and then draw the result.
+ *
+ * @return this
+ */
+vdifn.map.Station.prototype.getWeatherDetails = function() {
+    var self = this;
+
+    superagent.get(
+        Routing.generate('stations_single', {
+            usaf: this.usaf,
+            wban: this.wban,
+            start: Date.create('5 days ago'),
+            end: Date.create()
+        })
+    ).end(function(response) {
+        if (response.ok) {
+            var station = document.getElementById('station-' + self.usaf + '-' + self.wban);
+            station.classList.remove('loading');
+            station.innerHTML = response.text;
+        } else {
+            var content = self.getInfoBox().getContent();
+            content.innerHTML = '<p style="text-align: center">Error loading station.</p>';
+        }
+    });
+
+    return this;
+};
 
 /**
  * @see vdifn.map.Plottable.prototype.plot
