@@ -150,11 +150,6 @@ class AggregateCommand extends ContainerAwareCommand
                 ->setDsv($daily->calculateDsv());
 
             $this->em->persist($daily);
-
-            // Remove hourly data once daily data is aggregated and persisted.
-            foreach ($hourlies as $hourly) {
-                $this->em->remove($hourly);
-            }
         }
 
         $this->em->flush();
