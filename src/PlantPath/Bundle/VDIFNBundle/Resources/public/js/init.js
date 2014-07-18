@@ -17,7 +17,7 @@ var Interface = new vdifn.Interface(
 
 (function() {
     Interface.startPicker = vdifn.datepicker.create({
-        defaultDate: Date.create('3 days ago'),
+        defaultDate: Date.create(),
         field: document.getElementById('datepicker-start'),
         onSelect: function() {
             Interface.endPicker.setMinDate(this.getDate());
@@ -25,7 +25,7 @@ var Interface = new vdifn.Interface(
     });
 
     Interface.endPicker = vdifn.datepicker.create({
-        defaultDate: Date.create(),
+        defaultDate: Date.create('2 days from now'),
         minDate: Interface.startPicker.getDate(),
         field: document.getElementById('datepicker-end')
     });
