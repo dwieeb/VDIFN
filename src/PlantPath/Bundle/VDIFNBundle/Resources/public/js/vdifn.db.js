@@ -76,7 +76,7 @@ vdifn.db.prototype.findStations = function(criteria, callback) {
     var db = this;
 
     superagent.get(
-        Routing.generate('stations_country_state', {
+        Routing.generate('stations_list', {
             country: criteria.country,
             state: criteria.state
         })

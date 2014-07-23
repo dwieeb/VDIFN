@@ -19,19 +19,24 @@ class StationController extends Controller
     /**
      * Finds and displays Stations by their respective country and state.
      *
-     * @Route("/{country}/{state}", name="stations_country_state", options={"expose"=true})
+     * @Route("/", name="stations_list", options={"expose"=true})
      * @Method("GET")
      */
-    public function countryStateAction(Request $request, $country, $state)
+    public function countryStateAction(Request $request)
     {
-        $entities = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository('PlantPathVDIFNBundle:Station')
-            ->getOpenByCountryAndState($country, $state);
+        $country = $request->query->get('country');
+        $state = $request->query->get('state');
 
-        if (!$entities) {
-            throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
+        if (!empty($country) && !empty($state)) {
+            $entities = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('PlantPathVDIFNBundle:Station')
+                ->getOpenByCountryAndState($country, $state);
+        }
+
+        if (empty($entities)) {
+            throw $this->createNotFoundException('Unable to find stations by specified criteria.');
         }
 
         return JsonResponse::create($entities);
@@ -40,9 +45,9 @@ class StationController extends Controller
     /**
      * Gets a station.
      *
-     * @Route("/{usaf}/{wban}/{start}/{end}", name="stations_single", options={"expose"=true})
+     * @Route("/{usaf}-{wban}", name="stations_get", options={"expose"=true})
      */
-    public function stationAction(Request $request, $usaf, $wban, \DateTime $start, \DateTime $end)
+    public function stationAction(Request $request, $usaf, $wban)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -55,12 +60,10 @@ class StationController extends Controller
             ->createQueryBuilder('d')
             ->where('d.usaf = :usaf')
             ->andWhere('d.wban = :wban')
-            ->andWhere('d.time BETWEEN :start AND :end')
             ->orderBy('d.time', 'DESC')
+            ->setMaxResults(5)
             ->setParameter('usaf', $usaf)
             ->setParameter('wban', $wban)
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
             ->getQuery()
             ->getResult();
 

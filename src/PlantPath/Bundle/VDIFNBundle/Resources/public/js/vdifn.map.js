@@ -152,11 +152,9 @@ vdifn.map.Station.prototype.getWeatherDetails = function() {
     var self = this;
 
     superagent.get(
-        Routing.generate('stations_single', {
+        Routing.generate('stations_get', {
             usaf: this.usaf,
-            wban: this.wban,
-            start: Date.create('5 days ago'),
-            end: Date.create()
+            wban: this.wban
         })
     ).end(function(response) {
         if (response.ok) {
