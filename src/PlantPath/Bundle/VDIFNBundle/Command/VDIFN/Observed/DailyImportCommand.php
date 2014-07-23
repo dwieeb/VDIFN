@@ -88,7 +88,17 @@ class DailyImportCommand extends ContainerAwareCommand
             }
         }
 
-        foreach ($input->getArgument('date') as $date) {
+        $dates = $input->getArgument('date');
+        rsort($dates);
+        $lastDate = new \DateTime(end($dates));
+        $safetyDate = clone $lastDate;
+        $safetyDate->modify('-5 days');
+
+        foreach (new \DatePeriod($safetyDate, \DateInterval::createFromDateString('1 day'), $lastDate) as $date) {
+            array_unshift($dates, $date->format('Ymd'));
+        }
+
+        foreach ($dates as $date) {
             $console->find('vdifn:observed:aggregate')->run(new ArrayInput([
                 'command' => 'vdifn:observed:aggregate',
                 '--date' => $date,
