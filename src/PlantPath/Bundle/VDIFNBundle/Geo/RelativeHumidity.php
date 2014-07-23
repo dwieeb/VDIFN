@@ -22,12 +22,16 @@ class RelativeHumidity
      */
     public static function createFromTemperatureAndDewPoint($temperature, $dewPoint)
     {
-        $numerator = exp((self::CONSTANT_1 * $dewPoint) / (self::CONSTANT_2 + $dewPoint));
-        $denominator = exp((self::CONSTANT_1 * $temperature) / (self::CONSTANT_2 + $temperature));
-        $relativeHumidity = 100 * ($numerator / $denominator);
+        if (null === $temperature || null === $dewPoint) {
+            $relativeHumidity = null;
+        } else {
+            $numerator = exp((self::CONSTANT_1 * $dewPoint) / (self::CONSTANT_2 + $dewPoint));
+            $denominator = exp((self::CONSTANT_1 * $temperature) / (self::CONSTANT_2 + $temperature));
+            $relativeHumidity = 100 * ($numerator / $denominator);
 
-        $relativeHumidity = min($relativeHumidity, 100);
-        $relativeHumidity = max($relativeHumidity, 0);
+            $relativeHumidity = min($relativeHumidity, 100);
+            $relativeHumidity = max($relativeHumidity, 0);
+        }
 
         return new self($relativeHumidity);
     }
@@ -61,7 +65,7 @@ class RelativeHumidity
      */
     public function setRelativeHumidity($relativeHumidity)
     {
-        if (false === $relativeHumidity = filter_var($relativeHumidity, FILTER_VALIDATE_FLOAT)) {
+        if (null !== $relativeHumidity && false === $relativeHumidity = filter_var($relativeHumidity, FILTER_VALIDATE_FLOAT)) {
             throw new \InvalidArgumentException('Cannot validate relativeHumidity as a float');
         }
 
