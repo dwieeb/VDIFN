@@ -23,7 +23,7 @@ label {
     font-size: 0.75em;
 }
 
-thead tr {
+thead th {
     background-color: #e2e6e6;
 }
 
@@ -32,7 +32,7 @@ tr {
 }
 
 th, td {
-    padding: 1px 3px;
+    padding: 2px 6px;
 }
 
 #sidebar {
@@ -417,7 +417,7 @@ footer {
 .infoBox {
     position: relative;
     padding: 10px;
-    min-width: 150px;
+    min-width: 200px;
 }
 
 .infoBox > img {
@@ -431,9 +431,13 @@ footer {
     width: 100%;
 }
 
+.infoBox table .odd {
+    background-color: #ebefef;
+}
+
 .infoBox-station .information,
 .infoBox-station .weather-details {
-    margin-top: 1em;
+    margin-top: 0.5em;
 }
 
 .infoBox-station .title {

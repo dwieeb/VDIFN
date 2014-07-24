@@ -5,10 +5,10 @@
     <div><strong>Call</strong>: {{ station.call }}</div>
     <div><strong>USAF</strong>: {{ station.usaf }}</div>
     <div><strong>WBAN</strong>: {{ station.wban }}</div>
-    <div><strong>Elevation</strong>: {{ station.elevation }}</div>
+    <div><strong>Elevation</strong>: {{ station.elevation }}m</div>
 </div>
 
-<h3 class="weather-details-title">Last 5 DSVs</h3>
+<h3 class="weather-details-title">Five Day Summary</h3>
 <div class="weather-details">
     {% if weather %}
     {% set dsvTotal = 0 %}
@@ -16,25 +16,26 @@
         <thead>
             <tr>
                 <th>Day</th>
-                <th>DSV</th>
-                <th>Mean Temp.</th>
+                <th><abbr title="Disease Severity Value">DSV</abbr></th>
+                <th>Mean temp.</th>
+                <th>Hours over <abbr title="Relative Humidity">RH</abbr> threshold</th>
             </tr>
         </thead>
         <tbody>
         {% for day in weather %}
             {% set dsvTotal = dsvTotal + day.dsv %}
             <tr>
-                <td>{{ day.time|date('n/j/Y') }}</td>
+                <td class="odd">{{ day.time|date('n/j/Y') }}</td>
                 <td>{{ day.dsv }}</td>
-                <td>{{ day.meanTemperature|round(2) }}&deg;C</td>
+                <td class="odd">{{ day.meanTemperature|round(1) }}&deg;C</td>
+                <td>{{ day.leafWettingTime }}</td>
             </tr>
         {% endfor %}
         </tbody>
         <tfoot>
             <tr>
                 <th>Total:</th>
-                <td>{{ dsvTotal }}</td>
-                <td>&nbsp;</td>
+                <td colspan="3"><strong>{{ dsvTotal }}</strong></td>
             </tr>
         </tfoot>
     </table>
