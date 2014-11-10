@@ -436,18 +436,27 @@ footer {
 }
 
 .infoBox-station .information,
-.infoBox-station .weather-details {
+.infoBox-station .weather-details,
+.infoBox-point .information,
+.infoBox-point .weather-details {
     margin-top: 0.5em;
 }
 
-.infoBox-station .title {
+.infoBox-station .title,
+.infoBox-point .title {
     margin-top: 2px;
 }
 
-.infoBox-station h3 {
+.infoBox-station h3,
+.infoBox-point h3 {
     margin-bottom: 2px;
 }
 
-.infoBox-station .station.loading {
+.infoBox-point h3.information-title {
+    margin-top: 0;
+}
+
+.infoBox-station .station.loading,
+.infoBox-point .point.loading {
     padding: 50px 0;
 }

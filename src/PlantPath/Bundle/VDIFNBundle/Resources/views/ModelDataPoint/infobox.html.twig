@@ -1,0 +1,41 @@
+<h3 class="information-title">Data Point Information</h3>
+<div class="information">
+    <div><strong>Latitude</strong>: {{ point.latitude }}</div>
+    <div><strong>Longitude</strong>: {{ point.longitude }}</div>
+</div>
+
+<h3 class="weather-details-title">Weather Summary</h3>
+<div class="weather-details">
+    {% if weather %}
+    {% set dsvTotal = 0 %}
+    <table>
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th><abbr title="Disease Severity Value">DSV</abbr></th>
+                <th>Mean temp.</th>
+                <th>Hours over <abbr title="Relative Humidity">RH</abbr> threshold</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for day in weather %}
+            {% set dsvTotal = dsvTotal + day.dsv %}
+            <tr>
+                <td class="odd">{{ day.time|date('n/j/Y') }}</td>
+                <td>{{ day.dsv }}</td>
+                <td class="odd">{{ day.meanTemperature|round(1) }}&deg;C</td>
+                <td>{{ day.leafWettingTime }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total:</th>
+                <td colspan="3"><strong>{{ dsvTotal }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <p style="text-align: center;">No data to display.</p>
+    {% endif %}
+</div>

@@ -222,8 +222,13 @@ vdifn.Interface.prototype.drawDateRange = function(startDate, endDate, callback)
  * @return this
  */
 vdifn.Interface.prototype.drawModelDataPoint = function(modelDataPoint) {
+    if (typeof vdifn.Interface.prototype.drawModelDataPoint.id === 'undefined') {
+        vdifn.Interface.prototype.drawModelDataPoint.id = 0;
+    }
+
     this.modelDataPoints.push(modelDataPoint);
     modelDataPoint.plot(this.map);
+    modelDataPoint.id = vdifn.Interface.prototype.drawModelDataPoint.id++;
 
     google.maps.event.addListener(modelDataPoint.object, 'click', modelDataPoint.onclick.bind(modelDataPoint));
 

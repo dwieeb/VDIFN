@@ -55,7 +55,7 @@ class StationController extends Controller
         $endDate = \DateTime::createFromFormat('Ymd', $request->query->get('endDate'));
 
         if (false === $startDate || false === $endDate) {
-            throw new \IllegalArgumentException('startDate and endDate are invalid.');
+            throw new \InvalidArgumentException('startDate and endDate are invalid.');
         }
 
         $minStartDate = clone $endDate;

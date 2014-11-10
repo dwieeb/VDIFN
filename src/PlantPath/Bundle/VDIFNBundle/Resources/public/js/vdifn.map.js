@@ -47,7 +47,6 @@ vdifn.map.Plottable.createInfoBox = function(options) {
 
     return new InfoBox(Object.merge({
         alignBottom: true,
-        boxClass: 'infoBox infoBox-station',
         closeBoxURL: vdifn.parameters.static_path + '/img/close.png',
         visible: false,
         pixelOffset: new google.maps.Size(-13, -20)
@@ -173,15 +172,6 @@ vdifn.map.Station.prototype.getWeatherDetails = function() {
 };
 
 /**
- * @see vdifn.map.Plottable.prototype.plot
- */
-vdifn.map.Station.prototype.plot = function(map) {
-    vdifn.map.Plottable.prototype.plot.call(this, map);
-
-    return this;
-};
-
-/**
  * The event to run during a click event.
  */
 vdifn.map.Station.prototype.onclick = function(event) {
@@ -209,6 +199,7 @@ vdifn.map.DataPoint.prototype = Object.create(vdifn.map.Plottable.prototype);
  */
 vdifn.map.ModelDataPoint = function(latLng, dsv) {
     vdifn.map.DataPoint.call(this, latLng);
+    this.id = undefined;
     this.dsv = dsv;
     this.size = 12; // km
 };
@@ -242,6 +233,8 @@ vdifn.map.ModelDataPoint.getSeverityColor = function(dsv) {
  * @see vdifn.map.DataPoint.prototype.draw
  */
 vdifn.map.ModelDataPoint.prototype.draw = function() {
+    var self = this;
+
     if (!this.drawn) {
         var color = vdifn.map.ModelDataPoint.getSeverityColor(this.dsv);
         var latitude = this.latLng.lat();
@@ -262,12 +255,81 @@ vdifn.map.ModelDataPoint.prototype.draw = function() {
             fillOpacity: 0.2
         });
 
+        // Sort of a hack to give a data point an anchor in InfoBox.
+        this.object.getPosition = function() {
+            return self.latLng;
+        };
+
         this.drawn = true;
     }
 
     return this;
 };
 
+/**
+ * The event to run during a click event.
+ */
 vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
-    // TODO
+    var infoBox = this.getInfoBox();
+    infoBox.open(this.map, this.object);
+    infoBox.setVisible(true);
 };
+
+/**
+ * Get the weather details of this data point and then draw the result.
+ *
+ * @return this
+ */
+vdifn.map.ModelDataPoint.prototype.getWeatherDetails = function() {
+    var self = this;
+
+    superagent.get(
+        Routing.generate('weather_daily_point', {
+            latitude: this.latLng.lat(),
+            longitude: this.latLng.lng(),
+            startDate: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
+            endDate: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}')
+        })
+    ).end(function(response) {
+        if (response.ok) {
+            var point = document.getElementById('point-' + self.id);
+            point.classList.remove('loading');
+            point.innerHTML = response.text;
+        } else {
+            var content = self.getInfoBox().getContent();
+            content.innerHTML = '<p style="text-align: center">Error loading data point.</p>';
+        }
+    });
+
+    return this;
+};
+
+/**
+ * Get the InfoBox for this data point which displays information and
+ * recent weather details for this data point.
+ *
+ * @return {InfoBox}
+ */
+vdifn.map.ModelDataPoint.prototype.getInfoBox = function() {
+    if (!(this.infoBox instanceof InfoBox)) {
+        var content = document.createElement('div');
+        var loading = document.createElement('ul');
+        loading.classList.add('loading-icon');
+        loading.appendChild(document.createElement('li'));
+        loading.appendChild(document.createElement('li'));
+        loading.appendChild(document.createElement('li'));
+        content.setAttribute('id', 'point-' + this.id);
+        content.classList.add('point');
+        content.classList.add('loading');
+        content.appendChild(loading);
+
+        this.infoBox = vdifn.map.Plottable.createInfoBox({
+            content: content,
+            boxClass: 'infoBox infoBox-point'
+        });
+
+        this.getWeatherDetails();
+    }
+
+    return this.infoBox;
+}
