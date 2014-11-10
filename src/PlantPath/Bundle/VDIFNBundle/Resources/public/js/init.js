@@ -20,7 +20,26 @@ var Interface = new vdifn.Interface(
         defaultDate: Date.create(),
         field: document.getElementById('datepicker-start'),
         onSelect: function() {
-            Interface.endPicker.setMinDate(this.getDate());
+            var today = Date.create();
+            var minDate = this.getDate();
+            var maxDate = this.getDate().advance('2 weeks');
+
+            if (maxDate > today) {
+                maxDate = today;
+            }
+
+            Interface.endPicker.setMinDate(minDate);
+            Interface.endPicker.setMaxDate(maxDate);
+
+            if (Interface.endPicker.getDate() < minDate) {
+                Interface.endPicker.setDate(minDate);
+                Interface.endPicker.gotoDate(minDate);
+            }
+
+            if (Interface.endPicker.getDate() > maxDate) {
+                Interface.endPicker.setDate(maxDate);
+                Interface.endPicker.gotoDate(maxDate);
+            }
         }
     });
 
