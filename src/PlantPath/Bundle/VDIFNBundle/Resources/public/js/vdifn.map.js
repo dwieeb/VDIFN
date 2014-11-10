@@ -267,3 +267,7 @@ vdifn.map.ModelDataPoint.prototype.draw = function() {
 
     return this;
 };
+
+vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
+    // TODO
+};

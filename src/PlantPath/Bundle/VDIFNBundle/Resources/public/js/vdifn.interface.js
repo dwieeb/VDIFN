@@ -225,6 +225,8 @@ vdifn.Interface.prototype.drawModelDataPoint = function(modelDataPoint) {
     this.modelDataPoints.push(modelDataPoint);
     modelDataPoint.plot(this.map);
 
+    google.maps.event.addListener(modelDataPoint.object, 'click', modelDataPoint.onclick.bind(modelDataPoint));
+
     return this;
 };
 
