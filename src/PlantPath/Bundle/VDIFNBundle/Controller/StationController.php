@@ -51,6 +51,20 @@ class StationController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $startDate = \DateTime::createFromFormat('Ymd', $request->query->get('startDate'));
+        $endDate = \DateTime::createFromFormat('Ymd', $request->query->get('endDate'));
+
+        if (false === $startDate || false === $endDate) {
+            throw new \IllegalArgumentException('startDate and endDate are invalid.');
+        }
+
+        $minStartDate = clone $endDate;
+        $minStartDate->modify('-10 days');
+        $startDate = min($minStartDate, $startDate);
+
+        $startDate->setTime(0, 0, 0);
+        $endDate->setTime(0, 0, 0);
+
         $station = $em
             ->getRepository('PlantPathVDIFNBundle:Station')
             ->findOneBy(['usaf' => $usaf, 'wban' => $wban]);
@@ -60,10 +74,12 @@ class StationController extends Controller
             ->createQueryBuilder('d')
             ->where('d.usaf = :usaf')
             ->andWhere('d.wban = :wban')
+            ->andWhere('d.time BETWEEN :start AND :end')
             ->orderBy('d.time', 'DESC')
-            ->setMaxResults(5)
             ->setParameter('usaf', $usaf)
             ->setParameter('wban', $wban)
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate)
             ->getQuery()
             ->getResult();
 

@@ -154,7 +154,9 @@ vdifn.map.Station.prototype.getWeatherDetails = function() {
     superagent.get(
         Routing.generate('stations_get', {
             usaf: this.usaf,
-            wban: this.wban
+            wban: this.wban,
+            startDate: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
+            endDate: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}')
         })
     ).end(function(response) {
         if (response.ok) {
