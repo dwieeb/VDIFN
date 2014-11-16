@@ -20,12 +20,12 @@ var Interface = new vdifn.Interface(
         defaultDate: Date.create(),
         field: document.getElementById('datepicker-start'),
         onSelect: function() {
-            var today = Date.create();
+            var ultimateMaxDate = Interface.endPicker.config().defaultDate;
             var minDate = this.getDate();
             var maxDate = this.getDate().advance('2 weeks');
 
-            if (maxDate > today) {
-                maxDate = today;
+            if (maxDate > ultimateMaxDate) {
+                maxDate = ultimateMaxDate;
             }
 
             Interface.endPicker.setMinDate(minDate);
