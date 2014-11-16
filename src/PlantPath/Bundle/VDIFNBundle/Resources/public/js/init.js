@@ -15,7 +15,7 @@ var Interface = new vdifn.Interface(
     new vdifn.db()
 );
 
-(function() {
+(function(window) {
     Interface.startPicker = vdifn.datepicker.create({
         defaultDate: Date.create(),
         field: document.getElementById('datepicker-start'),
@@ -127,4 +127,4 @@ var Interface = new vdifn.Interface(
     google.maps.event.trigger(window, 'resize');
     google.maps.event.trigger(document.getElementById('datepicker-select'), 'click');
     Interface.drawStations();
-})();
+})(window, undefined);
