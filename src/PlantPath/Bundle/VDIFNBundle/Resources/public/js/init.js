@@ -64,6 +64,14 @@ var Interface = new vdifn.Interface(
                 Interface.openErrorOverlay("Could not load weather data for the date range specified.");
             }
         });
+
+        Interface.stations.forEach(function(station) {
+            station.current = false;
+        });
+
+        Interface.modelDataPoints.forEach(function(modelDataPoint) {
+            modelDataPoint.current = false;
+        });
     });
 
     google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseover', function(event) {

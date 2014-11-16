@@ -33,6 +33,7 @@ vdifn.map.Plottable = function(latLng) {
     this.object = undefined;
     this.map = undefined;
     this.drawn = false;
+    this.current = false;
 };
 
 /**
@@ -55,8 +56,6 @@ vdifn.map.Plottable.createInfoBox = function(options) {
 
 /**
  * Construct the object.
- *
- * @return this
  */
 vdifn.map.Plottable.prototype.draw = function() {
     throw new vdifn.UnimplementedAbstractException();
@@ -119,7 +118,7 @@ vdifn.map.Station.prototype.draw = function() {
  * @return {InfoBox}
  */
 vdifn.map.Station.prototype.getInfoBox = function() {
-    if (!(this.infoBox instanceof InfoBox)) {
+    if (!this.current) {
         var content = document.createElement('div');
         var loading = document.createElement('ul');
         loading.classList.add('loading-icon');
@@ -162,6 +161,7 @@ vdifn.map.Station.prototype.getWeatherDetails = function() {
             var station = document.getElementById('station-' + self.usaf + '-' + self.wban);
             station.classList.remove('loading');
             station.innerHTML = response.text;
+            self.current = true;
         } else {
             var content = self.getInfoBox().getContent();
             content.innerHTML = '<p style="text-align: center">Error loading station.</p>';
@@ -276,42 +276,13 @@ vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
 };
 
 /**
- * Get the weather details of this data point and then draw the result.
- *
- * @return this
- */
-vdifn.map.ModelDataPoint.prototype.getWeatherDetails = function() {
-    var self = this;
-
-    superagent.get(
-        Routing.generate('weather_daily_point', {
-            latitude: this.latLng.lat(),
-            longitude: this.latLng.lng(),
-            startDate: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
-            endDate: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}')
-        })
-    ).end(function(response) {
-        if (response.ok) {
-            var point = document.getElementById('point-' + self.id);
-            point.classList.remove('loading');
-            point.innerHTML = response.text;
-        } else {
-            var content = self.getInfoBox().getContent();
-            content.innerHTML = '<p style="text-align: center">Error loading data point.</p>';
-        }
-    });
-
-    return this;
-};
-
-/**
  * Get the InfoBox for this data point which displays information and
  * recent weather details for this data point.
  *
  * @return {InfoBox}
  */
 vdifn.map.ModelDataPoint.prototype.getInfoBox = function() {
-    if (!(this.infoBox instanceof InfoBox)) {
+    if (!this.current) {
         var content = document.createElement('div');
         var loading = document.createElement('ul');
         loading.classList.add('loading-icon');
@@ -333,3 +304,33 @@ vdifn.map.ModelDataPoint.prototype.getInfoBox = function() {
 
     return this.infoBox;
 }
+
+/**
+ * Get the weather details of this data point and then draw the result.
+ *
+ * @return this
+ */
+vdifn.map.ModelDataPoint.prototype.getWeatherDetails = function() {
+    var self = this;
+
+    superagent.get(
+        Routing.generate('weather_daily_point', {
+            latitude: this.latLng.lat(),
+            longitude: this.latLng.lng(),
+            startDate: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
+            endDate: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}')
+        })
+    ).end(function(response) {
+        if (response.ok) {
+            var point = document.getElementById('point-' + self.id);
+            point.classList.remove('loading');
+            point.innerHTML = response.text;
+            self.current = true;
+        } else {
+            var content = self.getInfoBox().getContent();
+            content.innerHTML = '<p style="text-align: center">Error loading data point.</p>';
+        }
+    });
+
+    return this;
+};
