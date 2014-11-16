@@ -61,6 +61,29 @@
             </div>
         </div>
     </div>
+    <fieldset id="dsv-legend">
+        <legend>Severity Legend:</legend>
+        <div id="dsv-very-high" data-dsv="20" class="dsv">
+            <div></div>
+            <label>Very High</label>
+        </div>
+        <div id="dsv-high" data-dsv="15" class="dsv">
+            <div></div>
+            <label>High</label>
+        </div>
+        <div id="dsv-medium" data-dsv="10" class="dsv">
+            <div></div>
+            <label>Medium</label>
+        </div>
+        <div id="dsv-low" data-dsv="5" class="dsv">
+            <div></div>
+            <label>Low</label>
+        </div>
+        <div id="dsv-very-low" data-dsv="0" class="dsv">
+            <div></div>
+            <label>Very Low</label>
+        </div>
+    </fieldset>
     <div id="sidebar">
         <header>
             <hgroup>
@@ -70,6 +93,28 @@
         </header>
         <div id="options">
             <div class="inner">
+                <fieldset id="crop">
+                    <legend>Crop:</legend>
+                    <select>
+                        <option id="crop-carrot">Carrot</option>
+                        <option id="crop-onion">Onion</option>
+                        <option id="crop-potato">Potato</option>
+                        <option id="crop-hops">Hops</option>
+                    </select>
+                </fieldset>
+                <fieldset id="infliction">
+                    <legend>Pest/Disease:</legend>
+                    <select>
+                        <optgroup id="carrot-pests" label="Pests">
+                            <option id="carrot-pest-aster-leafhopper">Aster Leafhopper</option>
+                            <option id="carrot-pest-carrot-weevil">Carrot Weevil</option>
+                            <option id="carrot-pest-carrot-rust-fly">Carrot Rust Fly</option>
+                        </optgroup>
+                        <optgroup id="carrot-diseases" label="Diseases">
+                            <option id="carrot-disease-foliar">Foliar Disease</option>
+                        </optgroup>
+                    </select>
+                </fieldset>
                 <fieldset id="datepicker">
                     <legend>Dates:</legend>
                     <div class="datepicker-wrapper" id="datepicker-start-wrapper">
@@ -82,29 +127,6 @@
                         <span class="datepicker-information" id="datepicker-end-information">?</span>
                     </div>
                     <input type="button" class="button" id="datepicker-select" value="Select" />
-                </fieldset>
-                <fieldset id="dsv-legend">
-                    <legend>Disease Severity Color Legend:</legend>
-                    <div id="dsv-very-high" data-dsv="20" class="dsv">
-                        <div></div>
-                        <label>Very High</label>
-                    </div>
-                    <div id="dsv-high" data-dsv="15" class="dsv">
-                        <div></div>
-                        <label>High</label>
-                    </div>
-                    <div id="dsv-medium" data-dsv="10" class="dsv">
-                        <div></div>
-                        <label>Medium</label>
-                    </div>
-                    <div id="dsv-low" data-dsv="5" class="dsv">
-                        <div></div>
-                        <label>Low</label>
-                    </div>
-                    <div id="dsv-very-low" data-dsv="0" class="dsv">
-                        <div></div>
-                        <label>Very Low</label>
-                    </div>
                 </fieldset>
             </div>
         </div>

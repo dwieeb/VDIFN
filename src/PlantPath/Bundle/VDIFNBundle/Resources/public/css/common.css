@@ -4,10 +4,6 @@ body {
     font-family: "Lucida Grande", "Trebuchet MS", Trebuchet, Arial, sans-serif;
 }
 
-input[type="text"] {
-    border: 1px solid #d0d0d0;
-}
-
 legend,
 label {
     padding: 0 5px;
@@ -59,7 +55,8 @@ hgroup > * {
 
 #sidebar,
 #tooltip,
-.infoBox {
+.infoBox,
+#dsv-legend {
     background: #ffffff;
     background: rgba(255, 255, 255, 0.85);
     -webkit-box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.3), 4px 0px 10px rgba(0, 0, 0, 0.3);
@@ -114,23 +111,39 @@ h1 span:nth-of-type(2) {
     font-size: 0.85em;
 }
 
-#options .inner {
-    margin: 0 10px;
-}
-
-#options fieldset {
+fieldset {
     background: rgba(200, 200, 200, 0.4);
     margin-bottom: 10px;
     padding: 10px;
+}
+
+#options .inner {
+    margin: 0 10px;
 }
 
 .datepicker-wrapper {
     position: relative;
 }
 
-#options input[type="text"] {
-    background-color: rgba(255, 255, 255, 0.7);
+#options input[type="text"],
+#options select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
     width: 99%;
+    background-color: rgba(255, 255, 255, 0.7);
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border: 1px solid #d0d0d0;
+    border-radius: 0;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+#options select {
+    overflow: hidden;
+    padding: 5px 8px;
+    text-indent: 0.01px;
+    text-overflow: '';
 }
 
 .datepicker-information {
@@ -155,13 +168,22 @@ h1 span:nth-of-type(2) {
 }
 
 .datepicker {
-    cursor: pointer;
     text-align: center;
-    padding: 5px 0;
 }
 
 #datepicker-select {
     margin: 10px auto 0;
+}
+
+#dsv-legend {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+    min-width: 200px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 #dsv-legend .dsv {
