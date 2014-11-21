@@ -96,22 +96,37 @@
                 <fieldset id="crop">
                     <legend>Crop:</legend>
                     <select id="crop-select">
-                        <option id="crop-carrot">Carrot</option>
-                        <option id="crop-onion">Onion</option>
-                        <option id="crop-potato">Potato</option>
-                        <option id="crop-hops">Hops</option>
+                        <option id="crop-carrot" value="carrot">Carrot</option>
+                        <option id="crop-onion" value="onion">Onion</option>
+                        <option id="crop-potato" value="potato">Potato</option>
+                        <option id="crop-hops" value="hops">Hops</option>
                     </select>
                 </fieldset>
                 <fieldset id="infliction">
                     <legend>Pest/Disease:</legend>
                     <select id="infliction-select">
                         <optgroup id="carrot-pests" label="Pests">
-                            <option id="carrot-pest-aster-leafhopper">Aster Leafhopper</option>
-                            <option id="carrot-pest-carrot-weevil">Carrot Weevil</option>
-                            <option id="carrot-pest-carrot-rust-fly">Carrot Rust Fly</option>
+                            <option value="pest-aster-leafhopper" selected="selected">Aster Leafhopper</option>
+                            <option value="pest-carrot-weevil">Carrot Weevil</option>
+                            <option value="pest-carrot-rust-fly">Carrot Rust Fly</option>
                         </optgroup>
                         <optgroup id="carrot-diseases" label="Diseases">
-                            <option id="carrot-disease-foliar">Foliar Disease</option>
+                            <option value="disease-foliar">Foliar Disease</option>
+                        </optgroup>
+                        <optgroup id="onion-pests" label="Pests">
+                            <option value="pest-onion-maggot">Onion Maggot</option>
+                        </optgroup>
+                        <optgroup id="potato-pests" label="Pests">
+                            <option value="pest-colorado-potato-beetle">Colorado Potato Beetle</option>
+                            <option value="pest-potato-leafhopper">Potato Leafhopper</option>
+                            <option value="pest-aster-leafhopper">Aster Leafhopper</option>
+                        </optgroup>
+                        <optgroup id="potato-diseases" label="Diseases">
+                            <option value="disease-early-blight">Early Blight</option>
+                            <option value="disease-late-blight">Late Blight</option>
+                        </optgroup>
+                        <optgroup id="hops-diseases" label="Diseases">
+                            <option value="disease-downy-mildew">Downy Mildew</option>
                         </optgroup>
                     </select>
                 </fieldset>

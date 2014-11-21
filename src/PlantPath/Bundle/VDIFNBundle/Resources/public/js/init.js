@@ -56,6 +56,44 @@ var Interface = new vdifn.Interface(
         });
     }
 
+    google.maps.event.addDomListener(document.getElementById('crop-select'), 'change', function(event) {
+        var optgroups = document.getElementById('infliction-select').childNodes;
+        var selected = false;
+
+        for (var i = 0; i < optgroups.length; i++) {
+            if (optgroups[i].nodeType !== Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            var optgroup = optgroups[i];
+            var options = optgroup.childNodes;
+            var firstOption = false;
+
+            for (var j = 0; j < options.length; j++) {
+                if (options[j].nodeType !== Node.ELEMENT_NODE) {
+                    continue;
+                }
+
+                options[j].removeAttribute('selected');
+
+                if (firstOption === false) {
+                    firstOption = options[j];
+                }
+            }
+
+            if (optgroup.id.indexOf(this.value) === 0) {
+                optgroup.style.display = 'block';
+
+                if (selected === false) {
+                    firstOption.selected = "selected";
+                    selected = true;
+                }
+            } else {
+                optgroup.style.display = 'none';
+            }
+        }
+    });
+
     google.maps.event.addDomListener(document.getElementById('select'), 'click', function(event) {
         Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate(), function(success) {
             Interface.closeLoadingOverlay();
@@ -128,6 +166,7 @@ var Interface = new vdifn.Interface(
 
     // Initialization
     google.maps.event.trigger(window, 'resize');
+    google.maps.event.trigger(document.getElementById('crop-select'), 'change');
     google.maps.event.trigger(document.getElementById('select'), 'click');
     Interface.drawStations();
 })(window, undefined);
