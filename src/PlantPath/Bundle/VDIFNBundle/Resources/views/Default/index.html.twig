@@ -95,7 +95,7 @@
             <div class="inner">
                 <fieldset id="crop">
                     <legend>Crop:</legend>
-                    <select>
+                    <select id="crop-select">
                         <option id="crop-carrot">Carrot</option>
                         <option id="crop-onion">Onion</option>
                         <option id="crop-potato">Potato</option>
@@ -104,7 +104,7 @@
                 </fieldset>
                 <fieldset id="infliction">
                     <legend>Pest/Disease:</legend>
-                    <select>
+                    <select id="infliction-select">
                         <optgroup id="carrot-pests" label="Pests">
                             <option id="carrot-pest-aster-leafhopper">Aster Leafhopper</option>
                             <option id="carrot-pest-carrot-weevil">Carrot Weevil</option>
@@ -126,8 +126,8 @@
                         <input type="text" class="datepicker" id="datepicker-end">
                         <span class="datepicker-information" id="datepicker-end-information">?</span>
                     </div>
-                    <input type="button" class="button" id="datepicker-select" value="Select" />
                 </fieldset>
+                <input type="button" class="button" id="select" value="Select" />
             </div>
         </div>
         <footer>

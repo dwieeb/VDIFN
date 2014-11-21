@@ -171,8 +171,8 @@ fieldset {
     text-align: center;
 }
 
-#datepicker-select {
-    margin: 10px auto 0;
+#select {
+    margin: 4px 1px;
 }
 
 #dsv-legend {

@@ -56,7 +56,7 @@ var Interface = new vdifn.Interface(
         });
     }
 
-    google.maps.event.addDomListener(document.getElementById('datepicker-select'), 'click', function(event) {
+    google.maps.event.addDomListener(document.getElementById('select'), 'click', function(event) {
         Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate(), function(success) {
             Interface.closeLoadingOverlay();
 
@@ -65,13 +65,8 @@ var Interface = new vdifn.Interface(
             }
         });
 
-        Interface.stations.forEach(function(station) {
-            station.current = false;
-        });
-
-        Interface.modelDataPoints.forEach(function(modelDataPoint) {
-            modelDataPoint.current = false;
-        });
+        Interface.stations.forEach(function(station) { station.current = false; });
+        Interface.modelDataPoints.forEach(function(modelDataPoint) { modelDataPoint.current = false; });
     });
 
     google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseover', function(event) {
@@ -133,6 +128,6 @@ var Interface = new vdifn.Interface(
 
     // Initialization
     google.maps.event.trigger(window, 'resize');
-    google.maps.event.trigger(document.getElementById('datepicker-select'), 'click');
+    google.maps.event.trigger(document.getElementById('select'), 'click');
     Interface.drawStations();
 })(window, undefined);
