@@ -20,18 +20,28 @@ class DailyController extends Controller
     /**
      * Finds and displays Weather\Daily entities.
      *
-     * @Route("/{start}/{end}", name="weather_daily_date_range", options={"expose"=true})
+     * @Route("/", name="weather_daily_date_range", options={"expose"=true})
      * @Method("GET")
      */
-    public function dateRangeAction(Request $request, \DateTime $start, \DateTime $end)
+    public function dateRangeAction(Request $request)
     {
-        $entities = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-            ->getDsvSumsWithinDateRange($start, $end);
+        $start = $request->query->get('start');
+        $end = $request->query->get('end');
+        $crop = $request->query->get('crop');
+        $infliction = $request->query->get('infliction');
 
-        if (!$entities) {
+        if (!empty($start) && !empty($end) && !empty($crop) && !empty($infliction)) {
+            $start = new \DateTime($start);
+            $end = new \DateTime($end);
+
+            $entities = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
+                ->getDsvSumsWithinDateRange($start, $end);
+        }
+
+        if (empty($entities)) {
             throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
         }
 

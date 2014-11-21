@@ -190,15 +190,13 @@ vdifn.Interface.prototype.closeErrorOverlay = function() {
  *
  * @return this
  */
-vdifn.Interface.prototype.drawDateRange = function(startDate, endDate, callback) {
+vdifn.Interface.prototype.drawDateRange = function(criteria, callback) {
     var self = this;
-    var startYmd = startDate.format('{yyyy}{MM}{dd}');
-    var endYmd = endDate.format('{yyyy}{MM}{dd}');
 
     this.openLoadingOverlay();
     this.clearModelDataPoints();
 
-    this.db.findPredictedWeatherData({ start: startYmd, end: endYmd }, function(results) {
+    this.db.findPredictedWeatherData(criteria, function(results) {
         for (var point in results) {
             self.drawModelDataPoint(new vdifn.map.ModelDataPoint(
                 new google.maps.LatLng(results[point].latitude, results[point].longitude),

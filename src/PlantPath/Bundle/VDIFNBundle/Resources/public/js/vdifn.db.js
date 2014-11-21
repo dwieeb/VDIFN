@@ -48,15 +48,22 @@ vdifn.db.verifyCallback = function(callback) {
  * @param  {Function} callback
  */
 vdifn.db.prototype.findPredictedWeatherData = function(criteria, callback) {
-    vdifn.db.verifyCriteria(criteria, { required: ['start', 'end'] });
+    vdifn.db.verifyCriteria(criteria, {
+        required: ['start', 'end', 'crop', 'infliction']
+    });
+
     vdifn.db.verifyCallback(callback);
 
     var db = this;
+    var startYmd = criteria.start.format('{yyyy}{MM}{dd}');
+    var endYmd = criteria.end.format('{yyyy}{MM}{dd}');
 
     superagent.get(
         Routing.generate('weather_daily_date_range', {
-            start: criteria.start,
-            end: criteria.end
+            start: startYmd,
+            end: endYmd,
+            crop: criteria.crop,
+            infliction: criteria.infliction
         })
     ).end(function(response) {
         if (response.ok) {

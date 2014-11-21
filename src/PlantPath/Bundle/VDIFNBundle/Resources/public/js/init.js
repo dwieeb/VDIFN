@@ -95,7 +95,12 @@ var Interface = new vdifn.Interface(
     });
 
     google.maps.event.addDomListener(document.getElementById('select'), 'click', function(event) {
-        Interface.drawDateRange(Interface.startPicker.getDate(), Interface.endPicker.getDate(), function(success) {
+        Interface.drawDateRange({
+            start: Interface.startPicker.getDate(),
+            end: Interface.endPicker.getDate(),
+            crop: document.getElementById('crop-select').value,
+            infliction: document.getElementById('infliction-select').value
+        }, function(success) {
             Interface.closeLoadingOverlay();
 
             if (!success) {
