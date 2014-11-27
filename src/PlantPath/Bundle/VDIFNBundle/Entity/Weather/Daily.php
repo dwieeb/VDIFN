@@ -3,6 +3,7 @@
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather;
 
 use PlantPath\Bundle\VDIFNBundle\Geo\DiseaseSeverity;
+use PlantPath\Bundle\VDIFNBundle\Geo\DegreeDay;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use PlantPath\Bundle\VDIFNBundle\Geo\Temperature;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,6 +59,34 @@ class Daily
     protected $dsv;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="dd10", type="float")
+     */
+    protected $degreeDay10;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dd7_2", type="float")
+     */
+    protected $degreeDay72;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dd4_4", type="float")
+     */
+    protected $degreeDay44;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="dd2_7", type="float")
+     */
+    protected $degreeDay27;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="mean_temperature", type="float")
@@ -70,11 +99,6 @@ class Daily
      * @ORM\Column(name="leaf_wetting_time", type="smallint")
      */
     protected $leafWettingTime;
-
-    /**
-     * @var array
-     */
-    protected static $dsvMatrix;
 
     /**
      * Factory.
@@ -226,6 +250,8 @@ class Daily
 
     /**
      * Given existing data, compute the disease severity value for this object.
+     *
+     * @return this
      */
     public function calculateDsv()
     {
@@ -234,7 +260,25 @@ class Daily
             $this->getLeafWettingTime()
         );
 
-        return $ds->calculate();
+        $this->setDsv($ds->calculate());
+
+        return $this;
+    }
+
+    /**
+     * Given existing data, calculate the degree days for this object.
+     *
+     * @return this
+     */
+    public function calculateDegreeDays()
+    {
+        $meanTemperature = $this->getMeanTemperature();
+        $this->setDegreeDay10(DegreeDay::create(10.0, $meanTemperature)->calculate());
+        $this->setDegreeDay72(DegreeDay::create(7.2222, $meanTemperature)->calculate());
+        $this->setDegreeDay44(DegreeDay::create(4.44444, $meanTemperature)->calculate());
+        $this->setDegreeDay27(DegreeDay::create(2.7778, $meanTemperature)->calculate());
+
+        return $this;
     }
 
     /**
@@ -289,6 +333,118 @@ class Daily
         }
 
         $this->leafWettingTime = $leafWettingTime;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of degreeDay10.
+     *
+     * @return float
+     */
+    public function getDegreeDay10()
+    {
+        return $this->degreeDay10;
+    }
+
+    /**
+     * Sets the value of degreeDay10.
+     *
+     * @param float $degreeDay10 the degree day10
+     *
+     * @return self
+     */
+    public function setDegreeDay10($degreeDay10)
+    {
+        if (false === $degreeDay10 = filter_var($degreeDay10, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Cannot validate degree day as a float');
+        }
+
+        $this->degreeDay10 = $degreeDay10;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of degreeDay72.
+     *
+     * @return float
+     */
+    public function getDegreeDay72()
+    {
+        return $this->degreeDay72;
+    }
+
+    /**
+     * Sets the value of degreeDay72.
+     *
+     * @param float $degreeDay72 the degree day72
+     *
+     * @return self
+     */
+    public function setDegreeDay72($degreeDay72)
+    {
+        if (false === $degreeDay72 = filter_var($degreeDay72, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Cannot validate degree day as a float');
+        }
+
+        $this->degreeDay72 = $degreeDay72;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of degreeDay44.
+     *
+     * @return float
+     */
+    public function getDegreeDay44()
+    {
+        return $this->degreeDay44;
+    }
+
+    /**
+     * Sets the value of degreeDay44.
+     *
+     * @param float $degreeDay44 the degree day44
+     *
+     * @return self
+     */
+    public function setDegreeDay44($degreeDay44)
+    {
+        if (false === $degreeDay44 = filter_var($degreeDay44, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Cannot validate degree day as a float');
+        }
+
+        $this->degreeDay44 = $degreeDay44;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of degreeDay27.
+     *
+     * @return float
+     */
+    public function getDegreeDay27()
+    {
+        return $this->degreeDay27;
+    }
+
+    /**
+     * Sets the value of degreeDay27.
+     *
+     * @param float $degreeDay27 the degree day27
+     *
+     * @return self
+     */
+    public function setDegreeDay27($degreeDay27)
+    {
+        if (false === $degreeDay27 = filter_var($degreeDay27, FILTER_VALIDATE_FLOAT)) {
+            throw new \InvalidArgumentException('Cannot validate degree day as a float');
+        }
+
+        $this->degreeDay27 = $degreeDay27;
 
         return $this;
     }

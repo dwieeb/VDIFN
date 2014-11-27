@@ -147,7 +147,7 @@ class AggregateCommand extends ContainerAwareCommand
                 ->setTime($date)
                 ->setMeanTemperature($meanTemperature)
                 ->setLeafWettingTime($leafWettingTime)
-                ->setDsv($daily->calculateDsv());
+                ->calculateDsv();
 
             $this->em->persist($daily);
         }

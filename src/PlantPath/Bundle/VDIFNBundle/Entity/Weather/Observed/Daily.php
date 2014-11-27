@@ -89,7 +89,9 @@ class Daily
             $this->getLeafWettingTime()
         );
 
-        return $ds->calculate();
+        $this->setDsv($ds->calculate());
+
+        return $this;
     }
 
     /**
