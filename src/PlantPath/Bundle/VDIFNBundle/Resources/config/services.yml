@@ -1,3 +1,13 @@
 services:
+    raven:
+        class: Raven_Client
+        arguments:
+            dsn: %sentry_dsn%
     vdifn.state:
         class: %vdifn.state.class%
+    kernel.listener.command_dispatch:
+        class: PlantPath\Bundle\VDIFNBundle\EventListener\ConsoleExceptionListener
+        arguments:
+            logger: "@logger"
+        tags:
+            - { name: kernel.event_listener, event: console.exception }
