@@ -50,6 +50,13 @@ framework:
     fragments:       ~
     http_method_override: true
 
+monolog:
+    handlers:
+        sentry:
+            type:  raven
+            dsn:   %sentry_dsn%
+            level: notice
+
 # Twig Configuration
 twig:
     debug:            %kernel.debug%
