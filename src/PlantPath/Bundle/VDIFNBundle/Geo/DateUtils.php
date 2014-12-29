@@ -11,7 +11,7 @@ class DateUtils
      *
      * @return DateTime
      */
-    public function getBeginningOfDay(\DateTime $day)
+    public static function getBeginningOfDay(\DateTime $day)
     {
         $beginning = clone $day;
         $beginning->setTime(0, 0, 0);
@@ -26,7 +26,7 @@ class DateUtils
      *
      * @return DateTime
      */
-    public function getEndOfDay(\DateTime $day)
+    public static function getEndOfDay(\DateTime $day)
     {
         $end = clone $day;
         $end->setTime(0, 0, 0);
@@ -43,7 +43,7 @@ class DateUtils
      *
      * @return DateTime
      */
-    public function getDailyHour(\DateTime $day, $hour)
+    public static function getDailyHour(\DateTime $day, $hour)
     {
         $dt = clone $day;
         $dt->setTime($hour, 0, 0);
