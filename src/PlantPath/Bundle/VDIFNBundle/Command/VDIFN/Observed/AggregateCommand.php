@@ -99,7 +99,7 @@ class AggregateCommand extends ContainerAwareCommand
                 ->setParameter('end', $end)
                 ->getResult();
 
-        if (24 !== count($hourlies)) {
+        if (count($hourlies) <= 1) {
             throw new \UnexpectedValueException('Not enough hourly data to aggregate this day: ' . $day->format('c'));
         }
 
