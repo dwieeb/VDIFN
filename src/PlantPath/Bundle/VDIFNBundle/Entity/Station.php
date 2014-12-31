@@ -204,7 +204,7 @@ class Station
             return null;
         }
 
-        return $item / 1000;
+        return $item;
     }
 
     /**
@@ -240,10 +240,6 @@ class Station
 
         if (false === $value = filter_var($value, FILTER_VALIDATE_FLOAT)) {
             throw new \InvalidArgumentException('Could not validate as a float: ' . $value);
-        }
-
-        if (in_array(abs($value), [99999, 999999])) {
-            return null;
         }
 
         return $value;
