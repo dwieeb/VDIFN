@@ -30,6 +30,7 @@ parameters:
     vdifn.date_format: '{yyyy}{MM}{dd}'
     vdifn.google_maps.api_key: 'AIzaSyDWBHf90rmieg96Wx7UgGmaJxylc6ML_Bs'
     vdifn.google_maps.sensor: 'false'
+    vdifn.sentry_dsn: http://dacdc28d5e604c6ba8e016f686b03e65:9c1399d1197641bb9647b4f83d29e162@sentry.dwieeb.com/2
 
 framework:
     #esi:             ~
@@ -54,7 +55,7 @@ monolog:
     handlers:
         sentry:
             type:  raven
-            dsn:   %sentry_dsn%
+            dsn:   %vdifn.sentry_dsn%
             level: notice
 
 # Twig Configuration

@@ -2,7 +2,7 @@ services:
     raven:
         class: Raven_Client
         arguments:
-            dsn: %sentry_dsn%
+            dsn: %vdifn.sentry_dsn%
     vdifn.state:
         class: %vdifn.state.class%
     kernel.listener.command_dispatch:
