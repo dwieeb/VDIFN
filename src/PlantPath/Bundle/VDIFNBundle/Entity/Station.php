@@ -60,13 +60,6 @@ class Station
     /**
      * @var string
      *
-     * @ORM\Column(name="fips", type="text", nullable=true)
-     */
-    protected $fips;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="state", type="text", nullable=true)
      */
     protected $state;
@@ -74,9 +67,9 @@ class Station
     /**
      * @var string
      *
-     * @ORM\Column(name="call", type="text", nullable=true)
+     * @ORM\Column(name="icao", type="text", nullable=true)
      */
-    protected $call;
+    protected $icao;
 
     /**
      * @var float
@@ -179,17 +172,15 @@ class Station
                 return $this->setName($value);
             case 'CTRY':
                 return $this->setCountry($value);
-            case 'FIPS':
-                return $this->setFips($value);
             case 'STATE':
                 return $this->setState($value);
-            case 'CALL':
-                return $this->setCall($value);
+            case 'ICAO':
+                return $this->setIcao($value);
             case 'LAT':
                 return $this->setLatitude($this->parseCartesianCoordinateItem($value));
             case 'LON':
                 return $this->setLongitude($this->parseCartesianCoordinateItem($value));
-            case 'ELEV(.1M)':
+            case 'ELEV(M)':
                 return $this->setElevation($this->parseElevation($value));
             case 'BEGIN':
                 return $this->setBeginTime($this->parseDateField($value));
@@ -229,7 +220,7 @@ class Station
             return null;
         }
 
-        return $elevation / 10;
+        return $elevation;
     }
 
     /**
@@ -382,30 +373,6 @@ class Station
     }
 
     /**
-     * Gets the value of fips.
-     *
-     * @return string
-     */
-    public function getFips()
-    {
-        return $this->fips;
-    }
-
-    /**
-     * Sets the value of fips.
-     *
-     * @param string $fips the fips
-     *
-     * @return self
-     */
-    public function setFips($fips)
-    {
-        $this->fips = $fips;
-
-        return $this;
-    }
-
-    /**
      * Gets the value of state.
      *
      * @return string
@@ -430,25 +397,25 @@ class Station
     }
 
     /**
-     * Gets the value of call.
+     * Gets the value of icao.
      *
      * @return string
      */
-    public function getCall()
+    public function getIcao()
     {
-        return $this->call;
+        return $this->icao;
     }
 
     /**
-     * Sets the value of call.
+     * Sets the value of icao.
      *
-     * @param string $call the call
+     * @param string $icao the icao
      *
      * @return self
      */
-    public function setCall($call)
+    public function setIcao($icao)
     {
-        $this->call = $call;
+        $this->icao = $icao;
 
         return $this;
     }

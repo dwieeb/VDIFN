@@ -19,7 +19,7 @@ class StationRepository extends EntityRepository
     {
         return $this
             ->createQueryBuilder('s')
-            ->select('s.usaf, s.wban, s.name, s.call, s.latitude, s.longitude, s.elevation')
+            ->select('s.usaf, s.wban, s.name, s.latitude, s.longitude, s.elevation')
             ->where('s.country = :country')
             ->andWhere('s.state = :state')
             // ->andWhere('s.beginTime IS NOT NULL')
