@@ -38,7 +38,14 @@ class DailyController extends Controller
                 ->getDoctrine()
                 ->getManager()
                 ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-                ->getDsvSumsWithinDateRange($start, $end);
+                ->createQueryBuilder('d')
+                ->select('d.latitude, d.longitude, SUM(d.dsv) AS dsv')
+                ->where('d.time BETWEEN :start AND :end')
+                ->groupBy('d.latitude, d.longitude')
+                ->setParameter('start', $start)
+                ->setParameter('end', $end)
+                ->getQuery()
+                ->getResult();
         }
 
         if (empty($entities)) {

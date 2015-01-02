@@ -61,28 +61,28 @@ class Daily
     /**
      * @var float
      *
-     * @ORM\Column(name="dd10", type="float")
+     * @ORM\Column(name="dd10", type="float", options={"default": 0})
      */
     protected $degreeDay10;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="dd7_2", type="float")
+     * @ORM\Column(name="dd7_2", type="float", options={"default": 0})
      */
     protected $degreeDay72;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="dd4_4", type="float")
+     * @ORM\Column(name="dd4_4", type="float", options={"default": 0})
      */
     protected $degreeDay44;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="dd2_7", type="float")
+     * @ORM\Column(name="dd2_7", type="float", options={"default": 0})
      */
     protected $degreeDay27;
 
