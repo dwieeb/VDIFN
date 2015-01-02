@@ -23,23 +23,4 @@ class DailyRepository extends EntityRepository
             'longitude' => $point->getLongitude(),
         ]);
     }
-
-    /**
-     * Find daily weather data based upon a date range.
-     *
-     * @param  DateTime $start
-     * @param  DateTime $end
-     */
-    public function getDsvSumsWithinDateRange(\DateTime $start, \DateTime $end)
-    {
-        return $this
-            ->createQueryBuilder('d')
-            ->select('d.latitude, d.longitude, SUM(d.dsv) AS dsv')
-            ->where('d.time BETWEEN :start AND :end')
-            ->groupBy('d.latitude, d.longitude')
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->getQuery()
-            ->getResult();
-    }
 }
