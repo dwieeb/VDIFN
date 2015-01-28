@@ -17,7 +17,7 @@ var Interface = new vdifn.Interface(
 
 (function(window) {
     Interface.startPicker = vdifn.datepicker.create({
-        defaultDate: Date.create(),
+        defaultDate: (2).daysBefore(vdifn.latest_date),
         field: document.getElementById('datepicker-start'),
         onSelect: function() {
             var ultimateMaxDate = Interface.endPicker.config().defaultDate;
@@ -44,7 +44,7 @@ var Interface = new vdifn.Interface(
     });
 
     Interface.endPicker = vdifn.datepicker.create({
-        defaultDate: Date.create('2 days from now'),
+        defaultDate: vdifn.latest_date,
         minDate: Interface.startPicker.getDate(),
         field: document.getElementById('datepicker-end')
     });

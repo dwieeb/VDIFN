@@ -15,6 +15,14 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return [];
+        $weather = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
+            ->getLatestOne();
+
+        return $this->render('PlantPathVDIFNBundle:Default:index.html.twig', [
+            'latest' => $weather,
+        ]);
     }
 }
