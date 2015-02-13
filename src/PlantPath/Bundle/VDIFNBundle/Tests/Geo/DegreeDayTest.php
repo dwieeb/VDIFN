@@ -4,7 +4,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Tests\Geo;
 
 use PlantPath\Bundle\VDIFNBundle\Geo\DegreeDay;
 
-class DegreeDayTests extends \PHPUnit_Framework_TestCase
+class DegreeDayTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
