@@ -120,7 +120,7 @@ vdifn.Interface.prototype.resize = function(event) {
  *
  * @return this
  */
-vdifn.Interface.prototype.tilesloaded = function() {
+vdifn.Interface.prototype.idle = function() {
     this.wrapControls();
     this.closeLoadingOverlay();
     this.loadingOverlay.style.backgroundColor = "transparent";
