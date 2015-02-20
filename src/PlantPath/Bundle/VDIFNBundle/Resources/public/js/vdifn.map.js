@@ -33,7 +33,6 @@ vdifn.map.Plottable = function(latLng) {
     this.object = undefined;
     this.map = undefined;
     this.drawn = false;
-    this.current = false;
 };
 
 /**
@@ -118,25 +117,23 @@ vdifn.map.Station.prototype.draw = function() {
  * @return {InfoBox}
  */
 vdifn.map.Station.prototype.getInfoBox = function() {
-    if (!this.current) {
-        var content = document.createElement('div');
-        var loading = document.createElement('ul');
-        loading.classList.add('loading-icon');
-        loading.appendChild(document.createElement('li'));
-        loading.appendChild(document.createElement('li'));
-        loading.appendChild(document.createElement('li'));
-        content.setAttribute('id', 'station-' + this.usaf + '-' + this.wban);
-        content.classList.add('station');
-        content.classList.add('loading');
-        content.appendChild(loading);
+    var content = document.createElement('div');
+    var loading = document.createElement('ul');
+    loading.classList.add('loading-icon');
+    loading.appendChild(document.createElement('li'));
+    loading.appendChild(document.createElement('li'));
+    loading.appendChild(document.createElement('li'));
+    content.setAttribute('id', 'station-' + this.usaf + '-' + this.wban);
+    content.classList.add('station');
+    content.classList.add('loading');
+    content.appendChild(loading);
 
-        this.infoBox = vdifn.map.Plottable.createInfoBox({
-            content: content,
-            boxClass: 'infoBox infoBox-station'
-        });
+    this.infoBox = vdifn.map.Plottable.createInfoBox({
+        content: content,
+        boxClass: 'infoBox infoBox-station'
+    });
 
-        this.getWeatherDetails();
-    }
+    this.getWeatherDetails();
 
     return this.infoBox;
 }
@@ -161,7 +158,6 @@ vdifn.map.Station.prototype.getWeatherDetails = function() {
             var station = document.getElementById('station-' + self.usaf + '-' + self.wban);
             station.classList.remove('loading');
             station.innerHTML = response.text;
-            self.current = true;
         } else {
             var content = self.getInfoBox().getContent();
             content.innerHTML = '<p style="text-align: center">Error loading station.</p>';
@@ -273,6 +269,7 @@ vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
     var infoBox = this.getInfoBox();
     infoBox.open(this.map, this.object);
     infoBox.setVisible(true);
+    Interface.attachListeners();
 };
 
 /**
@@ -282,25 +279,24 @@ vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
  * @return {InfoBox}
  */
 vdifn.map.ModelDataPoint.prototype.getInfoBox = function() {
-    if (!this.current) {
-        var content = document.createElement('div');
-        var loading = document.createElement('ul');
-        loading.classList.add('loading-icon');
-        loading.appendChild(document.createElement('li'));
-        loading.appendChild(document.createElement('li'));
-        loading.appendChild(document.createElement('li'));
-        content.setAttribute('id', 'point-' + this.id);
-        content.classList.add('point');
-        content.classList.add('loading');
-        content.appendChild(loading);
+    var content = document.createElement('div');
+    var loading = document.createElement('ul');
+    loading.classList.add('loading-icon');
+    loading.appendChild(document.createElement('li'));
+    loading.appendChild(document.createElement('li'));
+    loading.appendChild(document.createElement('li'));
+    content.setAttribute('id', 'point-' + this.id);
+    content.setAttribute('data-id', this.id);
+    content.classList.add('point');
+    content.classList.add('loading');
+    content.appendChild(loading);
 
-        this.infoBox = vdifn.map.Plottable.createInfoBox({
-            content: content,
-            boxClass: 'infoBox infoBox-point'
-        });
+    this.infoBox = vdifn.map.Plottable.createInfoBox({
+        content: content,
+        boxClass: 'infoBox infoBox-point'
+    });
 
-        this.getWeatherDetails();
-    }
+    this.getWeatherDetails();
 
     return this.infoBox;
 }
@@ -325,7 +321,7 @@ vdifn.map.ModelDataPoint.prototype.getWeatherDetails = function() {
             var point = document.getElementById('point-' + self.id);
             point.classList.remove('loading');
             point.innerHTML = response.text;
-            self.current = true;
+            Interface.attachListeners();
         } else {
             var content = self.getInfoBox().getContent();
             content.innerHTML = '<p style="text-align: center">Error loading data point.</p>';

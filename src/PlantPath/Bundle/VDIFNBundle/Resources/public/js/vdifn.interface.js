@@ -120,11 +120,43 @@ vdifn.Interface.prototype.resize = function(event) {
  *
  * @return this
  */
-vdifn.Interface.prototype.idle = function() {
+vdifn.Interface.prototype.tilesloaded = function() {
     this.wrapControls();
     this.closeLoadingOverlay();
     this.loadingOverlay.style.backgroundColor = "transparent";
     this.loadingOverlay.classList.add('radial');
+    this.attachListeners();
+
+    return this;
+};
+
+/**
+ * (Re)attach the various event listeners.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.attachListeners = function() {
+    var static = vdifn.Interface.prototype.attachListeners;
+    var div = this.map.getDiv();
+    var pointInfoBoxes = div.querySelectorAll('.infoBox-point');
+
+    if (typeof static.listeners === 'undefined') {
+        static.listeners = {
+            pointInfoBoxes: {}
+        };
+    }
+
+    for (var i = 0; i < pointInfoBoxes.length; i++) {
+        var pointInfoBox = pointInfoBoxes[i];
+        var id = pointInfoBox.querySelector('.point').id;
+
+        var listener = google.maps.event.addDomListener(pointInfoBox, 'click', function(event) {
+            console.log(event.target);
+        });
+
+        google.maps.event.removeListener(static.listeners.pointInfoBoxes[id]);
+        static.listeners.pointInfoBoxes[id] = listener;
+    }
 
     return this;
 };
@@ -220,6 +252,8 @@ vdifn.Interface.prototype.drawDateRange = function(criteria, callback) {
  * @return this
  */
 vdifn.Interface.prototype.drawModelDataPoint = function(modelDataPoint) {
+    var self = this;
+
     if (typeof vdifn.Interface.prototype.drawModelDataPoint.id === 'undefined') {
         vdifn.Interface.prototype.drawModelDataPoint.id = 0;
     }

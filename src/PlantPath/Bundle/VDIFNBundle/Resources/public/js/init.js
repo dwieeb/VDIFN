@@ -107,9 +107,6 @@ var Interface = new vdifn.Interface(
                 Interface.openErrorOverlay("Could not load weather data for the date range specified.");
             }
         });
-
-        Interface.stations.forEach(function(station) { station.current = false; });
-        Interface.modelDataPoints.forEach(function(modelDataPoint) { modelDataPoint.current = false; });
     });
 
     google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseover', function(event) {
@@ -166,7 +163,7 @@ var Interface = new vdifn.Interface(
     });
 
     google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
-    google.maps.event.addListenerOnce(Interface.map, 'idle', Interface.idle.bind(Interface));
+    google.maps.event.addListenerOnce(Interface.map, 'tilesloaded', Interface.tilesloaded.bind(Interface));
     google.maps.event.addDomListener(document.getElementById('error-button'), 'click', Interface.closeErrorOverlay.bind(Interface));
 
     // Initialization
