@@ -165,6 +165,7 @@ var Interface = new vdifn.Interface(
     google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
     google.maps.event.addListenerOnce(Interface.map, 'tilesloaded', Interface.tilesloaded.bind(Interface));
     google.maps.event.addDomListener(document.getElementById('error-button'), 'click', Interface.closeErrorOverlay.bind(Interface));
+    google.maps.event.addDomListener(document.getElementById('message-overlay-close'), 'click', Interface.closeMessageOverlay.bind(Interface));
 
     // Initialization
     google.maps.event.trigger(window, 'resize');

@@ -7,11 +7,12 @@
 vdifn.Interface = function(map, db) {
     this.map = map;
     this.db = db;
-    this.modelDataPoints = [];
-    this.stations = [];
+    this.modelDataPoints = {};
+    this.stations = {};
     this.tooltip = undefined;
-    this.errorOverlay = document.getElementById('error-overlay');
     this.loadingOverlay = document.getElementById('loading-overlay');
+    this.errorOverlay = document.getElementById('error-overlay');
+    this.messageOverlay = document.getElementById('message-overlay');
     this.setupDsvLegend();
 };
 
@@ -136,6 +137,7 @@ vdifn.Interface.prototype.tilesloaded = function() {
  * @return this
  */
 vdifn.Interface.prototype.attachListeners = function() {
+    var self = this;
     var static = vdifn.Interface.prototype.attachListeners;
     var div = this.map.getDiv();
     var pointInfoBoxes = div.querySelectorAll('.infoBox-point');
@@ -151,7 +153,19 @@ vdifn.Interface.prototype.attachListeners = function() {
         var id = pointInfoBox.querySelector('.point').id;
 
         var listener = google.maps.event.addDomListener(pointInfoBox, 'click', function(event) {
-            console.log(event.target);
+            var target = event.target || event.srcElement;
+
+            if (target.classList.contains('actions-subscribe')) {
+                var point = self.modelDataPoints[target.parentNode.getAttribute("data-id")];
+                self.openMessageOverlay();
+                superagent.get(
+                    Routing.generate('fos_user_login', {
+                    })
+                ).end(function(response) {
+                    var inner = document.getElementById('message-overlay-inner');
+                    inner.innerHTML = response.text;
+                });
+            }
         });
 
         google.maps.event.removeListener(static.listeners.pointInfoBoxes[id]);
@@ -214,6 +228,54 @@ vdifn.Interface.prototype.closeErrorOverlay = function() {
 };
 
 /**
+ * Open the message overlay with a message.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.openMessageOverlay = function() {
+    this.messageOverlay.style.display = "block";
+    this.messageOverlay.style.opacity = 1;
+    this.messageOverlay.style.visibility = "visible";
+
+    var content = this.generateLoadingBars();
+    var inner = document.getElementById('message-overlay-inner');
+    inner.innerHTML = '';
+    inner.appendChild(content);
+
+    return this;
+};
+
+/**
+ * Close the error overlay.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.closeMessageOverlay = function() {
+    this.messageOverlay.style.opacity = 0;
+    this.messageOverlay.style.visibility = "hidden";
+
+    return this;
+};
+
+/**
+ * Generate DOM elements that represent loading.
+ *
+ * @return DOMElement
+ */
+vdifn.Interface.prototype.generateLoadingBars = function() {
+    var content = document.createElement('div');
+    var loading = document.createElement('ul');
+    loading.classList.add('loading-icon');
+    loading.appendChild(document.createElement('li'));
+    loading.appendChild(document.createElement('li'));
+    loading.appendChild(document.createElement('li'));
+    content.classList.add('loading');
+    content.appendChild(loading);
+
+    return content;
+};
+
+/**
  * Draw a date range of aggregated data onto the map.
  *
  * @param  {Date} startDate
@@ -231,6 +293,7 @@ vdifn.Interface.prototype.drawDateRange = function(criteria, callback) {
     this.db.findPredictedWeatherData(criteria, function(results) {
         for (var point in results) {
             self.drawModelDataPoint(new vdifn.map.ModelDataPoint(
+                point,
                 new google.maps.LatLng(results[point].latitude, results[point].longitude),
                 results[point].dsv
             ));
@@ -258,7 +321,7 @@ vdifn.Interface.prototype.drawModelDataPoint = function(modelDataPoint) {
         vdifn.Interface.prototype.drawModelDataPoint.id = 0;
     }
 
-    this.modelDataPoints.push(modelDataPoint);
+    this.modelDataPoints[modelDataPoint.id] = modelDataPoint;
     modelDataPoint.plot(this.map);
     modelDataPoint.id = vdifn.Interface.prototype.drawModelDataPoint.id++;
 
@@ -293,7 +356,7 @@ vdifn.Interface.prototype.drawStations = function() {
  * @return this
  */
 vdifn.Interface.prototype.drawStation = function(station) {
-    this.stations.push(station);
+    this.stations[station.usaf + '-' + station.wban] = station;
     station.plot(this.map);
 
     google.maps.event.addListener(station.object, 'click', station.onclick.bind(station));
@@ -311,7 +374,7 @@ vdifn.Interface.prototype.clearModelDataPoints = function() {
         this.modelDataPoints[i].plot(null);
     }
 
-    this.modelDataPoints.length = 0;
+    this.modelDataPoints = {};
 
     return this;
 };

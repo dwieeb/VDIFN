@@ -117,16 +117,10 @@ vdifn.map.Station.prototype.draw = function() {
  * @return {InfoBox}
  */
 vdifn.map.Station.prototype.getInfoBox = function() {
-    var content = document.createElement('div');
-    var loading = document.createElement('ul');
-    loading.classList.add('loading-icon');
-    loading.appendChild(document.createElement('li'));
-    loading.appendChild(document.createElement('li'));
-    loading.appendChild(document.createElement('li'));
+    var content = Interface.generateLoadingBars();
+
     content.setAttribute('id', 'station-' + this.usaf + '-' + this.wban);
     content.classList.add('station');
-    content.classList.add('loading');
-    content.appendChild(loading);
 
     this.infoBox = vdifn.map.Plottable.createInfoBox({
         content: content,
@@ -193,9 +187,9 @@ vdifn.map.DataPoint.prototype = Object.create(vdifn.map.Plottable.prototype);
  * @param  {google.maps.LatLng} latLng
  * @param  {number} dsv
  */
-vdifn.map.ModelDataPoint = function(latLng, dsv) {
+vdifn.map.ModelDataPoint = function(id, latLng, dsv) {
     vdifn.map.DataPoint.call(this, latLng);
-    this.id = undefined;
+    this.id = id;
     this.dsv = dsv;
     this.size = 12; // km
 };
@@ -279,17 +273,11 @@ vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
  * @return {InfoBox}
  */
 vdifn.map.ModelDataPoint.prototype.getInfoBox = function() {
-    var content = document.createElement('div');
-    var loading = document.createElement('ul');
-    loading.classList.add('loading-icon');
-    loading.appendChild(document.createElement('li'));
-    loading.appendChild(document.createElement('li'));
-    loading.appendChild(document.createElement('li'));
+    var content = Interface.generateLoadingBars();
+
     content.setAttribute('id', 'point-' + this.id);
     content.setAttribute('data-id', this.id);
     content.classList.add('point');
-    content.classList.add('loading');
-    content.appendChild(loading);
 
     this.infoBox = vdifn.map.Plottable.createInfoBox({
         content: content,

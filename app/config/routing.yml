@@ -6,6 +6,12 @@ plant_path_vdifn:
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
+fos_user_login:
+    pattern:  /login
+    defaults: { _controller: FOSUserBundle:Security:login }
+    options:
+        expose: true
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

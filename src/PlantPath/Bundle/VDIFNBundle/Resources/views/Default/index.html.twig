@@ -62,6 +62,15 @@
             </div>
         </div>
     </div>
+    <div id="message-overlay" class="overlay">
+        <div id="message" class="message">
+            {% image '@PlantPathVDIFNBundle/Resources/public/img/close.png' %}
+            <img id="message-overlay-close" class="close" src="{{ asset_url }}" alt="x">
+            {% endimage %}
+            <div id="message-overlay-inner">
+            </div>
+        </div>
+    </div>
     <fieldset id="dsv-legend">
         <legend>Severity Legend:</legend>
         <div id="dsv-very-high" data-dsv="20" class="dsv">
