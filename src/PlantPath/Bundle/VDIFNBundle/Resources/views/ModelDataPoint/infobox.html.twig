@@ -5,7 +5,10 @@
 </div>
 
 <h3 class="actions-title">Actions</h3>
-<input type="button" class="actions-subscribe" value="Subscribe to Notifications" />
+{% if not app.user %}
+<p style="margin: 0 0 2px;">You must be <a class="login" href="#">logged in</a>.</p>
+{% endif %}
+<input type="button" class="actions-subscribe button{% if not app.user %} disabled{% endif %}" value="Subscribe to Notifications" {% if not app.user %}disabled="disabled"{% endif %} />
 
 <h3 class="weather-details-title">Weather Summary</h3>
 <div class="weather-details">

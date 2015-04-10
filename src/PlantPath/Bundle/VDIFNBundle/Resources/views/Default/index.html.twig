@@ -21,6 +21,7 @@
     '@PlantPathVDIFNBundle/Resources/public/bower-components/momentjs/min/moment.min.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/superagent/superagent.js'
     '@PlantPathVDIFNBundle/Resources/public/bower-components/pikaday/pikaday.js'
+    '@PlantPathVDIFNBundle/Resources/public/bower-components/form-serialize/index.js'
     '@PlantPathVDIFNBundle/Resources/public/js/compat.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.js'
     '@PlantPathVDIFNBundle/Resources/public/js/vdifn.util.js'
@@ -34,6 +35,7 @@
         vdifn.parameters = {{ parameters|json_encode|raw }};
         vdifn.parameters.static_path = "{{ asset('bundles/plantpathvdifn') }}";
         vdifn.latest_date = new Date('{{ latest.time|date('Y-m-d\\TH:i:sP') }}');
+        vdifn.logged_in = {% if app.user %}true{% else %}false{% endif %};
     </script>
 {% javascripts filter='?uglifyjs2'
     '@PlantPathVDIFNBundle/Resources/public/js/init.js' %}
@@ -58,7 +60,7 @@
             <div>
                 <div id="error-icon"></div>
                 <div id="error-text"></div>
-                <div id="error-button" class="button">Okay</div>
+                <div id="error-button" class="button button-primary">Okay</div>
             </div>
         </div>
     </div>
@@ -152,7 +154,7 @@
                         <span class="datepicker-information" id="datepicker-end-information">?</span>
                     </div>
                 </fieldset>
-                <input type="button" class="button" id="select" value="Select" />
+                <input type="button" class="button button-primary" id="select" value="Select" />
             </div>
         </div>
         <footer>

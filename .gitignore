@@ -22,6 +22,9 @@ composer.phar
 # Entity backups
 *~
 
+# NPM
+**/npm-debug.log
+
 # Bower
 src/PlantPath/Bundle/VDIFNBundle/Resources/public/bower-components
 

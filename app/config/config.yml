@@ -32,6 +32,10 @@ parameters:
     vdifn.google_maps.sensor: 'false'
     vdifn.sentry_dsn: http://dacdc28d5e604c6ba8e016f686b03e65:9c1399d1197641bb9647b4f83d29e162@sentry.dwieeb.com/2
 
+services:
+    authentication_handler:
+        class: PlantPath\Bundle\VDIFNBundle\Handler\AuthenticationHandler
+
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
