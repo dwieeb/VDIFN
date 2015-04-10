@@ -1,6 +1,7 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+        FOS\UserBundle\Model\UserInterface: sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -15,9 +16,6 @@ security:
 
         fos_userbundle:
             id: fos_user.user_provider.username
-
-    encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
 
     firewalls:
         main:

@@ -372,6 +372,10 @@ footer {
     transition: all .25s ease;
 }
 
+#login-form table {
+    margin: 0 auto;
+}
+
 #error {
     width: 200px;
     margin: -75px 0 0 -75px;
