@@ -8,7 +8,19 @@
 {% if not app.user %}
 <p style="margin: 0 0 2px;">You must be <a class="login" href="#">logged in</a>.</p>
 {% endif %}
+{% if subscription %}
+<ul>
+    <li>
+        <span class="subscribed">
+            <span class="message">Subscribed to notifications when severity level reaches or surpasses:<br />
+                <span class="dsv-threshold dsv-{{ subscription.threshold }}"><span></span>{{ subscription.getPrettyThreshold }}</span>
+            </span>
+        </span>
+    </li>
+</ul>
+{% else %}
 <input type="button" class="actions-subscribe button{% if not app.user %} disabled{% endif %}" value="Subscribe to Notifications" {% if not app.user %}disabled="disabled"{% endif %} />
+{% endif %}
 
 <h3 class="weather-details-title">Weather Summary</h3>
 <div class="weather-details">

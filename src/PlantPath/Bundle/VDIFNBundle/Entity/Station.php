@@ -417,6 +417,22 @@ class Station
     }
 
     /**
+     * Set the value of latitude and longitude.
+     *
+     * @param  PlantPath\Bundle\VDIFNBundle\Geo\Point $point
+     *
+     * @return self
+     */
+    public function setPoint(Point $point)
+    {
+        $this
+            ->setLatitude($point->getLatitude())
+            ->setLongitude($point->getLongitude());
+
+        return $this;
+    }
+
+    /**
      * Gets the value of latitude.
      *
      * @return float

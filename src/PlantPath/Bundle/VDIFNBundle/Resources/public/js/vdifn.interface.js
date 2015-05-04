@@ -8,6 +8,7 @@ vdifn.Interface = function(map, db) {
     this.map = map;
     this.db = db;
     this.modelDataPoints = {};
+    this.activeModelDataPoint = undefined;
     this.stations = {};
     this.tooltip = undefined;
     this.loadingOverlay = document.getElementById('loading-overlay');
@@ -141,23 +142,62 @@ vdifn.Interface.prototype.attachListeners = function() {
     var static = vdifn.Interface.prototype.attachListeners;
     var div = this.map.getDiv();
     var pointInfoBoxes = div.querySelectorAll('.infoBox-point');
+    var listener;
 
     if (typeof static.listeners === 'undefined') {
         static.listeners = {
-            pointInfoBoxes: {}
+            pointInfoBoxes: {},
+            message: null
         };
     }
+
+    listener = google.maps.event.addDomListener(document.getElementById('message'), 'click', function(event) {
+        var target = event.target || event.srcElement;
+
+        if (target.id == "form_save") {
+            var form = document.getElementById('subscription-form');
+            var latitude = document.getElementById('form_latitude');
+            var longitude = document.getElementById('form_longitude');
+            latitude.value = self.activeModelDataPoint.latLng.lat();
+            longitude.value = self.activeModelDataPoint.latLng.lng();
+
+            superagent.post(
+                Routing.generate('subscriptions_form')
+            ).send(
+                serialize(form)
+            ).end(function(response) {
+                if (response.ok) {
+                    self.closeMessageOverlay();
+                    self.activeModelDataPoint.getInfoBox();
+                }
+            });
+
+            event.preventDefault();
+        }
+    });
+
+    google.maps.event.removeListener(static.listeners.message);
+    static.listeners.message = listener;
 
     for (var i = 0; i < pointInfoBoxes.length; i++) {
         var pointInfoBox = pointInfoBoxes[i];
         var id = pointInfoBox.querySelector('.point').getAttribute('data-id');
         var point = self.modelDataPoints[id];
 
-        var listener = google.maps.event.addDomListener(pointInfoBox, 'click', function(event) {
+        listener = google.maps.event.addDomListener(pointInfoBox, 'click', function(event) {
             var target = event.target || event.srcElement;
 
             if (target.classList.contains('actions-subscribe')) {
-                // TODO
+                self.openMessageOverlay();
+
+                superagent.get(
+                    Routing.generate('subscriptions_form')
+                ).end(function(response) {
+                    var inner = document.getElementById('message-overlay-inner');
+                    inner.innerHTML = response.text;
+                });
+
+                event.preventDefault();
             } else if (target.classList.contains('login')) {
                 self.openMessageOverlay();
 
@@ -185,9 +225,9 @@ vdifn.Interface.prototype.attachListeners = function() {
                         event.preventDefault();
                     });
                 });
-            }
 
-            event.preventDefault();
+                event.preventDefault();
+            }
         });
 
         google.maps.event.removeListener(static.listeners.pointInfoBoxes[id]);

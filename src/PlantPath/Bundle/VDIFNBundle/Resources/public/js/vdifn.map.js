@@ -199,7 +199,7 @@ vdifn.map.ModelDataPoint.prototype = Object.create(vdifn.map.DataPoint.prototype
 /**
  * Get the hex color code of a given disease severity value.
  *
- * @param  {number} dsv
+ * @param  {number|string} dsv
  *
  * @return {string}
  */
@@ -263,6 +263,7 @@ vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
     var infoBox = this.getInfoBox();
     infoBox.open(this.map, this.object);
     infoBox.setVisible(true);
+    Interface.activeModelDataPoint = this;
     Interface.attachListeners();
 };
 

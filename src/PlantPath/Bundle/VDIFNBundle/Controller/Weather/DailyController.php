@@ -63,6 +63,7 @@ class DailyController extends Controller
      */
     public function pointAction(Request $request, $latitude, $longitude)
     {
+        $user = $this->get('security.context')->getToken()->getUser();
         $point = new Point($latitude, $longitude);
 
         $startDate = \DateTime::createFromFormat('Ymd', $request->query->get('startDate'));
@@ -79,9 +80,9 @@ class DailyController extends Controller
         $startDate->setTime(0, 0, 0);
         $endDate->setTime(0, 0, 0);
 
-        $weather = $this
-            ->getDoctrine()
-            ->getManager()
+        $em = $this->getDoctrine()->getManager();
+
+        $weather = $em
             ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
             ->createQueryBuilder('d')
             ->where('d.time BETWEEN :start AND :end')
@@ -95,9 +96,22 @@ class DailyController extends Controller
             ->getQuery()
             ->getResult();
 
+        $subscription = $em
+            ->getRepository('PlantPathVDIFNBundle:Subscription')
+            ->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->andWhere('s.latitude = :latitude')
+            ->andWhere('s.longitude = :longitude')
+            ->setParameter('user', $user)
+            ->setParameter('latitude', $point->getLatitude())
+            ->setParameter('longitude', $point->getLongitude())
+            ->getQuery()
+            ->getOneOrNullResult();
+
         return $this->render('PlantPathVDIFNBundle:ModelDataPoint:infobox.html.twig', [
             'point' => $point,
             'weather' => $weather,
+            'subscription' => $subscription,
         ]);
     }
 }

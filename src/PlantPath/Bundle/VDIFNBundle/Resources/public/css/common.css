@@ -205,6 +205,44 @@ fieldset {
     float: left;
 }
 
+.dsv-threshold > span {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    margin: 2px;
+}
+
+.dsv-threshold.dsv-very_high > span,
+#form_threshold option[value="very_high"] {
+    background: rgb(204, 0, 0);
+    background: rgba(204, 0, 0, 0.4);
+}
+
+.dsv-threshold.dsv-high > span,
+#form_threshold option[value="high"]  {
+    background: rgb(255, 128, 0);
+    background: rgba(255, 128, 0, 0.4);
+}
+
+.dsv-threshold.dsv-medium > span,
+#form_threshold option[value="medium"]  {
+    background: rgb(255, 215, 0);
+    background: rgba(255, 215, 0, 0.4);
+}
+
+.dsv-threshold.dsv-low > span,
+#form_threshold option[value="low"]  {
+    background: rgb(125, 255, 35);
+    background: rgba(125, 255, 35, 0.4);
+}
+
+.dsv-threshold.dsv-very_low > span,
+#form_threshold option[value="very_low"]  {
+    background: rgb(0, 201, 87);
+    background: rgba(0, 201, 87, 0.4);
+}
+
 footer {
     position: absolute;
     bottom: 0;
@@ -496,6 +534,11 @@ footer {
     right: -5px;
     padding: 10px;
     cursor: pointer;
+}
+
+.infoBox ul:not(.loading-icon) {
+    padding-left: 25px;
+    margin: 5px 0;
 }
 
 .infoBox table {

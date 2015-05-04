@@ -131,7 +131,7 @@ var Interface = new vdifn.Interface(
 
     [
         {
-            element: document.getElementById('dsv-very-high').getElementsByTagName('div')[0],
+            element: document.getElementById('dsv-very_high').getElementsByTagName('div')[0],
             tooltip: 'Very high likelihood of disease<br />(accumulated DSVs &ge; 20)'
         },
         {
@@ -147,7 +147,7 @@ var Interface = new vdifn.Interface(
             tooltip: 'Low likelihood of disease<br />(5 &le; accumulated DSVs &lt; 10)'
         },
         {
-            element: document.getElementById('dsv-very-low').getElementsByTagName('div')[0],
+            element: document.getElementById('dsv-very_low').getElementsByTagName('div')[0],
             tooltip: 'Very low likelihood of disease<br />(0 &le; accumulated DSVs &lt; 5)'
         }
     ].forEach(function(severity) {
