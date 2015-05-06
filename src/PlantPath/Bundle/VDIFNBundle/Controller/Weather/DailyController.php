@@ -63,7 +63,8 @@ class DailyController extends Controller
      */
     public function pointAction(Request $request, $latitude, $longitude)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $securityContext = $this->get('security.context');
+        $user = $securityContext->getToken()->getUser();
         $point = new Point($latitude, $longitude);
 
         $startDate = \DateTime::createFromFormat('Ymd', $request->query->get('startDate'));
@@ -96,22 +97,24 @@ class DailyController extends Controller
             ->getQuery()
             ->getResult();
 
-        $subscription = $em
-            ->getRepository('PlantPathVDIFNBundle:Subscription')
-            ->createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->andWhere('s.latitude = :latitude')
-            ->andWhere('s.longitude = :longitude')
-            ->setParameter('user', $user)
-            ->setParameter('latitude', $point->getLatitude())
-            ->setParameter('longitude', $point->getLongitude())
-            ->getQuery()
-            ->getOneOrNullResult();
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $subscription = $em
+                ->getRepository('PlantPathVDIFNBundle:Subscription')
+                ->createQueryBuilder('s')
+                ->where('s.user = :user')
+                ->andWhere('s.latitude = :latitude')
+                ->andWhere('s.longitude = :longitude')
+                ->setParameter('user', $user)
+                ->setParameter('latitude', $point->getLatitude())
+                ->setParameter('longitude', $point->getLongitude())
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
 
         return $this->render('PlantPathVDIFNBundle:ModelDataPoint:infobox.html.twig', [
             'point' => $point,
             'weather' => $weather,
-            'subscription' => $subscription,
+            'subscription' => !empty($subscription) ? $subscription : null,
         ]);
     }
 }
