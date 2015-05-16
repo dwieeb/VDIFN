@@ -4,6 +4,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -61,5 +62,34 @@ class SubscriptionController extends Controller
         return $this->render('PlantPathVDIFNBundle:Subscription:form.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/subscriptions", name="subscriptions_delete", options={"expose"=true})
+     */
+    public function subscriptionsDeleteAction(Request $request)
+    {
+        $point = new Point(
+            $request->query->get('latitude'),
+            $request->query->get('longitude')
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('PlantPathVDIFNBundle:Subscription');
+
+        $subscription = $repo->createQueryBuilder('s')
+            ->where('s.latitude = :latitude')
+            ->andWhere('s.longitude = :longitude')
+            ->andWhere('s.user = :user')
+            ->getQuery()
+            ->setParameter('latitude', $point->getLatitude())
+            ->setParameter('longitude', $point->getLongitude())
+            ->setParameter('user', $this->get('security.context')->getToken()->getUser())
+            ->getSingleResult();
+
+        $em->remove($subscription);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 }

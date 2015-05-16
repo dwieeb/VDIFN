@@ -227,6 +227,17 @@ vdifn.Interface.prototype.attachListeners = function() {
                 });
 
                 event.preventDefault();
+            } else if (target.classList.contains('unsubscribe')) {
+                superagent.del(
+                    Routing.generate('subscriptions_delete')
+                ).query({
+                    'latitude': self.activeModelDataPoint.latLng.lat(),
+                    'longitude': self.activeModelDataPoint.latLng.lng()
+                }).end(function(response) {
+                    if (response.ok) {
+                        self.activeModelDataPoint.getInfoBox();
+                    }
+                });
             }
         });
 
