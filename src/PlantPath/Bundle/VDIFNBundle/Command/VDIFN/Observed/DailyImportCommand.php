@@ -107,16 +107,16 @@ class DailyImportCommand extends ContainerAwareCommand
 
         $logger->info('Finished daily import.');
 
-        $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:DailyImport/finished.html.twig', [
-            'time' => $startTime->diff(new \DateTime()),
-        ]);
+        // $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:DailyImport/finished.html.twig', [
+        //     'time' => $startTime->diff(new \DateTime()),
+        // ]);
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('VDIFN Daily Import for Observed Data Finished')
-            ->setFrom($this->getContainer()->getParameter('vdifn.admin.email'))
-            ->setTo($this->getContainer()->getParameter('vdifn.admin.emails'))
-            ->setBody($body, 'text/html');
+        // $message = \Swift_Message::newInstance()
+        //     ->setSubject('VDIFN Daily Import for Observed Data Finished')
+        //     ->setFrom($this->getContainer()->getParameter('vdifn.admin.email'))
+        //     ->setTo($this->getContainer()->getParameter('vdifn.admin.emails'))
+        //     ->setBody($body, 'text/html');
 
-        $this->getContainer()->get('mailer')->send($message);
+        // $this->getContainer()->get('mailer')->send($message);
     }
 }
