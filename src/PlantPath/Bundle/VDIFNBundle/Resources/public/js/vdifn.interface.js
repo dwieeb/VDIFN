@@ -154,10 +154,10 @@ vdifn.Interface.prototype.attachListeners = function() {
     listener = google.maps.event.addDomListener(document.getElementById('message'), 'click', function(event) {
         var target = event.target || event.srcElement;
 
-        if (target.id == "form_save") {
+        if (target.id == "subscription_save") {
             var form = document.getElementById('subscription-form');
-            var latitude = document.getElementById('form_latitude');
-            var longitude = document.getElementById('form_longitude');
+            var latitude = document.getElementById('subscription_latitude');
+            var longitude = document.getElementById('subscription_longitude');
             latitude.value = self.activeModelDataPoint.latLng.lat();
             longitude.value = self.activeModelDataPoint.latLng.lng();
 
