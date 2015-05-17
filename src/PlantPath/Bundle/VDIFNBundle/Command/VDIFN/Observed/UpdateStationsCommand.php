@@ -193,17 +193,17 @@ class UpdateStationsCommand extends ContainerAwareCommand
 
             $this->logger->info('Finished update.');
 
-            $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:UpdateStations/finished.html.twig', [
-                'time' => $startTime->diff(new \DateTime()),
-            ]);
+            // $body = $this->getContainer()->get('templating')->render('PlantPathVDIFNBundle:Command:UpdateStations/finished.html.twig', [
+            //     'time' => $startTime->diff(new \DateTime()),
+            // ]);
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject('VDIFN Update Stations Finished')
-                ->setFrom($this->getContainer()->getParameter('vdifn.admin.email'))
-                ->setTo($this->getContainer()->getParameter('vdifn.admin.emails'))
-                ->setBody($body, 'text/html');
+            // $message = \Swift_Message::newInstance()
+            //     ->setSubject('VDIFN Update Stations Finished')
+            //     ->setFrom($this->getContainer()->getParameter('vdifn.admin.email'))
+            //     ->setTo($this->getContainer()->getParameter('vdifn.admin.emails'))
+            //     ->setBody($body, 'text/html');
 
-            $this->getContainer()->get('mailer')->send($message);
+            // $this->getContainer()->get('mailer')->send($message);
         }
     }
 }
