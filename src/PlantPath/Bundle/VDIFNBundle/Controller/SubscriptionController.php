@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PlantPath\Bundle\VDIFNBundle\Form\SubscriptionType;
 use PlantPath\Bundle\VDIFNBundle\Entity\Subscription;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 
@@ -22,25 +23,11 @@ class SubscriptionController extends Controller
     {
         $subscription = new Subscription();
 
-        $form = $this->createFormBuilder($subscription)
-            ->add('latitude', 'hidden')
-            ->add('longitude', 'hidden')
-            ->add('threshold', 'choice', [
-                'choices' => [
-                    'very_high' => 'Very High',
-                    'high' => 'High',
-                    'medium' => 'Medium',
-                    'low' => 'Low',
-                ],
-                'label' => false,
-                'required' => true,
-            ])
-            ->add('save', 'submit', ['label' => 'Subscribe'])
-            ->getForm();
+        $form = $this->createForm(new SubscriptionType(), $subscription);
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $latitude = $form->get('latitude')->getData();
             $longitude = $form->get('longitude')->getData();
 

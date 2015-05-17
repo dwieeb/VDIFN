@@ -1,5 +1,8 @@
-<p>Please select a threshold at which to receive email notifications when reached or surpassed.</p>
-<p>You will receive a notification at the email address with which you registered.</p>
+<p>Please select an emergence date (or date of last fungicide application) and then select a severity threshold at which to receive email notifications.</p>
+<p>You will receive a notification at the email address that you registered with{% if app.user %} ({{ app.user.email }}){% endif %}.</p>
 {{ form_start(form, {'attr': {'id': 'subscription-form'}}) }}
+{{ form_row(form.crop) }}
+{{ form_row(form.infliction) }}
+{{ form_row(form.emergenceDate) }}
 {{ form_row(form.threshold) }}
 {{ form_end(form) }}

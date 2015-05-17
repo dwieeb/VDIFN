@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PlantPath\Bundle\VDIFNBundle\Geo\Crop;
+use PlantPath\Bundle\VDIFNBundle\Geo\Infliction;
 
 class DefaultController extends Controller
 {
@@ -23,6 +25,8 @@ class DefaultController extends Controller
 
         return $this->render('PlantPathVDIFNBundle:Default:index.html.twig', [
             'latest' => $weather,
+            'crops' => Crop::getFormChoices(),
+            'inflictions' => Infliction::getFormChoices(),
         ]);
     }
 }

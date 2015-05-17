@@ -38,8 +38,8 @@ services:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: %locale% }
-    translator: ~
+    translator:      { fallback: %locale% }
+    # translator: ~
     secret:          %secret%
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -61,7 +61,7 @@ monolog:
         sentry:
             type:  raven
             dsn:   %vdifn.sentry_dsn%
-            level: notice
+            level: error
 
 # Twig Configuration
 twig:

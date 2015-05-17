@@ -195,6 +195,15 @@ vdifn.Interface.prototype.attachListeners = function() {
                 ).end(function(response) {
                     var inner = document.getElementById('message-overlay-inner');
                     inner.innerHTML = response.text;
+
+                    var d = new Date(document.getElementById('datepicker-start').value);
+                    document.getElementById('subscription_emergenceDate_month').value = d.getMonth() + 1;
+                    document.getElementById('subscription_emergenceDate_day').value = d.getDate();
+                    document.getElementById('subscription_emergenceDate_year').value = d.getFullYear();
+                    self.registerInflictionSelectHandler(
+                        document.getElementById('subscription_crop'),
+                        document.getElementById('subscription_infliction')
+                    );
                 });
 
                 event.preventDefault();
@@ -246,6 +255,58 @@ vdifn.Interface.prototype.attachListeners = function() {
     }
 
     return this;
+};
+
+vdifn.Interface.prototype.registerInflictionSelectHandler = function(cropSelect, inflictionSelect) {
+    var static = vdifn.Interface.prototype.registerInflictionSelectHandler;
+
+    if (typeof static.listeners === 'undefined') {
+        static.listeners = {};
+    }
+
+    if (cropSelect in static.listeners) {
+        google.maps.event.removeListener(static.listeners[cropSelect]);
+    }
+
+    static.listeners[cropSelect] = google.maps.event.addDomListener(cropSelect, 'change', function(event) {
+        var optgroups = inflictionSelect.childNodes;
+        var selected = false;
+
+        for (var i = 0; i < optgroups.length; i++) {
+            if (optgroups[i].nodeType !== Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            var optgroup = optgroups[i];
+            var options = optgroup.childNodes;
+            var firstOption = false;
+
+            for (var j = 0; j < options.length; j++) {
+                if (options[j].nodeType !== Node.ELEMENT_NODE) {
+                    continue;
+                }
+
+                options[j].removeAttribute('selected');
+
+                if (firstOption === false) {
+                    firstOption = options[j];
+                }
+            }
+
+            if (optgroup.label.indexOf(this.selectedOptions[0].innerHTML) === 0) {
+                optgroup.style.display = 'block';
+
+                if (selected === false) {
+                    firstOption.selected = "selected";
+                    selected = true;
+                }
+            } else {
+                optgroup.style.display = 'none';
+            }
+        }
+    });
+
+    google.maps.event.trigger(cropSelect, 'change');
 };
 
 /**

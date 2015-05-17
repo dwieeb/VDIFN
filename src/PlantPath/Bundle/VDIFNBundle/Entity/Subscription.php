@@ -11,6 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(
  *     name="subscriptions",
+ *     indexes={
+ *         @ORM\Index(
+ *             name="emergence_date_idx",
+ *             columns={"emergence_date"}
+ *         )
+ *     },
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
  *             name="user_id_latitude_longitude_idx",
@@ -59,18 +65,25 @@ class Subscription
     protected $longitude;
 
     /**
-     * @var bool
+     * @var string
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="crop", type="text", nullable=false)
      */
-    protected $active = true;
+    protected $crop;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="infliction", type="text", nullable=false)
+     */
+    protected $infliction;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="active_at", type="utcdatetime", nullable=false)
+     * @ORM\Column(name="emergence_date", type="utcdatetime", nullable=false)
      */
-    protected $activeAt;
+    protected $emergenceDate;
 
     /**
      * @var \DateTime
@@ -95,7 +108,6 @@ class Subscription
     public function __construct()
     {
         $now = new \DateTime();
-        $this->setActiveAt($now);
         $this->setCreatedAt($now);
     }
 
@@ -241,45 +253,67 @@ class Subscription
     }
 
     /**
-     * Get active.
+     * Get crop.
      *
-     * @return active.
+     * @return crop.
      */
-    public function getActive()
+    public function getCrop()
     {
-        return $this->active;
+        return $this->crop;
     }
 
     /**
-     * Set active.
+     * Set crop.
      *
-     * @param active the value to set.
+     * @param crop the value to set.
      */
-    public function setActive($active)
+    public function setCrop($crop)
     {
-        $this->active = $active;
+        $this->crop = $crop;
 
         return $this;
     }
 
     /**
-     * Get activeAt.
+     * Get infliction.
      *
-     * @return activeAt.
+     * @return infliction.
      */
-    public function getActiveAt()
+    public function getInfliction()
     {
-        return $this->activeAt;
+        return $this->infliction;
     }
 
     /**
-     * Set activeAt.
+     * Set infliction.
      *
-     * @param activeAt the value to set.
+     * @param infliction the value to set.
      */
-    public function setActiveAt(\DateTime $activeAt)
+    public function setInfliction($infliction)
     {
-        $this->activeAt = $activeAt;
+        $this->infliction = $infliction;
+
+        return $this;
+    }
+
+    /**
+     * Get emergenceDate.
+     *
+     * @return emergenceDate.
+     */
+    public function getEmergenceDate()
+    {
+        return $this->emergenceDate;
+    }
+
+    /**
+     * Set emergenceDate.
+     *
+     * @param emergenceDate the value to set.
+     */
+    public function setEmergenceDate(\DateTime $emergenceDate)
+    {
+        $this->emergenceDate = $emergenceDate;
 
         return $this;
     }

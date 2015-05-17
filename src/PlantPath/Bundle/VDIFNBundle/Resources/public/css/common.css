@@ -213,32 +213,27 @@ fieldset {
     margin: 2px;
 }
 
-.dsv-threshold.dsv-very_high > span,
-#form_threshold option[value="very_high"] {
+.dsv-threshold.dsv-very_high > span {
     background: rgb(204, 0, 0);
     background: rgba(204, 0, 0, 0.4);
 }
 
-.dsv-threshold.dsv-high > span,
-#form_threshold option[value="high"]  {
+.dsv-threshold.dsv-high > span {
     background: rgb(255, 128, 0);
     background: rgba(255, 128, 0, 0.4);
 }
 
-.dsv-threshold.dsv-medium > span,
-#form_threshold option[value="medium"]  {
+.dsv-threshold.dsv-medium > span {
     background: rgb(255, 215, 0);
     background: rgba(255, 215, 0, 0.4);
 }
 
-.dsv-threshold.dsv-low > span,
-#form_threshold option[value="low"]  {
+.dsv-threshold.dsv-low > span {
     background: rgb(125, 255, 35);
     background: rgba(125, 255, 35, 0.4);
 }
 
-.dsv-threshold.dsv-very_low > span,
-#form_threshold option[value="very_low"]  {
+.dsv-threshold.dsv-very_low > span {
     background: rgb(0, 201, 87);
     background: rgba(0, 201, 87, 0.4);
 }
@@ -414,6 +409,27 @@ footer {
     margin: 0 auto;
 }
 
+#subscription-form label {
+    display: block;
+}
+
+#subscription-form > div:nth-of-type(1),
+#subscription-form > div:nth-of-type(2) {
+    float: left;
+}
+
+#subscription-form > div:nth-of-type(2) {
+    margin-left: 10px;
+}
+
+#subscription-form > div:nth-of-type(3) {
+    clear: both;
+}
+
+#subscription_emergenceDate > select {
+    margin-right: 5px;
+}
+
 #error {
     width: 200px;
     margin: -75px 0 0 -75px;
@@ -431,7 +447,7 @@ footer {
     position: relative;
     width: 400px;
     height: auto;
-    margin: -100px 0 0 -190px;
+    margin: -135px 0 0 -190px;
     padding: 10px
 }
 
