@@ -5,7 +5,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Predicted;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily as DailyWeather;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Hourly as HourlyWeather;
 use PlantPath\Bundle\VDIFNBundle\Geo\DateUtils;
-use PlantPath\Bundle\VDIFNBundle\Geo\DiseaseSeverity;
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -102,7 +102,7 @@ class AggregateCommand extends ContainerAwareCommand
                 ->getResult();
 
         if (9 !== count($hourlies)) {
-            throw new \UnexpectedValueException('Not enough hourly data to aggregate this day: ' . $day->format('c'));
+            throw new \UnexpectedValueException('Not enough hourly data to aggregate day.');
         }
 
         $hourlyObjects = [];
@@ -180,7 +180,7 @@ class AggregateCommand extends ContainerAwareCommand
 
             array_pop($hourlies);
 
-            list($meanTemperature, $leafWettingTime) = DiseaseSeverity::calculateTemperatureAndLeafWettingTime($hourlies, $threshold);
+            list($meanTemperature, $leafWettingTime) = DiseaseModel::calculateTemperatureAndLeafWettingTime($hourlies, $threshold);
 
             $daily = $this->dailyRepo->getOneBySpaceTime($date, $point) ?: DailyWeather::create();
 

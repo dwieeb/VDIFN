@@ -5,7 +5,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Command\VDIFN\Observed;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Observed\Daily as DailyWeather;
 use PlantPath\Bundle\VDIFNBundle\Entity\Weather\Observed\Hourly as HourlyWeather;
 use PlantPath\Bundle\VDIFNBundle\Geo\DateUtils;
-use PlantPath\Bundle\VDIFNBundle\Geo\DiseaseSeverity;
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -100,7 +100,7 @@ class AggregateCommand extends ContainerAwareCommand
                 ->getResult();
 
         if (count($hourlies) <= 1) {
-            throw new \UnexpectedValueException('Not enough hourly data to aggregate this day: ' . $day->format('c'));
+            throw new \UnexpectedValueException('Not enough hourly data to aggregate day.');
         }
 
         return $hourlies;
@@ -133,11 +133,11 @@ class AggregateCommand extends ContainerAwareCommand
             try {
                 $hourlies = $this->getHourlyWeather($station['usaf'], $station['wban'], $date);
             } catch (\UnexpectedValueException $ex) {
-                $this->logger->error($ex->getMessage(), ['usaf' => $station['usaf'], 'wban' => $station['wban'], 'date' => $date]);
+                $this->logger->error($ex->getMessage(), ['usaf' => $station['usaf'], 'wban' => $station['wban'], 'date' => $date->format('c')]);
                 continue;
             }
 
-            list($meanTemperature, $leafWettingTime) = DiseaseSeverity::calculateTemperatureAndLeafWettingTime($hourlies, $threshold);
+            list($meanTemperature, $leafWettingTime) = DiseaseModel::calculateTemperatureAndLeafWettingTime($hourlies, $threshold);
 
             $daily = $this->dailyRepo->getOneByStationAndTime($station['usaf'], $station['wban'], $date) ?: DailyWeather::create();
 
