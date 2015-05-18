@@ -263,8 +263,6 @@ vdifn.map.ModelDataPoint.prototype.onclick = function(event) {
     var infoBox = this.getInfoBox();
     infoBox.open(this.map, this.object);
     infoBox.setVisible(true);
-    Interface.activeModelDataPoint = this;
-    Interface.attachListeners();
 };
 
 /**

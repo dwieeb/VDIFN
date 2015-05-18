@@ -186,6 +186,10 @@ vdifn.Interface.prototype.attachListeners = function() {
 
         listener = google.maps.event.addDomListener(pointInfoBox, 'click', function(event) {
             var target = event.target || event.srcElement;
+            var id = this.querySelector('.point').getAttribute('data-id');
+            var point = self.modelDataPoints[id];
+
+            self.activeModelDataPoint = point;
 
             if (target.classList.contains('actions-subscribe')) {
                 self.openMessageOverlay();
@@ -257,6 +261,14 @@ vdifn.Interface.prototype.attachListeners = function() {
     return this;
 };
 
+/**
+ * Register events for the pest/disease select box.
+ *
+ * @param  {DOMElement} cropSelect The select box that contains the crops.
+ * @param  {DOMElement} inflictionSelect The select box that contains the inflictions.
+ *
+ * @return this
+ */
 vdifn.Interface.prototype.registerInflictionSelectHandler = function(cropSelect, inflictionSelect) {
     var static = vdifn.Interface.prototype.registerInflictionSelectHandler;
 
@@ -307,6 +319,8 @@ vdifn.Interface.prototype.registerInflictionSelectHandler = function(cropSelect,
     });
 
     google.maps.event.trigger(cropSelect, 'change');
+
+    return this;
 };
 
 /**
@@ -459,7 +473,11 @@ vdifn.Interface.prototype.drawModelDataPoint = function(modelDataPoint) {
     modelDataPoint.plot(this.map);
     modelDataPoint.id = vdifn.Interface.prototype.drawModelDataPoint.id++;
 
-    google.maps.event.addListener(modelDataPoint.object, 'click', modelDataPoint.onclick.bind(modelDataPoint));
+    google.maps.event.addListener(modelDataPoint.object, 'click', function(event) {
+        modelDataPoint.onclick(event);
+        self.activeModelDataPoint = modelDataPoint;
+        self.attachListeners();
+    });
 
     return this;
 };
