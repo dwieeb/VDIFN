@@ -65,4 +65,15 @@ class Infliction
 
         return $choices;
     }
+
+    public static function getNameBySlug($slug)
+    {
+        if (0 === strpos($slug, 'disease-')) {
+            return Disease::getNameBySlug($slug);
+        } else if (0 === strpos($slug, 'pest-')) {
+            return Pest::getNameBySlug($slug);
+        }
+
+        throw new \InvalidArgumentException("Unknown infliction type.");
+    }
 }

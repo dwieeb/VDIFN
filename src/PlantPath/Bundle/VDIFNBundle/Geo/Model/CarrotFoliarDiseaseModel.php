@@ -2,6 +2,8 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
+use PlantPath\Bundle\VDIFNBundle\Geo\Threshold;
+
 class CarrotFoliarDiseaseModel extends DiseaseModel
 {
     /**
@@ -12,7 +14,7 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
     /**
      * {@inheritDoc}
      */
-    protected static function getMatrix()
+    public static function getMatrix()
     {
         if (null === self::$matrix) {
             self::$matrix = [];
@@ -68,13 +70,18 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
         return self::$matrix;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function apply($meanTemperature, $leafWettingTime)
     {
-        $matrix = self::getDsvMatrix();
+        $matrix = self::getMatrix();
 
         if (false === $meanTemperature = filter_var($meanTemperature, FILTER_VALIDATE_FLOAT)) {
             throw new \InvalidArgumentException('Cannot validate mean temperature as a float');
         }
+
+        $meanTemperature = (int) $meanTemperature;
 
         if (false === $leafWettingTime = filter_var($leafWettingTime, FILTER_VALIDATE_INT)) {
             throw new \InvalidArgumentException('Cannot validate leaf-wetting time as an integer');
@@ -90,5 +97,27 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
         }
 
         return $dsv;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function determineThreshold(DiseaseModelData $data)
+    {
+        $dayTotal = $data->getDayTotal();
+
+        if ($dayTotal >= 0 && $dayTotal < 5) {
+            return Threshold::VERY_LOW;
+        } else if ($dayTotal >= 5 && $dayTotal < 10) {
+            return Threshold::LOW;
+        } else if ($dayTotal >= 10 && $dayTotal < 15) {
+            return Threshold::MEDIUM;
+        } else if ($dayTotal >= 15 && $dayTotal < 20) {
+            return Threshold::HIGH;
+        } else if ($dayTotal >= 20) {
+            return Threshold::VERY_HIGH;
+        }
+
+        throw new \InvalidArgumentException("Unable to determine threshold with given data.");
     }
 }

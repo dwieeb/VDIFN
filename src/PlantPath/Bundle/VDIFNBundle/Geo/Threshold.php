@@ -22,6 +22,38 @@ class Threshold
     ];
 
     /**
+     * @var array
+     */
+    public static $cmpHelper = [
+        Threshold::VERY_HIGH => 'e',
+        Threshold::HIGH => 'd',
+        Threshold::MEDIUM => 'c',
+        Threshold::LOW => 'b',
+        Threshold::VERY_LOW => 'a',
+    ];
+
+    /**
+     * Threshold comparison.
+     *
+     * @param string Slug for first threshold.
+     * @param string Slug for second threshold.
+     *
+     * @return integer
+     */
+    public static function cmp($threshold1, $threshold2)
+    {
+        if (!static::isValidSlug($threshold1)) {
+            throw new \InvalidArgumentException("$threshold1 is not a valid threshold slug.");
+        }
+
+        if (!static::isValidSlug($threshold2)) {
+            throw new \InvalidArgumentException("$threshold2 is not a valid threshold slug.");
+        }
+
+        return strcmp(static::$cmpHelper[$threshold1], static::$cmpHelper[$threshold2]);
+    }
+
+    /**
      * Get the valid threshold slugs and names.
      *
      * @return array

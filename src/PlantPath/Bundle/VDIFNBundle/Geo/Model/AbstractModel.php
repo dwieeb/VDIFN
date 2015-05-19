@@ -8,13 +8,13 @@ use PlantPath\Bundle\VDIFNBundle\Geo\Pest;
 
 abstract class AbstractModel
 {
-    public static function createFromCropAndInfliction($crop, $infliction)
+    public static function getModelClassByCropAndInfliction($crop, $infliction)
     {
         switch ($crop) {
         case Crop::CARROT:
             switch ($infliction) {
             case Disease::FOLIAR_DISEASE:
-                return; // Foliar Disease Model
+                return 'PlantPath\Bundle\VDIFNBundle\Geo\Model\CarrotFoliarDiseaseModel';
             }
 
             break;

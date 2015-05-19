@@ -1,0 +1,11 @@
+<p>A data point to which you have subscribed has reached severity level '{{ actualThreshold }}' (your configured threshold was '{{ subscriptionThreshold }}').</p>
+<p>
+    <strong>Details</strong>:
+    <ul>
+        <li><strong>Crop</strong>: {{ crop }}</li>
+        <li><strong>Pest/Disease</strong>: {{ infliction }}</li>
+        <li><strong>Configured emergence date</strong>: {{ subscription.emergenceDate|date('m/d/Y') }}</li>
+        <li><strong>Latitude, Longitude</strong>: {{ subscription.latitude }}, {{ subscription.longitude }}</li>
+    </ul>
+</p>
+<p>To view the data point, <a href="{{ url('index') }}?latitude={{ subscription.latitude }}&longitude={{ subscription.longitude }}">click here</a>.</p>

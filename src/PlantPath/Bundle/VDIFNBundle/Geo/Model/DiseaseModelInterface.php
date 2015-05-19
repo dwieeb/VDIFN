@@ -20,4 +20,11 @@ interface DiseaseModelInterface
      * @return int The disease severity value.
      */
     static function apply($meanTemperature, $leafWettingTime);
+
+    /**
+     * Return the appropriate threshold according to given factors in $data.
+     *
+     * @param DiseaseModelData $data The data needed to calculate the appropriate threshold.
+     */
+    static function determineThreshold(DiseaseModelData $data);
 }

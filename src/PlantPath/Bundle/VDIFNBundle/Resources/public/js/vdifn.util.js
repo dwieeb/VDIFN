@@ -27,3 +27,27 @@ vdifn.util.calculateWindowSize = function() {
 
     return [windowWidth, windowHeight];
 };
+
+/**
+ * Parse a query string into a JSON object.
+ *
+ * @param queryString
+ */
+vdifn.util.parseQueryString = function(queryString) {
+    var params = {}, temp;
+
+    if (queryString.indexOf('?') === 0) {
+        queryString = queryString.substring(1);
+    }
+
+    // Split into key/value pairs
+    var queries = queryString.split("&");
+
+    // Convert the array of strings into an object
+    for (var i = 0, l = queries.length; i < l; i++) {
+        temp = queries[i].split('=');
+        params[temp[0]] = temp[1];
+    }
+
+    return params;
+};

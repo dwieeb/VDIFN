@@ -1,7 +1,19 @@
+var qs = vdifn.util.parseQueryString(window.location.search);
+
+var initialLatitude = 45.05024026979463;
+var initialLongitude = -90.274658203125;
+var initialZoom = 7;
+
+if ('latitude' in qs && 'longitude' in qs) {
+    initialLatitude = qs['latitude'];
+    initialLongitude = qs['longitude'];
+    initialZoom = 10;
+}
+
 // Setup
 var Interface = new vdifn.Interface(
     new google.maps.Map(document.getElementById('map-canvas'), {
-        center: new google.maps.LatLng(45.05024026979463, -90.274658203125),
+        center: new google.maps.LatLng(initialLatitude, initialLongitude),
         mapTypeControl: true,
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.HYBRID]
@@ -10,7 +22,7 @@ var Interface = new vdifn.Interface(
         maxZoom: 12,
         minZoom: 6,
         streetViewControl: false,
-        zoom: 7
+        zoom: initialZoom
     }),
     new vdifn.db()
 );
