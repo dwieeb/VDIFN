@@ -12,6 +12,13 @@ class DiseaseModelData
     protected $dayTotal;
 
     /**
+     * A running total of daily DSV values for the entire season.
+     *
+     * @var int
+     */
+    protected $seasonTotal;
+
+    /**
      * Get dayTotal.
      *
      * @return dayTotal.
@@ -33,6 +40,32 @@ class DiseaseModelData
         }
 
         $this->dayTotal = $dayTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get seasonTotal.
+     *
+     * @return seasonTotal.
+     */
+    public function getSeasonTotal()
+    {
+        return $this->seasonTotal;
+    }
+
+    /**
+     * Set seasonTotal.
+     *
+     * @param seasonTotal the value to set.
+     */
+    public function setSeasonTotal($seasonTotal)
+    {
+        if (false === $seasonTotal = filter_var($seasonTotal, FILTER_VALIDATE_INT)) {
+            throw new \InvalidArgumentException('Cannot validate season total as an integer');
+        }
+
+        $this->seasonTotal = $seasonTotal;
 
         return $this;
     }

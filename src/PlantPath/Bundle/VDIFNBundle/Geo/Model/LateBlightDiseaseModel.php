@@ -63,6 +63,32 @@ class LateBlightDiseaseModel extends DiseaseModel
      */
     public static function determineThreshold(DiseaseModelData $data)
     {
-        // TODO
+        if (!($data instanceof LateBlightDiseaseModelData)) {
+            throw new \InvalidArgumentException("Incompatible model data.");
+        }
+
+        $dayTotal = $data->getDayTotal();
+        $seasonTotal = $data->getSeasonTotal();
+        $status = $data->getLateBlightStatus();
+
+        if ($status === LateBlightStatus::WIDESPREAD_OUTBREAK) {
+            return Threshold::HIGH;
+        }
+
+        if ($dayTotal >= 21 || $status === LateBlightStatus::ISOLATED_OUTBREAK) {
+            return Threshold::HIGH;
+        }
+
+        if ($status === LateBlightStatus::NOT_OBSERVED) {
+            if ($dayTotal >= 3 || $seasonTotal > 30) {
+                return Threshold::MEDIUM;
+            }
+
+            if ($dayTotal <= 3 && $seasonTotal < 30) {
+                return Threshold::LOW;
+            }
+        }
+
+        throw new \InvalidArgumentException("Unable to determine threshold with given data.");
     }
 }
