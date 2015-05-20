@@ -2,10 +2,10 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather;
 
-use PlantPath\Bundle\VDIFNBundle\Geo\DiseaseSeverity;
 use PlantPath\Bundle\VDIFNBundle\Geo\DegreeDay;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use PlantPath\Bundle\VDIFNBundle\Geo\Temperature;
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\CarrotFoliarDiseaseModel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -255,12 +255,12 @@ class Daily
      */
     public function calculateDsv()
     {
-        $ds = DiseaseSeverity::create(
+        $dsv = CarrotFoliarDiseaseModel::apply(
             $this->getMeanTemperature(),
             $this->getLeafWettingTime()
         );
 
-        $this->setDsv($ds->calculate());
+        $this->setDsv($dsv);
 
         return $this;
     }

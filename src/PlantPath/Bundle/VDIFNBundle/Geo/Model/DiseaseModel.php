@@ -2,6 +2,8 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
+use PlantPath\Bundle\VDIFNBundle\Geo\DsvCalculableInterface;
+
 abstract class DiseaseModel extends AbstractModel implements DiseaseModelInterface
 {
     /**

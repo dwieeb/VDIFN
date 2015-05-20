@@ -34,7 +34,7 @@
     <script>
         vdifn.parameters = {{ parameters|json_encode|raw }};
         vdifn.parameters.static_path = "{{ asset('bundles/plantpathvdifn') }}";
-        vdifn.latest_date = new Date('{{ latest.time|date('Y-m-d\\TH:i:sP') }}');
+        vdifn.latest_date = Date.create('{{ latest.time|date('Y-m-d') }}');
         vdifn.logged_in = {% if app.user %}true{% else %}false{% endif %};
     </script>
 {% javascripts filter='?uglifyjs2'
