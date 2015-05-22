@@ -56,7 +56,7 @@ hgroup > * {
 #sidebar,
 #tooltip,
 .infoBox,
-#dsv-legend,
+#severity-legend,
 #message {
     background: #ffffff;
     background: rgba(255, 255, 255, 0.85);
@@ -176,22 +176,25 @@ fieldset {
     margin: 4px 1px;
 }
 
-#dsv-legend {
+#severity-legend {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 25px;
+    right: 15px;
     z-index: 10;
     min-width: 200px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+    min-height: 75px;
+    padding: 5px 10px;
 }
 
-#dsv-legend .dsv {
+#severity-legend .loading {
+    margin-top: 24px;
+}
+
+#severity-legend .dsv {
     clear: both;
 }
 
-#dsv-legend .dsv div {
+#severity-legend .dsv div {
     float: left;
     width: 20px;
     height: 20px;
@@ -201,7 +204,7 @@ fieldset {
     cursor: help;
 }
 
-#dsv-legend .dsv span {
+#severity-legend .dsv span {
     float: left;
 }
 

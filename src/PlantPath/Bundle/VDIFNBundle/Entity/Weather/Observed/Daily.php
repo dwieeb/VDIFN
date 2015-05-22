@@ -2,7 +2,9 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather\Observed;
 
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 use PlantPath\Bundle\VDIFNBundle\Geo\Model\CarrotFoliarDiseaseModel;
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\LateBlightDiseaseModel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,9 +53,16 @@ class Daily
     /**
      * @var integer
      *
-     * @ORM\Column(name="dsv", type="smallint")
+     * @ORM\Column(name="dsv_carrot_foliar_disease", type="smallint")
      */
-    protected $dsv;
+    protected $dsvCarrotFoliarDisease;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dsv_potato_late_blight", type="smallint")
+     */
+    protected $dsvPotatoLateBlight;
 
     /**
      * @var integer
@@ -84,12 +93,11 @@ class Daily
      */
     public function calculateDsv()
     {
-        $dsv = CarrotFoliarDiseaseModel::apply(
-            $this->getMeanTemperature(),
-            $this->getLeafWettingTime()
-        );
+        $meanTemperature = $this->getMeanTemperature();
+        $leafWettingTime = $this->getLeafWettingTime();
 
-        $this->setDsv($dsv);
+        $this->setDsvCarrotFoliarDisease(CarrotFoliarDiseaseModel::apply($meanTemperature,$leafWettingTime));
+        $this->setDsvPotatoLateBlight(LateBlightDiseaseModel::apply($meanTemperature,$leafWettingTime));
 
         return $this;
     }
@@ -177,38 +185,6 @@ class Daily
     }
 
     /**
-     * Gets the value of dsv.
-     *
-     * @return integer
-     */
-    public function getDsv()
-    {
-        return $this->dsv;
-    }
-
-    /**
-     * Sets the value of dsv.
-     *
-     * @param integer $dsv the dsv
-     *
-     * @return self
-     */
-    public function setDsv($dsv)
-    {
-        if (false === $dsv = filter_var($dsv, FILTER_VALIDATE_INT)) {
-            throw new \InvalidArgumentException('Cannot validate disease severity value as an integer');
-        }
-
-        if ($dsv < 0 || $dsv > 4) {
-            throw new \RangeException('Disease severity value must be between 0 and 4');
-        }
-
-        $this->dsv = $dsv;
-
-        return $this;
-    }
-
-    /**
      * Gets the value of meanTemperature.
      *
      * @return integer
@@ -260,6 +236,54 @@ class Daily
         }
 
         $this->leafWettingTime = $leafWettingTime;
+
+        return $this;
+    }
+
+    /**
+     * Get dsvCarrotFoliarDisease.
+     *
+     * @return dsvCarrotFoliarDisease.
+     */
+    public function getDsvCarrotFoliarDisease()
+    {
+        return $this->dsvCarrotFoliarDisease;
+    }
+
+    /**
+     * Set dsvCarrotFoliarDisease.
+     *
+     * @param dsvCarrotFoliarDisease the value to set.
+     */
+    public function setDsvCarrotFoliarDisease($dsvCarrotFoliarDisease)
+    {
+        $dsvCarrotFoliarDisease = DiseaseModel::validateDsv($dsvCarrotFoliarDisease);
+
+        $this->dsvCarrotFoliarDisease = $dsvCarrotFoliarDisease;
+
+        return $this;
+    }
+
+    /**
+     * Get dsvPotatoLateBlight.
+     *
+     * @return dsvPotatoLateBlight.
+     */
+    public function getDsvPotatoLateBlight()
+    {
+        return $this->dsvPotatoLateBlight;
+    }
+
+    /**
+     * Set dsvPotatoLateBlight.
+     *
+     * @param dsvPotatoLateBlight the value to set.
+     */
+    public function setDsvPotatoLateBlight($dsvPotatoLateBlight)
+    {
+        $dsvPotatoLateBlight = DiseaseModel::validateDsv($dsvPotatoLateBlight);
+
+        $this->dsvPotatoLateBlight = $dsvPotatoLateBlight;
 
         return $this;
     }

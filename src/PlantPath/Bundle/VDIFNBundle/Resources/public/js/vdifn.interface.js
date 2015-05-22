@@ -14,25 +14,9 @@ vdifn.Interface = function(map, db) {
     this.loadingOverlay = document.getElementById('loading-overlay');
     this.errorOverlay = document.getElementById('error-overlay');
     this.messageOverlay = document.getElementById('message-overlay');
-    this.setupDsvLegend();
-};
-
-/**
- * Using known severity colors, setup the DSV legend on the sidebar.
- *
- * @return this
- */
-vdifn.Interface.prototype.setupDsvLegend = function() {
-    var dsvSquares = document.getElementById('dsv-legend').querySelectorAll('.dsv');
-
-    for (var i = 0; i < dsvSquares.length; ++i) {
-        var element = dsvSquares.item(i);
-        var dsv = parseInt(element.getAttribute('data-dsv'));
-        var color = vdifn.map.ModelDataPoint.getSeverityColor(dsv);
-        element.getElementsByTagName('div').item(0).style.backgroundColor = color;
-    }
-
-    return this;
+    this.crop = undefined;
+    this.infliction = undefined;
+    this.modelChanged = true;
 };
 
 /**
@@ -316,6 +300,8 @@ vdifn.Interface.prototype.registerInflictionSelectHandler = function(cropSelect,
                 optgroup.style.display = 'none';
             }
         }
+
+        google.maps.event.trigger(inflictionSelect, 'change');
     });
 
     google.maps.event.trigger(cropSelect, 'change');
@@ -401,6 +387,47 @@ vdifn.Interface.prototype.openMessageOverlay = function() {
 vdifn.Interface.prototype.closeMessageOverlay = function() {
     this.messageOverlay.style.opacity = 0;
     this.messageOverlay.style.visibility = "hidden";
+
+    return this;
+};
+
+/**
+ * Load and display the severity legend given the current model.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.drawSeverityLegend = function() {
+    if (!this.modelChanged) {
+        return this;
+    }
+
+    var self = this;
+    var content = this.generateLoadingBars();
+    var inner = document.getElementById('severity-legend');
+    inner.innerHTML = '';
+    inner.appendChild(content);
+
+    superagent.get(
+        Routing.generate('model_severity_legend')
+    ).query({
+        'crop': Interface.crop,
+        'infliction': Interface.infliction
+    }).end(function(response) {
+        inner.innerHTML = response.text;
+        var elements = inner.querySelectorAll('.dsv');
+
+        for (var i = 0; i < elements.length; i++) {
+            google.maps.event.addDomListener(elements[i], 'mouseover', function(event) {
+                var content = document.createElement('div');
+                content.innerHTML = this.getAttribute('data-description');
+                Interface.openTooltip(this, content);
+            });
+
+            google.maps.event.addDomListener(elements[i], 'mouseout', function(event) {
+                Interface.closeTooltip();
+            });
+        }
+    });
 
     return this;
 };

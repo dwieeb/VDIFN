@@ -12,6 +12,11 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
     protected static $matrix;
 
     /**
+     * @var array
+     */
+    protected static $thresholds;
+
+    /**
      * {@inheritDoc}
      */
     public static function getMatrix()
@@ -119,5 +124,43 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
         }
 
         throw new \InvalidArgumentException("Unable to determine threshold with given data.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getThresholds()
+    {
+        if (null === static::$thresholds ) {
+            static::$thresholds = [
+                Threshold::VERY_HIGH => [
+                    'name' => Threshold::getNameBySlug(Threshold::VERY_HIGH),
+                    'description' => 'Very high likelihood of disease<br />(accumulated DSVs &ge; 20)',
+                    'color' => '#cc0000',
+                ],
+                Threshold::HIGH => [
+                    'name' => Threshold::getNameBySlug(Threshold::HIGH),
+                    'description' => 'High likelihood of disease<br />(15 &le; accumulated DSVs &lt; 20)',
+                    'color' => '#ff8000',
+                ],
+                Threshold::MEDIUM => [
+                    'name' => Threshold::getNameBySlug(Threshold::MEDIUM),
+                    'description' => 'Medium likelihood of disease<br />(10 &le; accumulated DSVs &lt; 15)',
+                    'color' => '#ffd700',
+                ],
+                Threshold::LOW => [
+                    'name' => Threshold::getNameBySlug(Threshold::LOW),
+                    'description' => 'Low likelihood of disease<br />(5 &le; accumulated DSVs &lt; 10)',
+                    'color' => '#7dff23',
+                ],
+                Threshold::VERY_LOW => [
+                    'name' => Threshold::getNameBySlug(Threshold::VERY_LOW),
+                    'description' => 'Very low likelihood of disease<br />(0 &le; accumulated DSVs &lt; 5)',
+                    'color' => '#00c957',
+                ],
+            ];
+        }
+
+        return static::$thresholds;
     }
 }

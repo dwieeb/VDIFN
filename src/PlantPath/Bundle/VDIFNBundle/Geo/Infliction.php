@@ -66,6 +66,27 @@ class Infliction
         return $choices;
     }
 
+    /**
+     * Delegate to pest or disease isValidSlug().
+     *
+     * @param string $slug
+     */
+    public static function isValidSlug($slug)
+    {
+        if (0 === strpos($slug, 'disease-')) {
+            return Disease::isValidSlug($slug);
+        } else if (0 === strpos($slug, 'pest-')) {
+            return Pest::isValidSlug($slug);
+        }
+
+        throw new \InvalidArgumentException("Unknown infliction type.");
+    }
+
+    /**
+     * Delegate to pest or disease getNameBySlug().
+     *
+     * @param string $slug
+     */
     public static function getNameBySlug($slug)
     {
         if (0 === strpos($slug, 'disease-')) {

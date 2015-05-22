@@ -91,4 +91,12 @@ class LateBlightDiseaseModel extends DiseaseModel
 
         throw new \InvalidArgumentException("Unable to determine threshold with given data.");
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getThresholds()
+    {
+        // TODO
+    }
 }

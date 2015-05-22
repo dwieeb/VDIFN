@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
+use PlantPath\Bundle\VDIFNBundle\Geo\Disease;
 
 /**
  * Weather\Daily controller.
@@ -33,13 +34,14 @@ class DailyController extends Controller
         if (!empty($start) && !empty($end) && !empty($crop) && !empty($infliction)) {
             $start = new \DateTime($start);
             $end = new \DateTime($end);
+            $dsvField = Disease::getDsvFieldName($crop, $infliction);
 
             $entities = $this
                 ->getDoctrine()
                 ->getManager()
                 ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
                 ->createQueryBuilder('d')
-                ->select('d.latitude, d.longitude, SUM(d.dsv) AS dsv')
+                ->select("d.latitude, d.longitude, SUM(d.$dsvField) AS dsv")
                 ->where('d.time BETWEEN :start AND :end')
                 ->groupBy('d.latitude, d.longitude')
                 ->setParameter('start', $start)

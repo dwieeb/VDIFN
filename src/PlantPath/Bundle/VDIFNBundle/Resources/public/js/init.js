@@ -27,7 +27,7 @@ var Interface = new vdifn.Interface(
     new vdifn.db()
 );
 
-(function(window) {
+(function(window, undefined) {
     Interface.startPicker = vdifn.datepicker.create({
         defaultDate: (2).daysBefore(vdifn.latest_date),
         field: document.getElementById('datepicker-start'),
@@ -72,8 +72,8 @@ var Interface = new vdifn.Interface(
         Interface.drawDateRange({
             start: Interface.startPicker.getDate(),
             end: Interface.endPicker.getDate(),
-            crop: document.getElementById('crop-select').value,
-            infliction: document.getElementById('infliction-select').value
+            crop: Interface.crop,
+            infliction: Interface.infliction
         }, function(success) {
             Interface.closeLoadingOverlay();
 
@@ -81,6 +81,23 @@ var Interface = new vdifn.Interface(
                 Interface.openErrorOverlay("Could not load weather data for the date range specified.");
             }
         });
+
+        Interface.drawSeverityLegend();
+        Interface.modelChanged = false;
+    });
+
+    google.maps.event.addDomListener(document.getElementById('crop-select'), 'change', function(event) {
+        if (Interface.crop !== this.value) {
+            Interface.crop = this.value;
+            Interface.modelChanged = true;
+        }
+    });
+
+    google.maps.event.addDomListener(document.getElementById('infliction-select'), 'change', function(event) {
+        if (Interface.infliction !== this.value) {
+            Interface.infliction = this.value;
+            Interface.modelChanged = true;
+        }
     });
 
     google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseover', function(event) {
@@ -103,39 +120,6 @@ var Interface = new vdifn.Interface(
         Interface.closeTooltip();
     });
 
-    [
-        {
-            element: document.getElementById('dsv-very_high').getElementsByTagName('div')[0],
-            tooltip: 'Very high likelihood of disease<br />(accumulated DSVs &ge; 20)'
-        },
-        {
-            element: document.getElementById('dsv-high').getElementsByTagName('div')[0],
-            tooltip: 'High likelihood of disease<br />(15 &le; accumulated DSVs &lt; 20)'
-        },
-        {
-            element: document.getElementById('dsv-medium').getElementsByTagName('div')[0],
-            tooltip: 'Medium likelihood of disease<br />(10 &le; accumulated DSVs &lt; 15)'
-        },
-        {
-            element: document.getElementById('dsv-low').getElementsByTagName('div')[0],
-            tooltip: 'Low likelihood of disease<br />(5 &le; accumulated DSVs &lt; 10)'
-        },
-        {
-            element: document.getElementById('dsv-very_low').getElementsByTagName('div')[0],
-            tooltip: 'Very low likelihood of disease<br />(0 &le; accumulated DSVs &lt; 5)'
-        }
-    ].forEach(function(severity) {
-        google.maps.event.addDomListener(severity.element, 'mouseover', function(event) {
-            var content = document.createElement('div');
-            content.innerHTML = severity.tooltip;
-            Interface.openTooltip(severity.element, content);
-        });
-
-        google.maps.event.addDomListener(severity.element, 'mouseout', function(event) {
-            Interface.closeTooltip();
-        });
-    });
-
     google.maps.event.addDomListener(window, 'resize', Interface.resize.bind(Interface));
     google.maps.event.addListenerOnce(Interface.map, 'tilesloaded', Interface.tilesloaded.bind(Interface));
     google.maps.event.addDomListener(document.getElementById('error-button'), 'click', Interface.closeErrorOverlay.bind(Interface));
@@ -147,6 +131,9 @@ var Interface = new vdifn.Interface(
         document.getElementById('crop-select'),
         document.getElementById('infliction-select')
     );
+
+    google.maps.event.trigger(document.getElementById('crop-select'), 'change');
+    google.maps.event.trigger(document.getElementById('infliction-select'), 'change');
     google.maps.event.trigger(document.getElementById('select'), 'click');
     Interface.drawStations();
-})(window, undefined);
+})(window);

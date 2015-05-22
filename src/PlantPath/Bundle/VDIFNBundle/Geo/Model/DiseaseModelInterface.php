@@ -20,4 +20,12 @@ interface DiseaseModelInterface
      * @param DiseaseModelData $data The data needed to calculate the appropriate threshold.
      */
     static function determineThreshold(DiseaseModelData $data);
+
+    /**
+     * Return a structured array containing information about the thresholds of
+     * this disease.
+     *
+     * @return array
+     */
+    static function getThresholds();
 }

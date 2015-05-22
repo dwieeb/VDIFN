@@ -1,0 +1,9 @@
+<fieldset id="dsv-legend">
+    <legend>Severity Legend:</legend>
+{% for slug, threshold in thresholds %}
+    <div id="dsv-{{ slug }}" class="dsv" data-description="{{ threshold.description }}">
+        <div style="background-color: {{ threshold.color }}"></div>
+        <label>{{ threshold.name }}</label>
+    </div>
+{% endfor %}
+</fieldset>
