@@ -28,11 +28,13 @@ var Interface = new vdifn.Interface(
 );
 
 (function(window, undefined) {
+    var endDate = Date.utc.create();
+
     Interface.startPicker = vdifn.datepicker.create({
-        defaultDate: (2).daysBefore(vdifn.latest_date),
+        defaultDate: (1).weeksBefore(endDate),
         field: document.getElementById('datepicker-start'),
         onSelect: function() {
-            var ultimateMaxDate = Interface.endPicker.config().defaultDate;
+            var ultimateMaxDate = vdifn.latest_date;
             var minDate = this.getDate();
             var maxDate = this.getDate().advance('2 weeks');
 
@@ -56,7 +58,7 @@ var Interface = new vdifn.Interface(
     });
 
     Interface.endPicker = vdifn.datepicker.create({
-        defaultDate: vdifn.latest_date,
+        defaultDate: endDate,
         minDate: Interface.startPicker.getDate(),
         field: document.getElementById('datepicker-end')
     });
