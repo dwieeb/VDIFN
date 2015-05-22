@@ -54,6 +54,8 @@ var Interface = new vdifn.Interface(
                 Interface.endPicker.setDate(maxDate);
                 Interface.endPicker.gotoDate(maxDate);
             }
+
+            Interface.modelChangedHandler();
         }
     });
 
@@ -92,6 +94,7 @@ var Interface = new vdifn.Interface(
         if (Interface.crop !== this.value) {
             Interface.crop = this.value;
             Interface.modelChanged = true;
+            Interface.modelChangedHandler();
         }
     });
 
@@ -99,6 +102,7 @@ var Interface = new vdifn.Interface(
         if (Interface.infliction !== this.value) {
             Interface.infliction = this.value;
             Interface.modelChanged = true;
+            Interface.modelChangedHandler();
         }
     });
 

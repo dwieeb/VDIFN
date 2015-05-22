@@ -2,6 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use PlantPath\Bundle\VDIFNBundle\Geo\Threshold;
 
 class LateBlightDiseaseModel extends DiseaseModel
@@ -123,5 +124,62 @@ class LateBlightDiseaseModel extends DiseaseModel
         }
 
         return static::$thresholds;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getDataByDateRange(ObjectManager $em, \DateTime $start, \DateTime $end)
+    {
+        $interval = $end->diff($start);
+
+        if (7 !== $interval->d) {
+            throw new \InvalidArgumentException('Difference of end and start date must be exactly 7 days for late blight model.');
+        }
+
+        $dayEntities = [];
+        $yearEntities = [];
+
+        $entities = $em
+            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
+            ->createQueryBuilder('d')
+            ->select("d.latitude, d.longitude, SUM(d.dsvPotatoLateBlight) AS dsv")
+            ->where('d.time BETWEEN :start AND :end')
+            ->groupBy('d.latitude, d.longitude')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($entities as &$entity) {
+            $dayEntities[$entity['latitude'] . $entity['longitude']] = $entity;
+        }
+
+        $yearStart = new \DateTime($start->format('Y') . '-01-01');
+
+        $entities = $em
+            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
+            ->createQueryBuilder('d')
+            ->select("d.latitude, d.longitude, SUM(d.dsvPotatoLateBlight) AS dsv")
+            ->where('d.time > :yearStart')
+            ->groupBy('d.latitude, d.longitude')
+            ->setParameter('yearStart', $yearStart)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($entities as &$entity) {
+            $yearEntities[$entity['latitude'] . $entity['longitude']] = $entity;
+        }
+
+        foreach ($dayEntities as $key => &$entity) {
+            $data = new LateBlightDiseaseModelData();
+            $data->setDayTotal($entity['dsv']);
+            $data->setSeasonTotal($yearEntities[$key]['dsv']);
+            $data->setLateBlightStatus(LateBlightStatus::NOT_OBSERVED); // TODO
+            $entity['severity'] = static::determineThreshold($data);
+            unset($entity['dsv']);
+        }
+
+        return array_values($dayEntities);
     }
 }

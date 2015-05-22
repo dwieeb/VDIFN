@@ -185,39 +185,16 @@ vdifn.map.DataPoint.prototype = Object.create(vdifn.map.Plottable.prototype);
  * Constructor.
  *
  * @param  {google.maps.LatLng} latLng
- * @param  {number} dsv
+ * @param  {string} severity
  */
-vdifn.map.ModelDataPoint = function(id, latLng, dsv) {
+vdifn.map.ModelDataPoint = function(id, latLng, severity) {
     vdifn.map.DataPoint.call(this, latLng);
     this.id = id;
-    this.dsv = dsv;
+    this.severity = severity;
     this.size = 12; // km
 };
 
 vdifn.map.ModelDataPoint.prototype = Object.create(vdifn.map.DataPoint.prototype);
-
-/**
- * Get the hex color code of a given disease severity value.
- *
- * @param  {number|string} dsv
- *
- * @return {string}
- */
-vdifn.map.ModelDataPoint.getSeverityColor = function(dsv) {
-    if (dsv >= 0 && dsv < 5) {
-        return '#00c957';
-    } else if (dsv >= 5 && dsv < 10) {
-        return '#7dff23';
-    } else if (dsv >= 10 && dsv < 15) {
-        return '#ffd700';
-    } else if (dsv >= 15 && dsv < 20) {
-        return '#ff8000';
-    } else if (dsv >= 20) {
-        return '#cc0000';
-    }
-
-    return '#ffffff';
-};
 
 /**
  * @see vdifn.map.DataPoint.prototype.draw
@@ -226,7 +203,6 @@ vdifn.map.ModelDataPoint.prototype.draw = function() {
     var self = this;
 
     if (!this.drawn) {
-        var color = vdifn.map.ModelDataPoint.getSeverityColor(this.dsv);
         var latitude = this.latLng.lat();
         var longitude = this.latLng.lng();
         var latitudeOffset = vdifn.map.kmToLatitude(this.size) / 2;
@@ -241,7 +217,7 @@ vdifn.map.ModelDataPoint.prototype.draw = function() {
                 new google.maps.LatLng(latitude - latitudeOffset - cornerOffset, longitude + longitudeOffset - cornerOffset)  // SE
             ],
             strokeWeight: 0,
-            fillColor: color,
+            fillColor: Interface.severities[self.severity],
             fillOpacity: 0.2
         });
 

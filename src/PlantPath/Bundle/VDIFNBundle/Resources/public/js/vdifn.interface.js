@@ -17,6 +17,7 @@ vdifn.Interface = function(map, db) {
     this.crop = undefined;
     this.infliction = undefined;
     this.modelChanged = true;
+    self.severities = {};
 };
 
 /**
@@ -246,6 +247,24 @@ vdifn.Interface.prototype.attachListeners = function() {
 };
 
 /**
+ * The callback for when a model changes.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.modelChangedHandler = function() {
+    if (this.crop === 'potato' && this.infliction === 'disease-late-blight') {
+        this.endPicker.config().field.setAttribute("disabled", "disabled");
+        this.endPicker.setDate((7).daysAfter(this.startPicker.getDate()));
+
+        if (7 !== this.startPicker.getDate().daysUntil(this.endPicker.getDate())) {
+            this.startPicker.setDate((7).daysBefore(this.endPicker.getDate()));
+        }
+    } else {
+        this.endPicker.config().field.removeAttribute("disabled");
+    }
+};
+
+/**
  * Register events for the pest/disease select box.
  *
  * @param  {DOMElement} cropSelect The select box that contains the crops.
@@ -415,8 +434,14 @@ vdifn.Interface.prototype.drawSeverityLegend = function() {
     }).end(function(response) {
         inner.innerHTML = response.text;
         var elements = inner.querySelectorAll('.dsv');
+        var severity, color;
+        self.severities = {};
 
         for (var i = 0; i < elements.length; i++) {
+            severity = elements[i].getAttribute('data-severity');
+            color = elements[i].getAttribute('data-color');
+            self.severities[severity] = color;
+
             google.maps.event.addDomListener(elements[i], 'mouseover', function(event) {
                 var content = document.createElement('div');
                 content.innerHTML = this.getAttribute('data-description');
@@ -470,7 +495,7 @@ vdifn.Interface.prototype.drawDateRange = function(criteria, callback) {
             self.drawModelDataPoint(new vdifn.map.ModelDataPoint(
                 point,
                 new google.maps.LatLng(results[point].latitude, results[point].longitude),
-                results[point].dsv
+                results[point].severity
             ));
         }
 

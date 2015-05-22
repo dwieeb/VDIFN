@@ -2,6 +2,8 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
+use Doctrine\Common\Persistence\ObjectManager;
+
 interface DiseaseModelInterface
 {
     /**
@@ -28,4 +30,15 @@ interface DiseaseModelInterface
      * @return array
      */
     static function getThresholds();
+
+    /**
+     * Return an array of data by a start and end date.
+     *
+     * @param \Doctrine\Common\Persistence\ObjectManager $em
+     * @param \DateTime $start
+     * @param \DateTime $end
+     *
+     * @return array
+     */
+    static function getDataByDateRange(ObjectManager $em, \DateTime $start, \DateTime $end);
 }

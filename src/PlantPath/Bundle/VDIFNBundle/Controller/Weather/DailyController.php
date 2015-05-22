@@ -19,45 +19,6 @@ use PlantPath\Bundle\VDIFNBundle\Geo\Disease;
 class DailyController extends Controller
 {
     /**
-     * Finds and displays Weather\Daily entities.
-     *
-     * @Route("/", name="weather_daily_date_range", options={"expose"=true})
-     * @Method("GET")
-     */
-    public function dateRangeAction(Request $request)
-    {
-        $start = $request->query->get('start');
-        $end = $request->query->get('end');
-        $crop = $request->query->get('crop');
-        $infliction = $request->query->get('infliction');
-
-        if (!empty($start) && !empty($end) && !empty($crop) && !empty($infliction)) {
-            $start = new \DateTime($start);
-            $end = new \DateTime($end);
-            $dsvField = Disease::getDsvFieldName($crop, $infliction);
-
-            $entities = $this
-                ->getDoctrine()
-                ->getManager()
-                ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-                ->createQueryBuilder('d')
-                ->select("d.latitude, d.longitude, SUM(d.$dsvField) AS dsv")
-                ->where('d.time BETWEEN :start AND :end')
-                ->groupBy('d.latitude, d.longitude')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->getQuery()
-                ->getResult();
-        }
-
-        if (empty($entities)) {
-            throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
-        }
-
-        return JsonResponse::create($entities);
-    }
-
-    /**
      * Finds data for a data point.
      *
      * @Route("/point/{latitude}/{longitude}", name="weather_daily_point", options={"expose"=true})

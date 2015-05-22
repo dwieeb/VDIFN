@@ -32,4 +32,36 @@ class ModelController extends Controller
             'thresholds' => $class::getThresholds(),
         ]);
     }
+
+    /**
+     * @Route("/data", name="model_data", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function dataAction(Request $request)
+    {
+        $start = $request->query->get('start');
+        $end = $request->query->get('end');
+        $crop = $request->query->get('crop');
+        $infliction = $request->query->get('infliction');
+
+        if (empty($start) || empty($end) || empty($crop) || empty($infliction)) {
+            return JsonResponse::create(['error' => 'Missing crucial query parameters.'], 400);
+        }
+
+        $start = new \DateTime($start);
+        $end = new \DateTime($end);
+        $class = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
+
+        $entities = $class::getDataByDateRange(
+            $this->getDoctrine()->getManager(),
+            $start,
+            $end
+        );
+
+        if (empty($entities)) {
+            throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
+        }
+
+        return JsonResponse::create($entities);
+    }
 }

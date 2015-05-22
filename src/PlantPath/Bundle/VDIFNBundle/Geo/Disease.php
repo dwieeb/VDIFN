@@ -71,25 +71,4 @@ class Disease
     {
         return static::$cropMapping;
     }
-
-    /**
-     * Determine the database DSV column name for a given crop and disease.
-     *
-     * @param string $crop
-     * @param string $disease
-     */
-    public static function getDsvFieldName($crop, $disease)
-    {
-        if (!Crop::isValidSlug($crop)) {
-            throw new \InvalidArgumentException("$crop is not a valid crop slug.");
-        }
-
-        if (!static::isValidSlug($disease)) {
-            throw new \InvalidArgumentException("$disease is not a valid disease slug.");
-        }
-
-        $disease = substr($disease, 8);
-
-        return 'dsv' . ucfirst($crop) . str_replace(' ', '', ucwords(str_replace('-', ' ', $disease)));
-    }
 }

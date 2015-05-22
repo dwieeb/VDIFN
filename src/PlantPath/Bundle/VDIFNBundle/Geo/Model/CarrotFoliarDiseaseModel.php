@@ -2,6 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use PlantPath\Bundle\VDIFNBundle\Geo\Threshold;
 
 class CarrotFoliarDiseaseModel extends DiseaseModel
@@ -162,5 +163,39 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
         }
 
         return static::$thresholds;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSeverityField()
+    {
+        return 'dsvCarrotFoliarDisease';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getDataByDateRange(ObjectManager $em, \DateTime $start, \DateTime $end)
+    {
+        $entities = $em
+            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
+            ->createQueryBuilder('d')
+            ->select("d.latitude, d.longitude, SUM(d.dsvCarrotFoliarDisease) AS dsv")
+            ->where('d.time BETWEEN :start AND :end')
+            ->groupBy('d.latitude, d.longitude')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($entities as &$entity) {
+            $data = new DiseaseModelData();
+            $data->setDayTotal($entity['dsv']);
+            $entity['severity'] = static::determineThreshold($data);
+            unset($entity['dsv']);
+        }
+
+        return $entities;
     }
 }

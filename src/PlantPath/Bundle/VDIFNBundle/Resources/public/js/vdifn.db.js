@@ -59,7 +59,7 @@ vdifn.db.prototype.findPredictedWeatherData = function(criteria, callback) {
     var endYmd = criteria.end.format('{yyyy}{MM}{dd}');
 
     superagent.get(
-        Routing.generate('weather_daily_date_range', {
+        Routing.generate('model_data', {
             start: startYmd,
             end: endYmd,
             crop: criteria.crop,

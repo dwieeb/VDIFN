@@ -134,8 +134,8 @@ fieldset {
     background-color: rgba(255, 255, 255, 0.7);
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
-    border: 1px solid #d0d0d0;
     border-radius: 0;
+    border: 1px solid #d0d0d0;
     padding: 5px 0;
     cursor: pointer;
 }
@@ -144,7 +144,11 @@ fieldset {
     overflow: hidden;
     padding: 5px 8px;
     text-indent: 0.01px;
-    text-overflow: '';
+}
+
+#options input[type="text"][disabled="disabled"],
+#options select[disabled="disabled"] {
+    background-color: #d0d0d0;
 }
 
 .datepicker-information {
@@ -471,11 +475,14 @@ footer {
     border: 1px solid #000;
 }
 
+input[disabled="disabled"],
 .button.disabled {
     background: #d0d0d0;
     color: #424242;
 }
 
+input[disabled="disabled"]:focus,
+input[disabled="disabled"]:hover,
 .button.disabled:focus,
 .button.disabled:hover {
     border: 1px solid #7f7f7f;
