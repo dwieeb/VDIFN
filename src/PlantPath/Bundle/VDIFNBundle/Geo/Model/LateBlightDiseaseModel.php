@@ -7,6 +7,11 @@ use PlantPath\Bundle\VDIFNBundle\Geo\Threshold;
 class LateBlightDiseaseModel extends DiseaseModel
 {
     /**
+     * @var array
+     */
+    protected static $thresholds;
+
+    /**
      * {@inheritDoc}
      */
     public static function apply($meanTemperature, $leafWettingTime)
@@ -97,6 +102,26 @@ class LateBlightDiseaseModel extends DiseaseModel
      */
     public static function getThresholds()
     {
-        // TODO
+        if (null === static::$thresholds) {
+            static::$thresholds = [
+                Threshold::HIGH => [
+                    'name' => Threshold::getNameBySlug(Threshold::HIGH),
+                    'description' => 'High likelihood of disease<br />(widespread outbreak observed OR 7-day accumulated DSVs &ge; 21 or isolated outbreak observed)',
+                    'color' => '#cc0000',
+                ],
+                Threshold::MEDIUM => [
+                    'name' => Threshold::getNameBySlug(Threshold::MEDIUM),
+                    'description' => 'Medium likelihood of disease<br />(7-day accumulated DSVs &ge; 3 or season accumulated DSVs &gt; 30)',
+                    'color' => '#ffd700',
+                ],
+                Threshold::LOW => [
+                    'name' => Threshold::getNameBySlug(Threshold::LOW),
+                    'description' => 'Low likelihood of disease<br />(7-day accumulated DSVs &le; 3 and season accumulated DSVs &lt; 30)',
+                    'color' => '#00c957',
+                ],
+            ];
+        }
+
+        return static::$thresholds;
     }
 }
