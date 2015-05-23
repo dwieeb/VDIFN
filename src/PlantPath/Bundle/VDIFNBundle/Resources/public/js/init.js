@@ -73,6 +73,10 @@ var Interface = new vdifn.Interface(
     }
 
     google.maps.event.addDomListener(document.getElementById('select'), 'click', function(event) {
+        if (Interface.modelChanged) {
+            Interface.closeInfoBoxes();
+        }
+
         Interface.drawDateRange({
             start: Interface.startPicker.getDate(),
             end: Interface.endPicker.getDate(),

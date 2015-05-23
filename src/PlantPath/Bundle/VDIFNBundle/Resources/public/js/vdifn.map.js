@@ -32,6 +32,7 @@ vdifn.map.Plottable = function(latLng) {
     this.latLng = latLng;
     this.object = undefined;
     this.map = undefined;
+    this.infoBox = undefined;
     this.drawn = false;
 };
 
@@ -51,7 +52,29 @@ vdifn.map.Plottable.createInfoBox = function(options) {
         visible: false,
         pixelOffset: new google.maps.Size(-13, -20)
     }, options));
-}
+};
+
+/**
+ * Determines whether the InfoBox for this Plottable is visible.
+ *
+ * @return boolean
+ */
+vdifn.map.Plottable.prototype.isInfoBoxVisible = function() {
+    return typeof this.infoBox !== 'undefined' && this.infoBox.getVisible();
+};
+
+/**
+ * Close the Plottable's InfoBox if it has one and is open.
+ *
+ * @return this
+ */
+vdifn.map.Plottable.prototype.closeInfoBox = function() {
+    if (this.isInfoBoxVisible()) {
+        this.infoBox.setMap(null);
+    }
+
+    return this;
+};
 
 /**
  * Construct the object.

@@ -149,6 +149,7 @@ fieldset {
 #options input[type="text"][disabled="disabled"],
 #options select[disabled="disabled"] {
     background-color: #d0d0d0;
+    cursor: default;
 }
 
 .datepicker-information {
@@ -479,6 +480,7 @@ input[disabled="disabled"],
 .button.disabled {
     background: #d0d0d0;
     color: #424242;
+    cursor: default;
 }
 
 input[disabled="disabled"]:focus,

@@ -458,6 +458,21 @@ vdifn.Interface.prototype.drawSeverityLegend = function() {
 };
 
 /**
+ * Redraw the open InfoBoxes according to the current model.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.closeInfoBoxes = function() {
+    for (var key in this.modelDataPoints) {
+        if (this.modelDataPoints.hasOwnProperty(key)) {
+            this.modelDataPoints[key].closeInfoBox();
+        }
+    }
+
+    return this;
+};
+
+/**
  * Generate DOM elements that represent loading.
  *
  * @return DOMElement
