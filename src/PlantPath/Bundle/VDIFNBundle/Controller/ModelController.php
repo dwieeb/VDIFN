@@ -18,7 +18,7 @@ use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 class ModelController extends Controller
 {
     /**
-     * @Route("/", name="model_severity_legend", options={"expose"=true})
+     * @Route("/severity-legend", name="model_severity_legend", options={"expose"=true})
      * @Method("GET")
      */
     public function severityLegendAction(Request $request)
