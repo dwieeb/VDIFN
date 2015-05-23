@@ -17,7 +17,7 @@ vdifn.Interface = function(map, db) {
     this.crop = undefined;
     this.infliction = undefined;
     this.modelChanged = true;
-    self.severities = {};
+    this.severities = {};
 };
 
 /**

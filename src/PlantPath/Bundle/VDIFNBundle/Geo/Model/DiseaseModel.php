@@ -2,12 +2,24 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use PlantPath\Bundle\VDIFNBundle\Geo\Crop;
 use PlantPath\Bundle\VDIFNBundle\Geo\Disease;
 use PlantPath\Bundle\VDIFNBundle\Geo\DsvCalculableInterface;
 
 abstract class DiseaseModel extends AbstractModel implements DiseaseModelInterface
 {
+    /**
+     * @var string
+     */
+    protected static $crop;
+
+    /**
+     * @var string
+     */
+    protected static $disease;
+
     /**
      * @param string crop
      * @param string disease
@@ -34,6 +46,74 @@ abstract class DiseaseModel extends AbstractModel implements DiseaseModelInterfa
         }
 
         throw new \InvalidArgumentException("Cound not determine disease model class by $crop and $disease.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getStationData(ObjectManager $em, $usaf, $wban, \DateTime $start, \DateTime $end)
+    {
+        if (null === static::$crop) {
+            throw new \Exception('$crop must be set.');
+        }
+
+        if (null === static::$disease) {
+            throw new \Exception('$disease must be set.');
+        }
+
+        $entities = $em
+            ->getRepository('PlantPathVDIFNBundle:Weather\Observed\Daily')
+            ->createQueryBuilder('d')
+            ->where('d.usaf = :usaf')
+            ->andWhere('d.wban = :wban')
+            ->andWhere('d.time BETWEEN :start AND :end')
+            ->orderBy('d.time', 'DESC')
+            ->setParameter('usaf', $usaf)
+            ->setParameter('wban', $wban)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($entities as &$entity) {
+            $entity->setCurrentModel(static::$crop, static::$disease);
+        }
+
+        return $entities;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getPointData(ObjectManager $em, Point $point, \DateTime $start, \DateTime $end)
+    {
+        if (null === static::$crop) {
+            throw new \Exception('$crop must be set.');
+        }
+
+        if (null === static::$disease) {
+            throw new \Exception('$disease must be set.');
+        }
+
+        $entities = $em
+            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
+            ->createQueryBuilder('d')
+            ->where('d.time BETWEEN :start AND :end')
+            ->andWhere('d.latitude = :latitude')
+            ->andWhere('d.longitude = :longitude')
+            ->orderBy('d.time', 'DESC')
+            ->setParameter('latitude', $point->getLatitude())
+            ->setParameter('longitude', $point->getLongitude())
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($entities as &$entity) {
+            $entity->setCurrentModel(static::$crop, static::$disease);
+        }
+
+        return $entities;
     }
 
     /**

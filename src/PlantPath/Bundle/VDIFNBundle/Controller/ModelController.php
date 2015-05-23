@@ -39,8 +39,8 @@ class ModelController extends Controller
      */
     public function dataAction(Request $request)
     {
-        $start = $request->query->get('start');
-        $end = $request->query->get('end');
+        $start = \DateTime::createFromFormat('Ymd', $request->query->get('start'));
+        $end = \DateTime::createFromFormat('Ymd', $request->query->get('end'));
         $crop = $request->query->get('crop');
         $infliction = $request->query->get('infliction');
 
@@ -48,8 +48,6 @@ class ModelController extends Controller
             return JsonResponse::create(['error' => 'Missing crucial query parameters.'], 400);
         }
 
-        $start = new \DateTime($start);
-        $end = new \DateTime($end);
         $class = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
 
         $entities = $class::getDataByDateRange(

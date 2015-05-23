@@ -3,10 +3,22 @@
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use PlantPath\Bundle\VDIFNBundle\Geo\Crop;
+use PlantPath\Bundle\VDIFNBundle\Geo\Disease;
 use PlantPath\Bundle\VDIFNBundle\Geo\Threshold;
 
 class CarrotFoliarDiseaseModel extends DiseaseModel
 {
+    /**
+     * @var string
+     */
+    protected static $crop = Crop::CARROT;
+
+    /**
+     * @var string
+     */
+    protected static $disease = Disease::FOLIAR_DISEASE;
+
     /**
      * @var array
      */
@@ -151,8 +163,7 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
                 ],
                 Threshold::LOW => [
                     'name' => Threshold::getNameBySlug(Threshold::LOW),
-                    'description' => 'Low likelihood of disease<br />(5 &le; accumulated DSVs &lt; 10)',
-                    'color' => '#7dff23',
+                    'description' => 'Low likelihood of disease<br />(5 &le; accumulated DSVs &lt; 10)', 'color' => '#7dff23',
                 ],
                 Threshold::VERY_LOW => [
                     'name' => Threshold::getNameBySlug(Threshold::VERY_LOW),
@@ -163,14 +174,6 @@ class CarrotFoliarDiseaseModel extends DiseaseModel
         }
 
         return static::$thresholds;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function getSeverityField()
-    {
-        return 'dsvCarrotFoliarDisease';
     }
 
     /**

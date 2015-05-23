@@ -3,6 +3,7 @@
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 
 interface DiseaseModelInterface
 {
@@ -30,6 +31,31 @@ interface DiseaseModelInterface
      * @return array
      */
     static function getThresholds();
+
+    /**
+     * Get data for a single station by its USAF and WBAN.
+     *
+     * @param \Doctrine\Common\Persistence\ObjectManager $em
+     * @param string $usaf
+     * @param string $wban
+     * @param \DateTime $start
+     * @param \DateTime $end
+     *
+     * @return array
+     */
+    static function getStationData(ObjectManager $em, $usaf, $wban, \DateTime $start, \DateTime $end);
+
+    /**
+     * Get data for a single point by its location and start and end date.
+     *
+     * @param \Doctrine\Common\Persistence\ObjectManager $em
+     * @param \PlantPath\Bundle\VDIFNBundle\Geo\Point $point
+     * @param \DateTime $start
+     * @param \DateTime $end
+     *
+     * @return \PlantPath\Bundle\VDIFNBundle\Entity\Weather\Daily
+     */
+    static function getPointData(ObjectManager $em, Point $point, \DateTime $start, \DateTime $end);
 
     /**
      * Return an array of data by a start and end date.

@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 
 /**
  * Station controller.
@@ -51,37 +52,29 @@ class StationController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $startDate = \DateTime::createFromFormat('Ymd', $request->query->get('startDate'));
-        $endDate = \DateTime::createFromFormat('Ymd', $request->query->get('endDate'));
+        $start = \DateTime::createFromFormat('Ymd', $request->query->get('start'));
+        $end = \DateTime::createFromFormat('Ymd', $request->query->get('end'));
+        $crop = $request->query->get('crop');
+        $infliction = $request->query->get('infliction');
 
-        if (false === $startDate || false === $endDate) {
-            throw new \InvalidArgumentException('startDate and endDate are invalid.');
+        if (empty($start) || empty($end) || empty($crop) || empty($infliction)) {
+            return JsonResponse::create(['error' => 'Missing crucial query parameters.'], 400);
         }
 
-        $minStartDate = clone $endDate;
-        $minStartDate->modify('-10 days');
-        $startDate = min($minStartDate, $startDate);
+        $minStart = clone $end;
+        $minStart->modify('-10 days');
+        $start = min($minStart, $start);
 
-        $startDate->setTime(0, 0, 0);
-        $endDate->setTime(0, 0, 0);
+        $start->setTime(0, 0, 0);
+        $end->setTime(0, 0, 0);
 
         $station = $em
             ->getRepository('PlantPathVDIFNBundle:Station')
             ->findOneBy(['usaf' => $usaf, 'wban' => $wban]);
 
-        $weather = $em
-            ->getRepository('PlantPathVDIFNBundle:Weather\Observed\Daily')
-            ->createQueryBuilder('d')
-            ->where('d.usaf = :usaf')
-            ->andWhere('d.wban = :wban')
-            ->andWhere('d.time BETWEEN :start AND :end')
-            ->orderBy('d.time', 'DESC')
-            ->setParameter('usaf', $usaf)
-            ->setParameter('wban', $wban)
-            ->setParameter('start', $startDate)
-            ->setParameter('end', $endDate)
-            ->getQuery()
-            ->getResult();
+        $em = $this->getDoctrine()->getManager();
+        $class = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
+        $weather = $class::getStationData($em, $usaf, $wban, $start, $end);
 
         return $this->render('PlantPathVDIFNBundle:Station:infobox.html.twig', [
             'station' => $station,

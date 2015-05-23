@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use PlantPath\Bundle\VDIFNBundle\Geo\Disease;
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 
 /**
  * Weather\Daily controller.
@@ -26,39 +27,30 @@ class DailyController extends Controller
      */
     public function pointAction(Request $request, $latitude, $longitude)
     {
-        $securityContext = $this->get('security.context');
-        $user = $securityContext->getToken()->getUser();
-        $point = new Point($latitude, $longitude);
-
-        $startDate = \DateTime::createFromFormat('Ymd', $request->query->get('startDate'));
-        $endDate = \DateTime::createFromFormat('Ymd', $request->query->get('endDate'));
-
-        if (false === $startDate || false === $endDate) {
-            throw new \InvalidArgumentException('startDate and endDate are invalid.');
-        }
-
-        $minStartDate = clone $endDate;
-        $minStartDate->modify('-10 days');
-        $startDate = min($minStartDate, $startDate);
-
-        $startDate->setTime(0, 0, 0);
-        $endDate->setTime(0, 0, 0);
-
         $em = $this->getDoctrine()->getManager();
 
-        $weather = $em
-            ->getRepository('PlantPathVDIFNBundle:Weather\Daily')
-            ->createQueryBuilder('d')
-            ->where('d.time BETWEEN :start AND :end')
-            ->andWhere('d.latitude = :latitude')
-            ->andWhere('d.longitude = :longitude')
-            ->orderBy('d.time', 'DESC')
-            ->setParameter('latitude', $point->getLatitude())
-            ->setParameter('longitude', $point->getLongitude())
-            ->setParameter('start', $startDate)
-            ->setParameter('end', $endDate)
-            ->getQuery()
-            ->getResult();
+        $securityContext = $this->get('security.context');
+        $user = $securityContext->getToken()->getUser();
+
+        $point = new Point($latitude, $longitude);
+        $start = \DateTime::createFromFormat('Ymd', $request->query->get('start'));
+        $end = \DateTime::createFromFormat('Ymd', $request->query->get('end'));
+        $crop = $request->query->get('crop');
+        $infliction = $request->query->get('infliction');
+
+        if (empty($start) || empty($end) || empty($crop) || empty($infliction)) {
+            return JsonResponse::create(['error' => 'Missing crucial query parameters.'], 400);
+        }
+
+        $minStart = clone $end;
+        $minStart->modify('-10 days');
+        $start = min($minStart, $start);
+
+        $start->setTime(0, 0, 0);
+        $end->setTime(0, 0, 0);
+
+        $class = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
+        $weather = $class::getPointData($em, $point, $start, $end);
 
         if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $subscription = $em

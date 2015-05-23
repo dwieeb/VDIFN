@@ -5,9 +5,7 @@ namespace PlantPath\Bundle\VDIFNBundle\Entity\Weather;
 use PlantPath\Bundle\VDIFNBundle\Geo\DegreeDay;
 use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use PlantPath\Bundle\VDIFNBundle\Geo\Temperature;
-use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
-use PlantPath\Bundle\VDIFNBundle\Geo\Model\CarrotFoliarDiseaseModel;
-use PlantPath\Bundle\VDIFNBundle\Geo\Model\LateBlightDiseaseModel;
+use PlantPath\Bundle\VDIFNBundle\Geo\Model\AbstractDailyWeather;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Daily
+class Daily extends AbstractDailyWeather
 {
     /**
      * @var integer
@@ -226,22 +224,6 @@ class Daily
     }
 
     /**
-     * Given existing data, compute the disease severity value for this object.
-     *
-     * @return this
-     */
-    public function calculateDsv()
-    {
-        $meanTemperature = $this->getMeanTemperature();
-        $leafWettingTime = $this->getLeafWettingTime();
-
-        $this->setDsvCarrotFoliarDisease(CarrotFoliarDiseaseModel::apply($meanTemperature,$leafWettingTime));
-        $this->setDsvPotatoLateBlight(LateBlightDiseaseModel::apply($meanTemperature,$leafWettingTime));
-
-        return $this;
-    }
-
-    /**
      * Given existing data, calculate the degree days for this object.
      *
      * @return this
@@ -421,54 +403,6 @@ class Daily
         }
 
         $this->degreeDay27 = $degreeDay27;
-
-        return $this;
-    }
-
-    /**
-     * Get dsvCarrotFoliarDisease.
-     *
-     * @return dsvCarrotFoliarDisease.
-     */
-    public function getDsvCarrotFoliarDisease()
-    {
-        return $this->dsvCarrotFoliarDisease;
-    }
-
-    /**
-     * Set dsvCarrotFoliarDisease.
-     *
-     * @param dsvCarrotFoliarDisease the value to set.
-     */
-    public function setDsvCarrotFoliarDisease($dsvCarrotFoliarDisease)
-    {
-        $dsvCarrotFoliarDisease = DiseaseModel::validateDsv($dsvCarrotFoliarDisease);
-
-        $this->dsvCarrotFoliarDisease = $dsvCarrotFoliarDisease;
-
-        return $this;
-    }
-
-    /**
-     * Get dsvPotatoLateBlight.
-     *
-     * @return dsvPotatoLateBlight.
-     */
-    public function getDsvPotatoLateBlight()
-    {
-        return $this->dsvPotatoLateBlight;
-    }
-
-    /**
-     * Set dsvPotatoLateBlight.
-     *
-     * @param dsvPotatoLateBlight the value to set.
-     */
-    public function setDsvPotatoLateBlight($dsvPotatoLateBlight)
-    {
-        $dsvPotatoLateBlight = DiseaseModel::validateDsv($dsvPotatoLateBlight);
-
-        $this->dsvPotatoLateBlight = $dsvPotatoLateBlight;
 
         return $this;
     }

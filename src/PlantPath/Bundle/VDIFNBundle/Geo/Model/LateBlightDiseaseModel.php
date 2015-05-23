@@ -3,10 +3,23 @@
 namespace PlantPath\Bundle\VDIFNBundle\Geo\Model;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use PlantPath\Bundle\VDIFNBundle\Geo\Crop;
+use PlantPath\Bundle\VDIFNBundle\Geo\Disease;
+use PlantPath\Bundle\VDIFNBundle\Geo\Point;
 use PlantPath\Bundle\VDIFNBundle\Geo\Threshold;
 
 class LateBlightDiseaseModel extends DiseaseModel
 {
+    /**
+     * @var string
+     */
+    protected static $crop = Crop::POTATO;
+
+    /**
+     * @var string
+     */
+    protected static $disease = Disease::LATE_BLIGHT;
+
     /**
      * @var array
      */

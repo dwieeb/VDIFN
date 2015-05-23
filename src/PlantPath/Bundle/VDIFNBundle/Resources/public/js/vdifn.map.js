@@ -144,8 +144,10 @@ vdifn.map.Station.prototype.getWeatherDetails = function() {
         Routing.generate('stations_get', {
             usaf: this.usaf,
             wban: this.wban,
-            startDate: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
-            endDate: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}')
+            start: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
+            end: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}'),
+            crop: Interface.crop,
+            infliction: Interface.infliction
         })
     ).end(function(response) {
         if (response.ok) {
@@ -276,8 +278,10 @@ vdifn.map.ModelDataPoint.prototype.getWeatherDetails = function() {
         Routing.generate('weather_daily_point', {
             latitude: this.latLng.lat(),
             longitude: this.latLng.lng(),
-            startDate: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
-            endDate: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}')
+            start: Interface.startPicker.getDate().format('{yyyy}{MM}{dd}'),
+            end: Interface.endPicker.getDate().format('{yyyy}{MM}{dd}'),
+            crop: Interface.crop,
+            infliction: Interface.infliction
         })
     ).end(function(response) {
         if (response.ok) {
