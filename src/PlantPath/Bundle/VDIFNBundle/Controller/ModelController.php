@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PlantPath\Bundle\VDIFNBundle\Geo\AbstractInfliction;
+use PlantPath\Bundle\VDIFNBundle\Geo\Disease;
 use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 
 /**
@@ -18,19 +20,22 @@ use PlantPath\Bundle\VDIFNBundle\Geo\Model\DiseaseModel;
 class ModelController extends Controller
 {
     /**
-     * @Route("/severity-legend", name="model_severity_legend", options={"expose"=true})
+     * @Route("/{crop}/inflictions/{infliction}/severity-legend", name="model_severity_legend", options={"expose"=true})
      * @Method("GET")
      */
-    public function severityLegendAction(Request $request)
+    public function severityLegendAction(Request $request, $crop, $infliction)
     {
-        $crop = $request->query->get('crop');
-        $infliction = $request->query->get('infliction');
+        $inflictionClass = AbstractInfliction::getClassBySlug($infliction);
 
-        $class = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
+        if ($inflictionClass::INFLICTION_TYPE == Disease::INFLICTION_TYPE) {
+            $class = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
 
-        return $this->render('PlantPathVDIFNBundle:Model:severity-legend.html.twig', [
-            'thresholds' => $class::getThresholds(),
-        ]);
+            return $this->render('PlantPathVDIFNBundle:Model:severity-legend.html.twig', [
+                'thresholds' => $class::getThresholds(),
+            ]);
+        }
+
+        throw $this->createNotFoundException('Unknown infliction type.');
     }
 
     /**
@@ -39,25 +44,31 @@ class ModelController extends Controller
      */
     public function dataAction(Request $request, $crop, $infliction)
     {
-        $start = \DateTime::createFromFormat('Ymd', $request->query->get('start'));
-        $end = \DateTime::createFromFormat('Ymd', $request->query->get('end'));
+        $inflictionClass = AbstractInfliction::getClassBySlug($infliction);
 
-        if (empty($start) || empty($end)) {
-            return JsonResponse::create(['error' => 'Missing crucial query parameters.'], 400);
+        if ($inflictionClass::INFLICTION_TYPE == Disease::INFLICTION_TYPE) {
+            $start = \DateTime::createFromFormat('Ymd', $request->query->get('start'));
+            $end = \DateTime::createFromFormat('Ymd', $request->query->get('end'));
+
+            if (empty($start) || empty($end)) {
+                return JsonResponse::create(['error' => 'Missing crucial query parameters.'], 400);
+            }
+
+            $modelClass = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
+
+            $entities = $modelClass::getDataByDateRange(
+                $this->getDoctrine()->getManager(),
+                $start,
+                $end
+            );
+
+            if (empty($entities)) {
+                throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
+            }
+
+            return JsonResponse::create($entities);
         }
 
-        $class = DiseaseModel::getClassByCropAndDisease($crop, $infliction);
-
-        $entities = $class::getDataByDateRange(
-            $this->getDoctrine()->getManager(),
-            $start,
-            $end
-        );
-
-        if (empty($entities)) {
-            throw $this->createNotFoundException('Unable to find daily weather data by specified criteria.');
-        }
-
-        return JsonResponse::create($entities);
+        throw $this->createNotFoundException('Unknown infliction type.');
     }
 }

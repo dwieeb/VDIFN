@@ -227,11 +227,11 @@ vdifn.Interface.prototype.attachListeners = function() {
                 event.preventDefault();
             } else if (target.classList.contains('unsubscribe')) {
                 superagent.del(
-                    Routing.generate('subscriptions_delete')
-                ).query({
-                    'latitude': self.activeModelDataPoint.latLng.lat(),
-                    'longitude': self.activeModelDataPoint.latLng.lng()
-                }).end(function(response) {
+                    Routing.generate('subscriptions_delete', {
+                        latitude: self.activeModelDataPoint.latLng.lat(),
+                        longitude: self.activeModelDataPoint.latLng.lng()
+                    })
+                ).end(function(response) {
                     if (response.ok) {
                         self.activeModelDataPoint.getInfoBox();
                     }
@@ -427,11 +427,11 @@ vdifn.Interface.prototype.drawSeverityLegend = function() {
     inner.appendChild(content);
 
     superagent.get(
-        Routing.generate('model_severity_legend')
-    ).query({
-        'crop': Interface.crop,
-        'infliction': Interface.infliction
-    }).end(function(response) {
+        Routing.generate('model_severity_legend', {
+            crop: Interface.crop,
+            infliction: Interface.infliction
+        })
+    ).end(function(response) {
         inner.innerHTML = response.text;
         var elements = inner.querySelectorAll('.dsv');
         var severity, color;

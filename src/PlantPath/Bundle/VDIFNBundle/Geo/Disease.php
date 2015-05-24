@@ -4,6 +4,8 @@ namespace PlantPath\Bundle\VDIFNBundle\Geo;
 
 class Disease extends AbstractInfliction
 {
+    const INFLICTION_TYPE = 'disease';
+
     const FOLIAR_DISEASE = 'disease-foliar-disease';
     const EARLY_BLIGHT = 'disease-early-blight';
     const LATE_BLIGHT = 'disease-late-blight';

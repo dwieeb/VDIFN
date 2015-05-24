@@ -4,6 +4,8 @@ namespace PlantPath\Bundle\VDIFNBundle\Geo;
 
 class Pest extends AbstractInfliction
 {
+    const INFLICTION_TYPE = 'pest';
+
     const ASTER_LEAFHOPPER = 'pest-aster-leafhopper';
     const CARROT_WEEVIL = 'pest-carrot-weevil';
     const CARROT_RUST_FLY = 'pest-carrot-rust-fly';
