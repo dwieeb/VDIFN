@@ -2,7 +2,7 @@
 
 namespace PlantPath\Bundle\VDIFNBundle\Geo;
 
-class Pest
+class Pest extends AbstractInfliction
 {
     const ASTER_LEAFHOPPER = 'pest-aster-leafhopper';
     const CARROT_WEEVIL = 'pest-carrot-weevil';
@@ -31,48 +31,4 @@ class Pest
         Crop::ONION => [Pest::ONION_MAGGOT],
         Crop::POTATO => [Pest::COLORADO_POTATO_BEETLE, Pest::POTATO_LEAFHOPPER, Pest::ASTER_LEAFHOPPER]
     ];
-
-    /**
-     * Get the valid disease names.
-     *
-     * @return array
-     */
-    public static function getValidNames()
-    {
-        return static::$validNames;
-    }
-
-    /**
-     * Return a pretty name by a slug.
-     *
-     * @return string
-     */
-    public static function getNameBySlug($slug)
-    {
-        if (!static::isValidSlug($slug)) {
-            throw new \InvalidArgumentException("$slug is not a valid pest slug.");
-        }
-
-        return static::getValidNames()[$slug];
-    }
-
-    /**
-     * Determines whether a slug is valid or not.
-     *
-     * @param string $slug
-     */
-    public static function isValidSlug($slug)
-    {
-        return in_array($slug, array_keys(static::$validNames));
-    }
-
-    /**
-     * Get the crop/pest mapping.
-     *
-     * @return array
-     */
-    public static function getCropMapping()
-    {
-        return static::$cropMapping;
-    }
 }

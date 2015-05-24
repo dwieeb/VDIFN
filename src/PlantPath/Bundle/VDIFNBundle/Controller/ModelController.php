@@ -34,17 +34,15 @@ class ModelController extends Controller
     }
 
     /**
-     * @Route("/data", name="model_data", options={"expose"=true})
+     * @Route("/{crop}/inflictions/{infliction}/data", name="model_data", options={"expose"=true})
      * @Method("GET")
      */
-    public function dataAction(Request $request)
+    public function dataAction(Request $request, $crop, $infliction)
     {
         $start = \DateTime::createFromFormat('Ymd', $request->query->get('start'));
         $end = \DateTime::createFromFormat('Ymd', $request->query->get('end'));
-        $crop = $request->query->get('crop');
-        $infliction = $request->query->get('infliction');
 
-        if (empty($start) || empty($end) || empty($crop) || empty($infliction)) {
+        if (empty($start) || empty($end)) {
             return JsonResponse::create(['error' => 'Missing crucial query parameters.'], 400);
         }
 

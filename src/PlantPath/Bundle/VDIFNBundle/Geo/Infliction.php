@@ -73,13 +73,9 @@ class Infliction
      */
     public static function isValidSlug($slug)
     {
-        if (0 === strpos($slug, 'disease-')) {
-            return Disease::isValidSlug($slug);
-        } else if (0 === strpos($slug, 'pest-')) {
-            return Pest::isValidSlug($slug);
-        }
+        $class = AbstractInfliction::getClassBySlug($slug);
 
-        throw new \InvalidArgumentException("Unknown infliction type.");
+        return $class::isValidSlug($slug);
     }
 
     /**
@@ -89,12 +85,8 @@ class Infliction
      */
     public static function getNameBySlug($slug)
     {
-        if (0 === strpos($slug, 'disease-')) {
-            return Disease::getNameBySlug($slug);
-        } else if (0 === strpos($slug, 'pest-')) {
-            return Pest::getNameBySlug($slug);
-        }
+        $class = AbstractInfliction::getClassBySlug($slug);
 
-        throw new \InvalidArgumentException("Unknown infliction type.");
+        return $class::getNameBySlug($slug);
     }
 }
