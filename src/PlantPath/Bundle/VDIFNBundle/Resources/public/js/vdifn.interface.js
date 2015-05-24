@@ -252,16 +252,38 @@ vdifn.Interface.prototype.attachListeners = function() {
  * @return this
  */
 vdifn.Interface.prototype.modelChangedHandler = function() {
+    if (typeof this.crop === 'undefined' || typeof this.infliction === 'undefined') {
+        return this;
+    }
+
+    var inflictionType = this.infliction.substring(0, this.infliction.indexOf('-'));
+    var endPickerField = this.endPicker.config().field;
+    var endPickerWrapper = document.getElementById('datepicker-end-wrapper');
+    var to = document.getElementById('datepicker-to');
+    var legend = document.getElementById('datepicker-legend');
+
     if (this.crop === 'potato' && this.infliction === 'disease-late-blight') {
-        this.endPicker.config().field.setAttribute("disabled", "disabled");
+        endPickerField.setAttribute("disabled", "disabled");
         this.endPicker.setDate((7).daysAfter(this.startPicker.getDate()));
 
         if (7 !== this.startPicker.getDate().daysUntil(this.endPicker.getDate())) {
             this.startPicker.setDate((7).daysBefore(this.endPicker.getDate()));
         }
     } else {
-        this.endPicker.config().field.removeAttribute("disabled");
+        endPickerField.removeAttribute("disabled");
     }
+
+    if (inflictionType === 'pest') {
+        endPickerWrapper.style.display = 'none';
+        to.style.display = 'none';
+        legend.innerHTML = 'Date';
+    } else {
+        endPickerWrapper.style.display = 'block';
+        to.style.display = 'block';
+        legend.innerHTML = 'Dates';
+    }
+
+    return this;
 };
 
 /**

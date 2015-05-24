@@ -86,7 +86,7 @@ var Interface = new vdifn.Interface(
             Interface.closeLoadingOverlay();
 
             if (!success) {
-                Interface.openErrorOverlay("Could not load weather data for the date range specified.");
+                Interface.openErrorOverlay("Could not load weather data for the model specified.");
             }
         });
 
