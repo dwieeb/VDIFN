@@ -16,9 +16,9 @@ class Disease extends AbstractInfliction
      */
     public static $validNames = [
         Disease::FOLIAR_DISEASE => 'Foliar Disease',
-        Disease::EARLY_BLIGHT => 'Early Blight',
+        // Disease::EARLY_BLIGHT => 'Early Blight',
         Disease::LATE_BLIGHT => 'Late Blight',
-        Disease::DOWNY_MILDEW => 'Downy Mildew',
+        // Disease::DOWNY_MILDEW => 'Downy Mildew',
     ];
 
     /**
@@ -26,7 +26,7 @@ class Disease extends AbstractInfliction
      */
     public static $cropMapping = [
         Crop::CARROT => [Disease::FOLIAR_DISEASE],
-        Crop::POTATO => [Disease::EARLY_BLIGHT, Disease::LATE_BLIGHT],
-        Crop::HOPS => [Disease::DOWNY_MILDEW],
+        Crop::POTATO => [/* Disease::EARLY_BLIGHT, */ Disease::LATE_BLIGHT],
+        Crop::HOPS => [/* Disease::DOWNY_MILDEW */],
     ];
 }

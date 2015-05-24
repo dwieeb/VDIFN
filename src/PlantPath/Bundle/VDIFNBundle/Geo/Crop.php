@@ -14,9 +14,9 @@ class Crop
      */
     public static $validNames = [
         Crop::CARROT => 'Carrot',
-        Crop::ONION => 'Onion',
+        // Crop::ONION => 'Onion',
         Crop::POTATO => 'Potato',
-        Crop::HOPS => 'Hops',
+        // Crop::HOPS => 'Hops',
     ];
 
     /**
