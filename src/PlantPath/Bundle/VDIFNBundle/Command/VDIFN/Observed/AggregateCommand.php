@@ -133,7 +133,7 @@ class AggregateCommand extends ContainerAwareCommand
             try {
                 $hourlies = $this->getHourlyWeather($station['usaf'], $station['wban'], $date);
             } catch (\UnexpectedValueException $ex) {
-                $this->logger->error($ex->getMessage(), ['usaf' => $station['usaf'], 'wban' => $station['wban'], 'date' => $date->format('c')]);
+                $this->logger->warning($ex->getMessage(), ['usaf' => $station['usaf'], 'wban' => $station['wban'], 'date' => $date->format('c')]);
                 continue;
             }
 
