@@ -36,7 +36,7 @@ var Interface = new vdifn.Interface(
         onSelect: function() {
             var ultimateMaxDate = vdifn.latest_date;
             var minDate = this.getDate();
-            var maxDate = this.getDate().advance('2 weeks');
+            var maxDate = this.getDate().advance('8 weeks');
 
             if (maxDate > ultimateMaxDate) {
                 maxDate = ultimateMaxDate;
