@@ -197,31 +197,8 @@ vdifn.Interface.prototype.attachListeners = function() {
 
                 event.preventDefault();
             } else if (target.classList.contains('login')) {
-                self.openMessageOverlay();
-
-                superagent.get(
-                    Routing.generate('fos_user_login')
-                ).end(function(response) {
-                    var inner = document.getElementById('message-overlay-inner');
-                    inner.innerHTML = response.text;
-                    document.getElementById('username').focus();
-                    var form = document.getElementById('login-form');
-
-                    google.maps.event.addDomListener(form, 'submit', function(event) {
-                        self.openLoadingOverlay();
-
-                        superagent.post(
-                            form.getAttribute('action')
-                        ).send(
-                            serialize(form)
-                        ).end(function(response) {
-                            self.closeLoadingOverlay();
-                            self.closeMessageOverlay();
-                            point.getInfoBox();
-                        });
-
-                        event.preventDefault();
-                    });
+                self.openLoginModal(function() {
+                    point.getInfoBox();
                 });
 
                 event.preventDefault();
@@ -346,6 +323,46 @@ vdifn.Interface.prototype.registerInflictionSelectHandler = function(cropSelect,
     });
 
     google.maps.event.trigger(cropSelect, 'change');
+
+    return this;
+};
+
+/**
+ * Open the login modal.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.openLoginModal = function(callback) {
+    var self = this;
+    self.openMessageOverlay();
+
+    superagent.get(
+        Routing.generate('fos_user_login')
+    ).end(function(response) {
+        var inner = document.getElementById('message-overlay-inner');
+        inner.innerHTML = response.text;
+        document.getElementById('username').focus();
+        var form = document.getElementById('login-form');
+
+        google.maps.event.addDomListener(form, 'submit', function(event) {
+            self.openLoadingOverlay();
+
+            superagent.post(
+                form.getAttribute('action')
+            ).send(
+                serialize(form)
+            ).end(function(response) {
+                self.closeLoadingOverlay();
+                self.closeMessageOverlay();
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
+
+            event.preventDefault();
+        });
+    });
 
     return this;
 };
