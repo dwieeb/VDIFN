@@ -8,6 +8,7 @@
     "pikaday": "master",
     "momentjs": "~2.6.0",
     "google-maps-utility-library-v3": "*",
-    "form-serialize": "https://github.com/dwieeb/form-serialize.git#master"
+    "form-serialize": "https://github.com/dwieeb/form-serialize.git#master",
+    "async": "~1.2.1"
   }
 }

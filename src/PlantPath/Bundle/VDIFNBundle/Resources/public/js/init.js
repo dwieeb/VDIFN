@@ -77,20 +77,70 @@ var Interface = new vdifn.Interface(
             Interface.closeInfoBoxes();
         }
 
-        Interface.drawDateRange({
-            start: Interface.startPicker.getDate(),
-            end: Interface.endPicker.getDate(),
-            crop: Interface.crop,
-            infliction: Interface.infliction
-        }, function(success) {
-            Interface.closeLoadingOverlay();
+        async.parallel({
+            date_range: function(callback) {
+                Interface.drawDateRange({
+                    start: Interface.startPicker.getDate(),
+                    end: Interface.endPicker.getDate(),
+                    crop: Interface.crop,
+                    infliction: Interface.infliction
+                }, function(results) {
+                    Interface.closeLoadingOverlay();
 
-            if (!success) {
-                Interface.openErrorOverlay("Could not load weather data for the model specified.");
+                    if (results.isEmpty()) {
+                        Interface.openErrorOverlay("Could not load weather data for the model specified.");
+                    }
+
+                    callback(null, {'results': results});
+                });
+            },
+            severity_legend: function(callback) {
+                var content = Interface.generateLoadingBars();
+                var inner = document.getElementById('severity-legend');
+                inner.innerHTML = '';
+                inner.appendChild(content);
+
+                Interface.drawSeverityLegend({
+                    crop: Interface.crop,
+                    infliction: Interface.infliction
+                }, function(response) {
+                    callback(null, {'response': response});
+                });
+            }
+        }, function(err, results) {
+            var inner = document.getElementById('severity-legend');
+            inner.innerHTML = results.severity_legend.response.text;
+            var elements = inner.querySelectorAll('.dsv');
+            var severity, color;
+            Interface.severities = {};
+
+            for (var i = 0; i < elements.length; i++) {
+                severity = elements[i].getAttribute('data-severity');
+                color = elements[i].getAttribute('data-color');
+                Interface.severities[severity] = color;
+
+                google.maps.event.addDomListener(elements[i], 'mouseover', function(event) {
+                    var content = document.createElement('div');
+                    content.innerHTML = this.getAttribute('data-description');
+                    Interface.openTooltip(this, content);
+                });
+
+                google.maps.event.addDomListener(elements[i], 'mouseout', function(event) {
+                    Interface.closeTooltip();
+                });
+            }
+
+            var date_range_results = results.date_range.results;
+
+            for (var point in date_range_results) {
+                Interface.drawModelDataPoint(new vdifn.map.ModelDataPoint(
+                    point,
+                    new google.maps.LatLng(date_range_results[point].latitude, date_range_results[point].longitude),
+                    date_range_results[point].severity
+                ));
             }
         });
 
-        Interface.drawSeverityLegend();
         Interface.modelChanged = false;
     });
 

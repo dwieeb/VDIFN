@@ -437,16 +437,10 @@ vdifn.Interface.prototype.closeMessageOverlay = function() {
  *
  * @return this
  */
-vdifn.Interface.prototype.drawSeverityLegend = function() {
+vdifn.Interface.prototype.drawSeverityLegend = function(criteria, callback) {
     if (!this.modelChanged) {
         return this;
     }
-
-    var self = this;
-    var content = this.generateLoadingBars();
-    var inner = document.getElementById('severity-legend');
-    inner.innerHTML = '';
-    inner.appendChild(content);
 
     superagent.get(
         Routing.generate('model_severity_legend', {
@@ -454,25 +448,8 @@ vdifn.Interface.prototype.drawSeverityLegend = function() {
             infliction: Interface.infliction
         })
     ).end(function(response) {
-        inner.innerHTML = response.text;
-        var elements = inner.querySelectorAll('.dsv');
-        var severity, color;
-        self.severities = {};
-
-        for (var i = 0; i < elements.length; i++) {
-            severity = elements[i].getAttribute('data-severity');
-            color = elements[i].getAttribute('data-color');
-            self.severities[severity] = color;
-
-            google.maps.event.addDomListener(elements[i], 'mouseover', function(event) {
-                var content = document.createElement('div');
-                content.innerHTML = this.getAttribute('data-description');
-                Interface.openTooltip(this, content);
-            });
-
-            google.maps.event.addDomListener(elements[i], 'mouseout', function(event) {
-                Interface.closeTooltip();
-            });
+        if (typeof callback === 'function') {
+            callback.call(this, response);
         }
     });
 
@@ -528,16 +505,8 @@ vdifn.Interface.prototype.drawDateRange = function(criteria, callback) {
     this.clearModelDataPoints();
 
     this.db.findPredictedWeatherData(criteria, function(results) {
-        for (var point in results) {
-            self.drawModelDataPoint(new vdifn.map.ModelDataPoint(
-                point,
-                new google.maps.LatLng(results[point].latitude, results[point].longitude),
-                results[point].severity
-            ));
-        }
-
         if (typeof callback === 'function') {
-            callback.call(this, !results.isEmpty());
+            callback.call(this, results);
         }
     });
 
