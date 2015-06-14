@@ -337,7 +337,7 @@ vdifn.Interface.prototype.openLoginModal = function(callback) {
     self.openMessageOverlay();
 
     superagent.get(
-        Routing.generate('fos_user_login')
+        Routing.generate('user_login')
     ).end(function(response) {
         var inner = document.getElementById('message-overlay-inner');
         inner.innerHTML = response.text;
@@ -366,6 +366,56 @@ vdifn.Interface.prototype.openLoginModal = function(callback) {
 
     return this;
 };
+
+/**
+ * Open the registration form modal.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.openRegistrationModal = function(callback) {
+    var self = this;
+    self.openMessageOverlay();
+    var inner = document.getElementById('message-overlay-inner');
+
+    var attachFormHandlers = function(form) {
+        document.getElementById('fos_user_registration_form_email').focus();
+
+        google.maps.event.addDomListener(form, 'submit', function(event) {
+            self.openLoadingOverlay();
+
+            superagent.post(
+                form.getAttribute('action')
+            ).send(
+                serialize(form)
+            ).end(function(response) {
+                self.closeLoadingOverlay();
+                inner.innerHTML = response.text;
+                var form = document.getElementById('register-form');
+
+                if (form) {
+                    attachFormHandlers(form);
+                } else {
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            });
+
+            event.preventDefault();
+        });
+    };
+
+    superagent.get(
+        Routing.generate('user_register')
+    ).end(function(response) {
+        inner.innerHTML = response.text;
+        var form = document.getElementById('register-form');
+        attachFormHandlers(form);
+    });
+
+    return this;
+};
+
 
 /**
  * Open the loading overlay.
@@ -504,6 +554,53 @@ vdifn.Interface.prototype.generateLoadingBars = function() {
     content.appendChild(loading);
 
     return content;
+};
+
+/**
+ * Draw the user links on the interface.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.drawUserLinks = function() {
+    var self = this;
+    var content = self.generateLoadingBars();
+    var inner = document.getElementById('user-links');
+    inner.innerHTML = '';
+    inner.appendChild(content);
+
+    superagent.get(
+        Routing.generate('user_links')
+    ).end(function(response) {
+        inner.innerHTML = response.text;
+
+        if (document.getElementById('login')) {
+            google.maps.event.addDomListener(document.getElementById('login'), 'click', function(event) {
+                self.openLoginModal(function() {
+                    self.drawUserLinks();
+                });
+            });
+        }
+
+        if (document.getElementById('logout')) {
+            google.maps.event.addDomListener(document.getElementById('logout'), 'click', function(event) {
+                superagent.get(
+                    Routing.generate('user_logout')
+                ).end(function(response) {
+                    self.drawUserLinks();
+                });
+            });
+        }
+
+        if (document.getElementById('register')) {
+            google.maps.event.addDomListener(document.getElementById('register'), 'click', function(event) {
+                self.openRegistrationModal(function() {
+                    self.drawUserLinks();
+                });
+            });
+        }
+    });
+
+    return this;
 };
 
 /**

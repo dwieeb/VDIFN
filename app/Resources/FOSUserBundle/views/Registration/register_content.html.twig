@@ -1,0 +1,41 @@
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register" id="register-form">
+    {{ form_errors(form.email) }}
+    {{ form_errors(form.username) }}
+    {{ form_errors(form.plainPassword.first) }}
+    {{ form_errors(form.plainPassword.second) }}
+
+    <table>
+        <tr>
+            <td align="right"><label>Email:</label></td>
+            <td>
+                {{ form_widget(form.email, { 'attr': {'class': 'form-control' } }) }}
+            </td>
+        </tr>
+        <tr>
+            <td align="right"><label>Username:</label></td>
+            <td>
+                {{ form_widget(form.username, { 'attr': {'class': 'form-control' } }) }}
+            </td>
+        </tr>
+        <tr>
+            <td align="right"><label>Password:</label></td>
+            <td>
+                {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control' } }) }}
+            </td>
+        </tr>
+        <tr>
+            <td align="right"><label>Password (again):</label></td>
+            <td>
+                {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control' } }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <input type="submit" class="button button-primary" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
+            </td>
+        </tr>
+    </table>
+
+    {{ form_rest(form) }}
+</form>

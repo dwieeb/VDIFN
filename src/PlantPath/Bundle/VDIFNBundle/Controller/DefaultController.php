@@ -29,4 +29,13 @@ class DefaultController extends Controller
             'inflictions' => Infliction::getFormChoices(),
         ]);
     }
+
+    /**
+     * @Route("/user-links", name="user_links", options={"expose": true})
+     * @Template()
+     */
+    public function userLinksAction()
+    {
+        return $this->render('PlantPathVDIFNBundle:Default:user-links.html.twig');
+    }
 }

@@ -1,0 +1,5 @@
+{% if app.user %}
+logged in as {{ app.user.username }} &ndash; <a href="#" id="logout">logout</a>
+{% else %}
+not logged in &ndash; <a href="#" id="login">login</a> &middot; <a href="#" id="register">register</a>
+{% endif %}
