@@ -53,7 +53,25 @@ vdifn.Interface.prototype.wrapControls = function() {
  *
  * @return this
  */
-vdifn.Interface.prototype.openTooltip = function(element, content) {
+vdifn.Interface.prototype.openTooltip = function(element, content, options) {
+    if (typeof options === 'undefined') {
+        options = {};
+    }
+
+    var defaultOptions = {
+        'top': 17,
+        'left': -7,
+        'right': 17,
+        'max-width': '350px',
+        'arrow': 'left'
+    };
+
+    for (var k in defaultOptions) {
+        if (typeof options[k] === 'undefined') {
+            options[k] = defaultOptions[k];
+        }
+    }
+
     if (typeof this.tooltip === 'undefined') {
         this.tooltip = document.createElement('div');
         this.tooltip.id = 'tooltip';
@@ -65,8 +83,18 @@ vdifn.Interface.prototype.openTooltip = function(element, content) {
     this.tooltip.innerHTML = '';
     this.tooltip.appendChild(content);
     this.tooltip.style.display = 'block';
-    this.tooltip.style.top = (elementBounding.top - (this.tooltip.clientHeight + 7)) + 'px';
-    this.tooltip.style.left = (elementBounding.left + 1) + 'px';
+    this.tooltip.style.maxWidth = options['max-width'];
+    this.tooltip.style.top = (elementBounding.top - (this.tooltip.clientHeight + options.top)) + 'px';
+
+    if (options['arrow'] === 'left') {
+        this.tooltip.style.left = (elementBounding.left + options.left) + 'px';
+        this.tooltip.classList.add('left-triangle');
+        this.tooltip.classList.remove('right-triangle');
+    } else if (options['arrow'] === 'right') {
+        this.tooltip.style.left = (elementBounding.left - this.tooltip.clientWidth + options.right) + 'px';
+        this.tooltip.classList.add('right-triangle');
+        this.tooltip.classList.remove('left-triangle');
+    }
 
     return this;
 };
@@ -129,10 +157,16 @@ vdifn.Interface.prototype.attachListeners = function() {
     var pointInfoBoxes = div.querySelectorAll('.infoBox-point');
     var listener;
 
-    if (typeof static.listeners === 'undefined') {
-        static.listeners = {
+    if (typeof static.clickListeners === 'undefined') {
+        static.clickListeners = {
             pointInfoBoxes: {},
             message: null
+        };
+    }
+
+    if (typeof static.mouseoverListeners === 'undefined') {
+        static.mouseoverListeners = {
+            pointInfoBoxes: {}
         };
     }
 
@@ -161,8 +195,8 @@ vdifn.Interface.prototype.attachListeners = function() {
         }
     });
 
-    google.maps.event.removeListener(static.listeners.message);
-    static.listeners.message = listener;
+    google.maps.event.removeListener(static.clickListeners.message);
+    static.clickListeners.message = listener;
 
     for (var i = 0; i < pointInfoBoxes.length; i++) {
         var pointInfoBox = pointInfoBoxes[i];
@@ -194,14 +228,10 @@ vdifn.Interface.prototype.attachListeners = function() {
                         document.getElementById('subscription_infliction')
                     );
                 });
-
-                event.preventDefault();
             } else if (target.classList.contains('login')) {
                 self.openLoginModal(function() {
                     point.getInfoBox();
                 });
-
-                event.preventDefault();
             } else if (target.classList.contains('unsubscribe')) {
                 superagent.del(
                     Routing.generate('subscriptions_delete', {
@@ -214,10 +244,37 @@ vdifn.Interface.prototype.attachListeners = function() {
                     }
                 });
             }
+
+            event.preventDefault();
         });
 
-        google.maps.event.removeListener(static.listeners.pointInfoBoxes[id]);
-        static.listeners.pointInfoBoxes[id] = listener;
+        google.maps.event.removeListener(static.clickListeners.pointInfoBoxes[id]);
+        static.clickListeners.pointInfoBoxes[id] = listener;
+
+        listener = google.maps.event.addDomListener(pointInfoBox, 'mouseover', function(event) {
+            var target = event.target || event.srcElement;
+
+            if (target.classList.contains('weather-details-dsv')) {
+                var content = document.createElement('div');
+                content.innerHTML = 'Disease Severity Values are calculated by using temperature and leaf wetness (or relative humidity) duration (hours). Values range from 0-4. Accumulation of threshold DSV levels trigger fungicide/pesticide applications.';
+                self.openTooltip(target, content);
+
+                google.maps.event.addDomListener(target, 'mouseout', function(event) {
+                    self.closeTooltip();
+                });
+            } else if (target.classList.contains('weather-details-rh')) {
+                var content = document.createElement('div');
+                content.innerHTML = 'Relative humidity is a measure of how much water vapor (%) is in the air compared to complete saturation (100%) at a given temperature.';
+                self.openTooltip(target, content);
+
+                google.maps.event.addDomListener(target, 'mouseout', function(event) {
+                    self.closeTooltip();
+                });
+            }
+        });
+
+        google.maps.event.removeListener(static.mouseoverListeners.pointInfoBoxes[id]);
+        static.mouseoverListeners.pointInfoBoxes[id] = listener;
     }
 
     return this;

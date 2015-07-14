@@ -3,7 +3,7 @@
 {% for slug, threshold in thresholds %}
     <div id="dsv-{{ slug }}" class="dsv" data-description="{{ threshold.description }}" data-color="{{ threshold.color }}" data-severity="{{ slug }}">
         <div style="background-color: {{ threshold.color }}"></div>
-        <label>{{ threshold.name }}</label>
+        <label>{{ threshold.name }} <span class="more-information">?</span></label>
     </div>
 {% endfor %}
 </fieldset>
