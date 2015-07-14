@@ -195,6 +195,6 @@ var Interface = new vdifn.Interface(
     google.maps.event.trigger(document.getElementById('crop-select'), 'change');
     google.maps.event.trigger(document.getElementById('infliction-select'), 'change');
     google.maps.event.trigger(document.getElementById('select'), 'click');
-    Interface.drawUserLinks();
+    // Interface.drawUserLinks();
     Interface.drawStations();
 })(window);
