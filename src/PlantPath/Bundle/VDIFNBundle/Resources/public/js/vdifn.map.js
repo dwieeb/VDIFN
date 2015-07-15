@@ -177,6 +177,7 @@ vdifn.map.Station.prototype.getWeatherDetails = function() {
             var station = document.getElementById('station-' + self.usaf + '-' + self.wban);
             station.classList.remove('loading');
             station.innerHTML = response.text;
+            Interface.attachStationListeners();
         } else {
             var content = self.getInfoBox().getContent();
             content.innerHTML = '<p style="text-align: center">Error loading station.</p>';

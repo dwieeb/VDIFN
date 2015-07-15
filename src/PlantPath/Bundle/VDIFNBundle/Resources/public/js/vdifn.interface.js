@@ -288,7 +288,8 @@ vdifn.Interface.prototype.attachListeners = function() {
                 content.innerHTML = 'Disease Severity Values are calculated by using temperature and leaf wetness (or relative humidity) duration (hours). Values range from 0-4. Accumulation of threshold DSV levels trigger fungicide/pesticide applications.';
                 self.openTooltip(target, content);
 
-                google.maps.event.addDomListener(target, 'mouseout', function(event) {
+                google.maps.event.addDomListener(target, 'mouseleave', function(event) {
+                    self.tooltipOpen = false;
                     self.closeTooltip();
                 });
             } else if (target.classList.contains('weather-details-rh')) {
@@ -296,7 +297,8 @@ vdifn.Interface.prototype.attachListeners = function() {
                 content.innerHTML = 'Relative humidity is a measure of how much water vapor (%) is in the air compared to complete saturation (100%) at a given temperature.';
                 self.openTooltip(target, content);
 
-                google.maps.event.addDomListener(target, 'mouseout', function(event) {
+                google.maps.event.addDomListener(target, 'mouseleave', function(event) {
+                    self.tooltipOpen = false;
                     self.closeTooltip();
                 });
             }
@@ -304,6 +306,47 @@ vdifn.Interface.prototype.attachListeners = function() {
 
         google.maps.event.removeListener(static.mouseoverListeners.pointInfoBoxes[id]);
         static.mouseoverListeners.pointInfoBoxes[id] = listener;
+    }
+
+    return this;
+};
+
+/**
+ * (Re)attach event listeners to stations.
+ *
+ * @return this
+ */
+vdifn.Interface.prototype.attachStationListeners = function() {
+    var self = this;
+
+    for (var k in this.stations) {
+        var station = this.stations[k];
+
+        if (typeof station.infoBox !== 'undefined') {
+            google.maps.event.addDomListener(station.infoBox.getContent(), 'mouseover', function(event) {
+                var target = event.target || event.srcElement;
+
+                if (target.classList.contains('weather-details-dsv')) {
+                    var content = document.createElement('div');
+                    content.innerHTML = 'Disease Severity Values are calculated by using temperature and leaf wetness (or relative humidity) duration (hours). Values range from 0-4. Accumulation of threshold DSV levels trigger fungicide/pesticide applications.';
+                    self.openTooltip(target, content);
+
+                    google.maps.event.addDomListener(target, 'mouseleave', function(event) {
+                        self.tooltipOpen = false;
+                        self.closeTooltip();
+                    });
+                } else if (target.classList.contains('weather-details-rh')) {
+                    var content = document.createElement('div');
+                    content.innerHTML = 'Relative humidity is a measure of how much water vapor (%) is in the air compared to complete saturation (100%) at a given temperature.';
+                    self.openTooltip(target, content);
+
+                    google.maps.event.addDomListener(target, 'mouseleave', function(event) {
+                        self.tooltipOpen = false;
+                        self.closeTooltip();
+                    });
+                }
+            });
+        }
     }
 
     return this;

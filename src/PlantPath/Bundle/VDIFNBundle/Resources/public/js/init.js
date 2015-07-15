@@ -119,13 +119,13 @@ var Interface = new vdifn.Interface(
                 color = elements[i].getAttribute('data-color');
                 Interface.severities[severity] = color;
 
-                google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseover', function(event) {
+                google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseenter', function(event) {
                     var content = document.createElement('div');
                     content.innerHTML = this.parentNode.parentNode.getAttribute('data-description');
                     Interface.openTooltip(this, content, { 'arrow': 'right' });
                 });
 
-                google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseout', function(event) {
+                google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseleave', function(event) {
                     Interface.tooltipOpen = false;
                     Interface.closeTooltip();
                 });
@@ -161,35 +161,35 @@ var Interface = new vdifn.Interface(
         }
     });
 
-    google.maps.event.addDomListener(document.getElementById('infliction-select-information'), 'mouseover', function(event) {
+    google.maps.event.addDomListener(document.getElementById('infliction-select-information'), 'mouseenter', function(event) {
         var content = document.createElement('div');
         content.innerHTML = vdifn.infliction_descriptions[document.getElementById('infliction-select').value];
         Interface.openTooltip(document.getElementById('infliction-select-information'), content, { 'top': 7, 'left': 1, 'max-width': '500px' });
     });
 
-    google.maps.event.addDomListener(document.getElementById('infliction-select-information'), 'mouseout', function(event) {
+    google.maps.event.addDomListener(document.getElementById('infliction-select-information'), 'mouseleave', function(event) {
         Interface.tooltipOpen = false;
         Interface.closeTooltip();
     });
 
-    google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseover', function(event) {
+    google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseenter', function(event) {
         var content = document.createElement('div');
         content.innerHTML = 'Date of Emergence/Last Fungicide Application';
         Interface.openTooltip(document.getElementById('datepicker-start-information'), content, { 'top': 7, 'left': 1, 'max-width': '200px' });
     });
 
-    google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseout', function(event) {
+    google.maps.event.addDomListener(document.getElementById('datepicker-start-information'), 'mouseleave', function(event) {
         Interface.tooltipOpen = false;
         Interface.closeTooltip();
     });
 
-    google.maps.event.addDomListener(document.getElementById('datepicker-end-information'), 'mouseover', function(event) {
+    google.maps.event.addDomListener(document.getElementById('datepicker-end-information'), 'mouseenter', function(event) {
         var content = document.createElement('div');
         content.innerHTML = 'Date through which disease severity values are accumulated';
         Interface.openTooltip(document.getElementById('datepicker-end-information'), content, { 'top': 7, 'left': 1, 'max-width': '200px' });
     });
 
-    google.maps.event.addDomListener(document.getElementById('datepicker-end-information'), 'mouseout', function(event) {
+    google.maps.event.addDomListener(document.getElementById('datepicker-end-information'), 'mouseleave', function(event) {
         Interface.tooltipOpen = false;
         Interface.closeTooltip();
     });
