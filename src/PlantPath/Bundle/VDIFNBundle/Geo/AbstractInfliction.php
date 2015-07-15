@@ -39,6 +39,16 @@ abstract class AbstractInfliction
     }
 
     /**
+     * Get the disease descriptions.
+     *
+     * @return array
+     */
+    public static function getDescriptions()
+    {
+        return static::$descriptions;
+    }
+
+    /**
      * Return a pretty name by a slug.
      *
      * @return string
@@ -50,6 +60,26 @@ abstract class AbstractInfliction
         }
 
         return static::getValidNames()[$slug];
+    }
+
+    /**
+     * Return a description by a slug.
+     *
+     * @return string
+     */
+    public static function getDescriptionBySlug($slug)
+    {
+        if (!static::isValidSlug($slug)) {
+            throw new \InvalidArgumentException("$slug is not a valid infliction slug.");
+        }
+
+        $descriptions = static::getDescriptions();
+
+        if (empty($descriptions[$slug])) {
+            return null;
+        }
+
+        return $descriptions[$slug];
     }
 
     /**

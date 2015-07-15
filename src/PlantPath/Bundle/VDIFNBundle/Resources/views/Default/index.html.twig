@@ -37,6 +37,7 @@
         vdifn.parameters.static_path = "{{ asset('bundles/plantpathvdifn') }}";
         vdifn.latest_date = Date.create('{{ latest.time|date('Y-m-d') }}');
         vdifn.logged_in = {% if app.user %}true{% else %}false{% endif %};
+        vdifn.infliction_descriptions = {{ infliction_descriptions|json_encode|raw }};
     </script>
 {% javascripts filter='?uglifyjs2'
     '@PlantPathVDIFNBundle/Resources/public/js/init.js' %}
@@ -88,34 +89,39 @@
             <div class="inner">
                 <fieldset id="crop">
                     <legend>Crop:</legend>
-                    <select id="crop-select">
-                        {% for slug, crop in crops %}
-                        <option value="{{ slug }}">{{ crop }}</option>
-                        {% endfor %}
-                    </select>
+                    <div id="crop-select-wrapper">
+                        <select id="crop-select">
+                            {% for slug, crop in crops %}
+                            <option value="{{ slug }}">{{ crop }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </fieldset>
                 <fieldset id="infliction">
                     <legend>Pest/Disease:</legend>
-                    <select id="infliction-select">
-                        {% for name, group in inflictions %}
-                        <optgroup label="{{ name }}">
-                            {% for slug, infliction in group %}
-                            <option value="{{ slug }}">{{ infliction }}</option>
+                    <div id="infliction-select-wrapper" class="select-wrapper">
+                        <select id="infliction-select">
+                            {% for name, group in inflictions %}
+                            <optgroup label="{{ name }}">
+                                {% for slug, infliction in group %}
+                                <option value="{{ slug }}">{{ infliction }}</option>
+                                {% endfor %}
+                            </optgroup>
                             {% endfor %}
-                        </optgroup>
-                        {% endfor %}
-                    </select>
+                        </select>
+                        <span class="more-information" id="infliction-select-information">?</span>
+                    </div>
                 </fieldset>
                 <fieldset id="datepicker">
                     <legend id="datepicker-legend">Dates:</legend>
-                    <div class="datepicker-wrapper" id="datepicker-start-wrapper">
+                    <div class="select-wrapper" id="datepicker-start-wrapper">
                         <input type="text" class="datepicker" id="datepicker-start">
-                        <span class="datepicker-information more-information" id="datepicker-start-information">?</span>
+                        <span class="more-information" id="datepicker-start-information">?</span>
                     </div>
                     <div class="to" id="datepicker-to">to</div>
-                    <div class="datepicker-wrapper" id="datepicker-end-wrapper">
+                    <div class="select-wrapper" id="datepicker-end-wrapper">
                         <input type="text" class="datepicker" id="datepicker-end">
-                        <span class="datepicker-information more-information" id="datepicker-end-information">?</span>
+                        <span class="more-information" id="datepicker-end-information">?</span>
                     </div>
                 </fieldset>
                 <input type="button" class="button button-primary" id="select" value="Select" />

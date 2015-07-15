@@ -67,6 +67,38 @@ class Infliction
     }
 
     /**
+     * Returns a map of infliction IDs and their corresponding description.
+     *
+     * @return array
+     */
+    public static function getDescriptions()
+    {
+        $map = [];
+
+        foreach (Disease::getCropMapping() as $slug => $diseases) {
+            foreach ($diseases as $diseaseSlug) {
+                $description = Disease::getDescriptionBySlug($diseaseSlug);
+
+                if (null !== $description) {
+                    $map[$diseaseSlug] = $description;
+                }
+            }
+        }
+
+        foreach (Pest::getCropMapping() as $slug => $pests) {
+            foreach ($pests as $pestSlug) {
+                $description = Pest::getDescriptionBySlug($pestSlug);
+
+                if (null !== $description) {
+                    $map[$pestSlug] = $description;
+                }
+            }
+        }
+
+        return $map;
+    }
+
+    /**
      * Delegate to pest or disease isValidSlug().
      *
      * @param string $slug

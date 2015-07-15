@@ -27,6 +27,7 @@ class DefaultController extends Controller
             'latest' => $weather,
             'crops' => Crop::getFormChoices(),
             'inflictions' => Infliction::getFormChoices(),
+            'infliction_descriptions' => Infliction::getDescriptions(),
         ]);
     }
 

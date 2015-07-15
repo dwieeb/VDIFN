@@ -135,10 +135,6 @@ fieldset {
   margin: 0 10px;
 }
 
-.datepicker-wrapper {
-  position: relative;
-}
-
 #options input[type="text"],
 #options select {
   -webkit-appearance: none;
@@ -175,7 +171,11 @@ fieldset {
   background-repeat: no-repeat;
 }
 
-.datepicker-information {
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper .more-information {
   position: absolute;
   top: 0;
   right: 0;

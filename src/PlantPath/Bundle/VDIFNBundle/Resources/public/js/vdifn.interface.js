@@ -11,6 +11,7 @@ vdifn.Interface = function(map, db) {
     this.activeModelDataPoint = undefined;
     this.stations = {};
     this.tooltip = undefined;
+    this.tooltipOpen = false;
     this.loadingOverlay = document.getElementById('loading-overlay');
     this.errorOverlay = document.getElementById('error-overlay');
     this.messageOverlay = document.getElementById('message-overlay');
@@ -54,6 +55,17 @@ vdifn.Interface.prototype.wrapControls = function() {
  * @return this
  */
 vdifn.Interface.prototype.openTooltip = function(element, content, options) {
+    var self = this;
+    var static = vdifn.Interface.prototype.openTooltip;
+
+    if (typeof static.tooltipMouseenterListener !== 'undefined') {
+        google.maps.event.removeListener(static.tooltipMouseenterListener);
+    }
+
+    if (typeof static.tooltipMouseleaveListener !== 'undefined') {
+        google.maps.event.removeListener(static.tooltipMouseleaveListener);
+    }
+
     if (typeof options === 'undefined') {
         options = {};
     }
@@ -85,6 +97,7 @@ vdifn.Interface.prototype.openTooltip = function(element, content, options) {
     this.tooltip.style.display = 'block';
     this.tooltip.style.maxWidth = options['max-width'];
     this.tooltip.style.top = (elementBounding.top - (this.tooltip.clientHeight + options.top)) + 'px';
+    this.tooltipOpen = true;
 
     if (options['arrow'] === 'left') {
         this.tooltip.style.left = (elementBounding.left + options.left) + 'px';
@@ -96,6 +109,15 @@ vdifn.Interface.prototype.openTooltip = function(element, content, options) {
         this.tooltip.classList.remove('left-triangle');
     }
 
+    static.tooltipMouseenterListener = google.maps.event.addDomListener(this.tooltip, 'mouseenter', function(event) {
+        self.tooltipOpen = true;
+
+        static.tooltipMouseleaveListener = google.maps.event.addDomListener(self.tooltip, 'mouseleave', function(event) {
+            self.tooltipOpen = false;
+            self.closeTooltip();
+        });
+    });
+
     return this;
 };
 
@@ -106,7 +128,14 @@ vdifn.Interface.prototype.openTooltip = function(element, content, options) {
  * @return this
  */
 vdifn.Interface.prototype.closeTooltip = function() {
-    this.tooltip.style.display = 'none';
+    var self = this;
+
+    setTimeout(function() {
+        if (!self.tooltipOpen) {
+            self.tooltip.style.display = 'none';
+            self.tooltipOpen = false;
+        }
+    }, 500);
 
     return this;
 };
