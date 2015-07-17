@@ -632,3 +632,52 @@ input[disabled="disabled"]:hover,
 #message .loading {
   padding: 50px 0;
 }
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+  }
+
+  #sidebar {
+    left: 0;
+  }
+
+  #severity-legend {
+    right: 0;
+    bottom: 0;
+  }
+
+  fieldset {
+    background: none;
+  }
+
+  #sidebar,
+  #tooltip,
+  .infoBox,
+  #severity-legend,
+  #message {
+    background: #fff;
+    border: none;
+    box-shadow: none;
+  }
+
+  header {
+    background: #fff;
+  }
+
+  #sidebar {
+    background: none;
+  }
+
+  footer {
+    display: none;
+  }
+
+  .more-information {
+    display: none;
+  }
+
+  #options {
+    display: none;
+  }
+}
