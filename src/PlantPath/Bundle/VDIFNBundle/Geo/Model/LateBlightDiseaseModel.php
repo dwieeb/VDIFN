@@ -99,7 +99,7 @@ class LateBlightDiseaseModel extends DiseaseModel
         }
 
         if ($status === LateBlightStatus::NOT_OBSERVED) {
-            if ($dayTotal >= 3 || $seasonTotal > 30) {
+            if ($dayTotal >= 3 || $seasonTotal >= 30) {
                 return Threshold::MEDIUM;
             }
 
