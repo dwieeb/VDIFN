@@ -164,7 +164,7 @@ var Interface = new vdifn.Interface(
     google.maps.event.addDomListener(document.getElementById('infliction-select-information'), 'mouseenter', function(event) {
         var content = document.createElement('div');
         content.innerHTML = vdifn.infliction_descriptions[document.getElementById('infliction-select').value];
-        Interface.openTooltip(document.getElementById('infliction-select-information'), content, { 'top': 7, 'left': 1, 'max-width': '500px' });
+        Interface.openTooltip(document.getElementById('infliction-select-information'), content, { 'top': 7, 'left': 1, 'max-width': '600px' });
     });
 
     google.maps.event.addDomListener(document.getElementById('infliction-select-information'), 'mouseleave', function(event) {
