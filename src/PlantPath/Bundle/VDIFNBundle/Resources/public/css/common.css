@@ -161,6 +161,20 @@ fieldset {
   cursor: default;
 }
 
+#definitions {
+  margin-top: 10px;
+}
+
+#definitions ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: .8em;
+}
+
+#definitions ul li {
+  color: #424242;
+}
+
 .more-information {
   display: inline-block;
   width: 12px;
