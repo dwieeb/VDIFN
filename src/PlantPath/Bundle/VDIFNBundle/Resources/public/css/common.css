@@ -56,7 +56,7 @@ hgroup > * {
 #sidebar,
 #tooltip,
 .infoBox,
-#severity-legend,
+#right-sidebar,
 #message {
   background: #ffffff;
   background: rgba(255, 255, 255, 0.85);
@@ -214,7 +214,7 @@ fieldset {
   margin: 4px 1px;
 }
 
-#severity-legend {
+#right-sidebar {
   position: absolute;
   bottom: 25px;
   right: 15px;
@@ -661,6 +661,10 @@ input[disabled="disabled"]:hover,
     bottom: 0;
   }
 
+  #definitions {
+    display: none;
+  }
+
   fieldset {
     background: none;
   }
@@ -668,7 +672,7 @@ input[disabled="disabled"]:hover,
   #sidebar,
   #tooltip,
   .infoBox,
-  #severity-legend,
+  #right-sidebar,
   #message {
     background: #fff;
     border: none;

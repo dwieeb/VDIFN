@@ -197,7 +197,7 @@ var Interface = new vdifn.Interface(
     google.maps.event.addDomListener(document.getElementById('tomcast-information'), 'mouseenter', function(event) {
         var content = document.createElement('div');
         content.innerHTML = 'Disease forecasting model (adapted from a tomato disease model) used to predict the development of carrot foliar blights caused by <em>Alternaria</em> and <em>Cercospora</em> fungi, based on an accumulation of DSVs from past temperature and leaf wetness data combined with forecasted weather conditions.';
-        Interface.openTooltip(document.getElementById('tomcast-information'), content);
+        Interface.openTooltip(document.getElementById('tomcast-information'), content, { 'arrow': 'right' });
     });
 
     google.maps.event.addDomListener(document.getElementById('tomcast-information'), 'mouseleave', function(event) {
@@ -208,7 +208,7 @@ var Interface = new vdifn.Interface(
     google.maps.event.addDomListener(document.getElementById('blitecast-information'), 'mouseenter', function(event) {
         var content = document.createElement('div');
         content.innerHTML = 'Disease forecasting model used to predict the development of late blight of potato/tomato caused by <em>Phytophthora infestans</em>, based on an accumulation of DSVs, which are generated from air temperature and relative humidity data.';
-        Interface.openTooltip(document.getElementById('blitecast-information'), content);
+        Interface.openTooltip(document.getElementById('blitecast-information'), content, { 'arrow': 'right' });
     });
 
     google.maps.event.addDomListener(document.getElementById('blitecast-information'), 'mouseleave', function(event) {
@@ -219,7 +219,7 @@ var Interface = new vdifn.Interface(
     google.maps.event.addDomListener(document.getElementById('disease-forecasting-information'), 'mouseenter', function(event) {
         var content = document.createElement('div');
         content.innerHTML = 'A plant disease management system that uses computer-based models to collect field weather data and predict the onset and potential severity of crop diseases. Current and forecasted weather conditions determine the risk for disease, and prompts disease management decisions (preventative pesticide applications).';
-        Interface.openTooltip(document.getElementById('disease-forecasting-information'), content);
+        Interface.openTooltip(document.getElementById('disease-forecasting-information'), content, { 'arrow': 'right' });
     });
 
     google.maps.event.addDomListener(document.getElementById('disease-forecasting-information'), 'mouseleave', function(event) {
