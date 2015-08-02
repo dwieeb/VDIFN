@@ -155,6 +155,10 @@ fieldset {
   text-indent: 0.01px;
 }
 
+#options select::-ms-expand {
+  display: none;
+}
+
 #options input[type="text"][disabled="disabled"],
 #options select[disabled="disabled"] {
   background-color: #d0d0d0;
@@ -529,6 +533,7 @@ input[disabled="disabled"]:hover,
 
 .button-primary {
   padding: 5px 24px;
+  background: #249dde;
   background: -webkit-gradient(linear, left top, left bottom, from(#29d4ff), to(#249dde));
   background: -moz-linear-gradient(top, #29d4ff 0%, #249dde);
   -webkit-border-radius: 3px;

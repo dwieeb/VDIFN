@@ -436,7 +436,7 @@ vdifn.Interface.prototype.registerInflictionSelectHandler = function(cropSelect,
                 }
             }
 
-            if (optgroup.label.indexOf(this.selectedOptions[0].innerHTML) === 0) {
+            if (optgroup.label.toLowerCase().indexOf(this.value) === 0) {
                 optgroup.style.display = 'block';
 
                 if (selected === false) {
