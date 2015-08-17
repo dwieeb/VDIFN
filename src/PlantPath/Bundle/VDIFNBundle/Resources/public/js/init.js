@@ -95,40 +95,46 @@ var Interface = new vdifn.Interface(
                 });
             },
             severity_legend: function(callback) {
-                var content = Interface.generateLoadingBars();
-                var inner = document.getElementById('severity-legend');
-                inner.innerHTML = '';
-                inner.appendChild(content);
+                if (Interface.modelChanged) {
+                    var content = Interface.generateLoadingBars();
+                    var inner = document.getElementById('severity-legend');
+                    inner.innerHTML = '';
+                    inner.appendChild(content);
 
-                Interface.drawSeverityLegend({
-                    crop: Interface.crop,
-                    infliction: Interface.infliction
-                }, function(response) {
-                    callback(null, {'response': response});
-                });
+                    Interface.drawSeverityLegend({
+                        crop: Interface.crop,
+                        infliction: Interface.infliction
+                    }, function(response) {
+                        callback(null, {'response': response});
+                    });
+                } else {
+                    callback(null, null);
+                }
             }
         }, function(err, results) {
-            var inner = document.getElementById('severity-legend');
-            inner.innerHTML = results.severity_legend.response.text;
-            var elements = inner.querySelectorAll('.dsv');
-            var severity, color;
-            Interface.severities = {};
+            if (results.severity_legend) {
+                var inner = document.getElementById('severity-legend');
+                inner.innerHTML = results.severity_legend.response.text;
+                var elements = inner.querySelectorAll('.dsv');
+                var severity, color;
+                Interface.severities = {};
 
-            for (var i = 0; i < elements.length; i++) {
-                severity = elements[i].getAttribute('data-severity');
-                color = elements[i].getAttribute('data-color');
-                Interface.severities[severity] = color;
+                for (var i = 0; i < elements.length; i++) {
+                    severity = elements[i].getAttribute('data-severity');
+                    color = elements[i].getAttribute('data-color');
+                    Interface.severities[severity] = color;
 
-                google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseenter', function(event) {
-                    var content = document.createElement('div');
-                    content.innerHTML = this.parentNode.parentNode.getAttribute('data-description');
-                    Interface.openTooltip(this, content, { 'arrow': 'right' });
-                });
+                    google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseenter', function(event) {
+                        var content = document.createElement('div');
+                        content.innerHTML = this.parentNode.parentNode.getAttribute('data-description');
+                        Interface.openTooltip(this, content, { 'arrow': 'right' });
+                    });
 
-                google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseleave', function(event) {
-                    Interface.tooltipOpen = false;
-                    Interface.closeTooltip();
-                });
+                    google.maps.event.addDomListener(elements[i].querySelector('.more-information'), 'mouseleave', function(event) {
+                        Interface.tooltipOpen = false;
+                        Interface.closeTooltip();
+                    });
+                }
             }
 
             var date_range_results = results.date_range.results;

@@ -634,10 +634,6 @@ vdifn.Interface.prototype.closeMessageOverlay = function() {
  * @return this
  */
 vdifn.Interface.prototype.drawSeverityLegend = function(criteria, callback) {
-    if (!this.modelChanged) {
-        return this;
-    }
-
     superagent.get(
         Routing.generate('model_severity_legend', {
             crop: Interface.crop,
