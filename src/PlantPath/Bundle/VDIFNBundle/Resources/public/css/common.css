@@ -79,6 +79,7 @@ hgroup > * {
 }
 
 #plantpath-logo,
+#vegento-logo,
 #uw-madison,
 #uw-extension {
   display: inline-block;
@@ -86,11 +87,19 @@ hgroup > * {
   text-indent: -9999em;
 }
 
-#plantpath-logo {
-  background-image: url('/bundles/plantpathvdifn/img/plantpath-logo.png');
+#plantpath-logo,
+#vegento-logo {
   width: 80px;
   height: 80px;
-  margin: 12px;
+  margin: 12px 6px;
+}
+
+#plantpath-logo {
+  background-image: url('/bundles/plantpathvdifn/img/plantpath-logo.png');
+}
+
+#vegento-logo {
+  background-image: url('/bundles/plantpathvdifn/img/vegento-logo.png');
 }
 
 #uw-madison {
